@@ -2,88 +2,94 @@ library(R6)
 library(tibble)
 library(tidyverse)
 
-#' @title Village Data
+#' @title Village State
 #' @docType class
-#' @description desc
-#' @details An object that represents the state of a village
+#' @description This is an object that represents the state of a village at a particular time.
+#' @details This class acts as a type of record that holds the values of the different village variables. This class can be subclassed
+#' to include more variables that aren't present.
 #' @section Methods:
 #' \itemize{
+#'   \item{\code{\link{initialize}}}{Creates a new instance of the record}
 #'   \item{\code{\link{as_tibble}}}{Turns the state into a tibble}
 #' }
-#' @export# A class that represents Village properties at an instance in time; this is an
-# object that represents the state of a village at an instance in time.
 VillageState <- R6Class("VillageState", cloneable = TRUE,
-                       public = list(
-                         # The birth rate of villagers
-                         birthRate = NA,
-                         # The average death rate of villagers
-                         deathRate = NA,
-                         # Total number of crops that the village has
-                         cropStock = NA,
-                         # Maximum number of allowed population
-                         carrying_capacity = NA,
-                         # City's crop productivity
-                         crop_productivity  = NA,
-                         #Number of farmers that the village has
-                         farmers = NA,
-                         # Number of fishers in the village
-                         fishers = NA,
-                         # Catch rate for the village
-                         fish_catch_rate  = NA,
-                         # Total amount of fish a village has
-                         fish_stock = NA,
-                         # Total population that the village has
-                         population = NA,
-                         # Year that this slice of data belongs to
-                         year = NA,
+                        public = list(
+                          birthRate = NA,
+                          deathRate = NA,
+                          cropStock = NA,
+                          carryingCapacity = NA,
+                          cropProductivity  = NA,
+                          farmers = NA,
+                          fishers = NA,
+                          fishCatchRate  = NA,
+                          fishStock = NA,
+                          population = NA,
+                          year = NA,
 
-                         # Called when instantiating this object. People should be able to
-                         # override most of the properties contained in this class, adding
-                         # an option here is ideal.
-                         initialize = function(birthRate = 0.085,
-                                               deathRate = 0.070,
-                                               carrying_capacity = 300,
-                                               crop_productivity  = 3.0,
-                                               fish_catch_rate  = 2.0,
-                                               year = 1,
-                                               population = 100,
-                                               cropStock = 300,
-                                               fish_stock = 200,
-                                               farmers = 0,
-                                               fishers = 0
-                         ) {
-                           self$birthRate  <- birthRate
-                           self$deathRate  <- deathRate
-                           self$carrying_capacity  <- carrying_capacity
-                           self$crop_productivity  <- crop_productivity
-                           self$fish_catch_rate  <- fish_catch_rate
-                           self$year <- year #BCE
-                           self$population <- population
-                           self$cropStock <- cropStock
-                           self$fish_stock <- fish_stock
-                           self$farmers <-farmers
-                           self$fishers <-fishers
-                         },
-                         as_tibble = function() {
+                          #' Creates a new State
+                          #'
+                          #' @description Initializes all of the properties in the state to the ones passed in. This should
+                          #' be called by subclasses during initialization.
+                          #' @details When adding a new property, make sure to add it to the tibble
+                          #' representation.
+                          #'
+                          #' @param birthRate The average birth rate of the village's citizens
+                          #' @param deathRate The average death rate of the village's citizens
+                          #' @param carryingCapacity The maximum number of villagers the village can sustain
+                          #' @param cropProductivity
+                          #' @param fishCatchRate
+                          #' @param year The year that the state represents
+                          #' @param population The number of villagers in the village
+                          #' @param cropStock The number of crops in the village
+                          #' @param fishStock The number of fish in the village
+                          #' @param farmers The number of farmers in the village
+                          #' @param fishers The number of fishers in the village
+                          initialize = function(birthRate = 0.085,
+                                                deathRate = 0.070,
+                                                carryingCapacity = 300,
+                                                cropProductivity  = 3.0,
+                                                fishCatchRate  = 2.0,
+                                                year = 1,
+                                                population = 100,
+                                                cropStock = 300,
+                                                fishStock = 200,
+                                                farmers = 0,
+                                                fishers = 0
+                          ) {
+                            self$birthRate  <- birthRate
+                            self$deathRate  <- deathRate
+                            self$carryingCapacity  <- carryingCapacity
+                            self$cropProductivity  <- cropProductivity
+                            self$fishCatchRate  <- fishCatchRate
+                            self$year <- year
+                            self$population <- population
+                            self$cropStock <- cropStock
+                            self$fishStock <- fishStock
+                            self$farmers <-farmers
+                            self$fishers <-fishers
+                          },
 
-                           return(tibble(
-                             birthRate = self$birthRate,
-                             deathRate = self$deathRate,
-                             carrying_capacity = self$carrying_capacity,
-                             crop_productivity = self$crop_productivity,
-                             fish_catch_rate = self$fish_catch_rate,
-                             year = self$year, #BCE
-                             population = self$population,
-                             cropStock = self$cropStock,
-                             fish_stock = self$fish_stock,
-                             farmers = self$farmers,
-                             fishers = self$fishers
-                           ))
-                         },
+                          #' Returns a tibble representation of the state
+                          #'
+                          #' @describe Sometimes it's useful to visualize the states. Tibbles are
+                          #' the common data structure to hold the data. This method gives a tibble
+                          #' with each property.
+                          #' @return Returns a tibble representation of the state
+                          as_tibble = function() {
 
-                         # DEVNOTE: This method should be generalized to get any property back as a tibble
-                         get_population = function () {
-                           return(tibbble(name= self$population))
-                         }
-                       )
+                            return(tibble(
+                              birthRate = self$birthRate,
+                              deathRate = self$deathRate,
+                              carryingCapacity = self$carryingCapacity,
+                              cropProductivity = self$cropProductivity,
+                              fishCatchRate = self$fishCatchRate,
+                              year = self$year,
+                              population = self$population,
+                              cropStock = self$cropStock,
+                              fishStock = self$fishStock,
+                              farmers = self$farmers,
+                              fishers = self$fishers
+                            ))
+                          }
+                        )
 )
