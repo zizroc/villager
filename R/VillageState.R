@@ -1,18 +1,26 @@
-library(R6)
-library(tibble)
-library(tidyverse)
-
 #' @title Village State
 #' @docType class
 #' @description This is an object that represents the state of a village at a particular time.
 #' @details This class acts as a type of record that holds the values of the different village variables. This class can be subclassed
 #' to include more variables that aren't present.
 #' @section Methods:
-#' \itemize{
-#'   \item{\code{\link{initialize}}}{Creates a new instance of the record}
-#'   \item{\code{\link{as_tibble}}}{Turns the state into a tibble}
-#' }
-VillageState <- R6Class("VillageState", cloneable = TRUE,
+#' @field birthRate The average birth rate of the village's citizens
+#' @field deathRate The average death rate of the village's citizens
+#' @field carryingCapacity The maximum number of villagers the village can sustain
+#' @field cropProductivity Productivity for crops
+#' @field fishCatchRate Rate of fish caught
+#' @field year The year that the state represents
+#' @field population The number of villagers in the village
+#' @field cropStock The number of crops in the village
+#' @field fishStock The number of fish in the village
+#' @field farmers The number of farmers in the village
+#' @field fishers The number of fishers in the village
+#' @section Methods:
+#' \describe{
+#'   \item{\code{propagate()}}{Advances the village a single time step}
+#'   \item{\code{as_tibble()}}{Turns the object into a tibble}.
+#'   }
+VillageState <- R6::R6Class("VillageState", cloneable = TRUE,
                         public = list(
                           birthRate = NA,
                           deathRate = NA,
@@ -32,12 +40,12 @@ VillageState <- R6Class("VillageState", cloneable = TRUE,
                           #' be called by subclasses during initialization.
                           #' @details When adding a new property, make sure to add it to the tibble
                           #' representation.
-                          #'
+                          #' @export
                           #' @param birthRate The average birth rate of the village's citizens
                           #' @param deathRate The average death rate of the village's citizens
                           #' @param carryingCapacity The maximum number of villagers the village can sustain
-                          #' @param cropProductivity
-                          #' @param fishCatchRate
+                          #' @param cropProductivity Productivity for crops
+                          #' @param fishCatchRate Rate of fish caught
                           #' @param year The year that the state represents
                           #' @param population The number of villagers in the village
                           #' @param cropStock The number of crops in the village
@@ -71,9 +79,10 @@ VillageState <- R6Class("VillageState", cloneable = TRUE,
 
                           #' Returns a tibble representation of the state
                           #'
-                          #' @describe Sometimes it's useful to visualize the states. Tibbles are
+                          #' @description Sometimes it's useful to visualize the states. Tibbles are
                           #' the common data structure to hold the data. This method gives a tibble
                           #' with each property.
+                          #' @export
                           #' @return Returns a tibble representation of the state
                           as_tibble = function() {
 
