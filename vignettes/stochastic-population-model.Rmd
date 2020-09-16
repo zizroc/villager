@@ -1,0 +1,52 @@
+---
+title: "stochastic-population-model"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{stochastic-population-model}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteDepends{tibble}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(villager)
+```
+
+## Background
+This is an example of how to build a village with a stochastic population model. At each year, the population changes to a random value.
+
+## Creating the Model
+The first step is to define the function that will change the population at each year. Recall that it _must_ take `currentState`, `previousState`, and `modelData` as parameters.
+
+``` {R}
+newPopulation <- function(currentState, previousState, modelData) {
+  # Set the population to a random value
+  currentState$population <- runif(10, 15)
+}
+
+```
+
+## Creating the Village
+The village creation is done the standard way. An initial condition is created using the default state object and is added to the village with the model.
+``` {R}
+# Create the village
+library(tibble)
+village_initial_condition = VillageState$new()
+village = BaseVillage$new(name="Random Population Village",
+                          initialState=village_initial_condition,
+                          models = newPopulation)
+
+mayanSimulation <- Simulation$new(length=10, #years
+                                   villages=c(village))
+
+# Call run_model to start the simulation
+mayanSimulation$run_model()
+mayanSimulation$show_results()
+```

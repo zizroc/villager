@@ -1,0 +1,130 @@
+---
+title: "village-state"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{village-state}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteDepends{R6}
+
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(villager)
+```
+
+# State
+The concept of a state is used throughout this library. Understanding what the village state is, how it’s used, and how to customize it is essential for using this library. This vignette is meant to give an overview of what the state object is and how to extend it.
+
+The village’s state is a record at a particular time about the properties of a city, eg the total population, the amount of food stockpiled, etc. This is, in the most general sense the same _state_ that is referred to in other fields of science. The state information is stored in the `VillageState` class. To create a state object,
+
+```{r basic-state}
+villageState <- VillageState$new()
+print(villageState)
+```
+
+From the print statement, it's clear what the state properties of `VillageState` are. For example, it can be seen that at each point in time, the village has a state for the birth rate, death rate, total population, etc.
+
+## Creating the First State (initial condition)
+The first state that a village has is important because it represents the initial condition. As of right now, you must create the initial state for a new village before running the simulation. The initial condition below represents a village with 5 farmers, 5 fishers, and 15 people living in it.
+
+```{r }
+initialVillageState <- VillageState$new(farmers=5, fishers=5, population=15)
+print(initialVillageState)
+```
+
+From the print statement, we can verify that the state is correct.
+
+## Mutating State
+At each time step, you'll most likely want to calculate a new value for the population and other time dependant variables. Maybe you'll want to increase the death rate that particular year. This is done by modifying the new state object that `villager` creates at each new time step.
+
+State properties are accessed with `$`. For example, to print the population in the initial state, one would
+``` {r }
+print(initialVillageState$population)
+```
+
+To change it's value to a random number between 10 and 15, 
+``` {r }
+initialVillageState$population = runif(10, 15)
+```
+
+
+For more information on mutating the state for each time step, refer to the ___(I haven't done this yet)___ documentation.
+
+
+## Example of Chained States
+As an exercise, it's useful to understand how the states are used in `villager` and to make a toy model of a simulation. Consider a village that is simulated over three years. It will have a total of three states: The initial condition for the first year, and then one for the next two years.
+
+Internally, these are stored in a ordered list, starting at the first year and ending at the last. 
+
+We'll model the population at each year as a random number between 10 and 15.
+
+``` {r}
+# Create the initial state
+initialVillageState <- VillageState$new(farmers=5, fishers=5, population=15)
+# Copy the initial state so that all the other variables are the same
+yearOneState <- initialVillageState$clone()
+yearOneState$population <- runif(10, 15)
+# Base the second year off of the first year
+yearTwoState <- yearOneState$clone()
+yearTwoState$population <- runif(10, 15)
+
+states <-list(initialVillageState, yearOneState, yearTwoState)
+```
+
+One of villager's strengths is streamlining this process, which is discussed in the custom-algorithm vignette.
+
+## Custom States
+Chances are, the state class provided by villager won't be sufficient for specific needs. If a model needs more parameters, then `VillageState` should be subclassed.
+
+
+``` {r}
+#' @importFrom R6 R6Class
+customState <- R6::R6Class("demographicState",
+                          inherit = VillageState,
+                          public = list(customValue=NULL,
+                            customValue2=NULL,
+                            initialize = function() {
+                                          # Let the base class initialize all of the other values
+                                          super$initialize()
+                                                              }
+                                        )
+                          )
+initial_condition <- customState$new()
+initial_condition$customValue <- 10
+initial_condition$customValue2 <- 5
+print(initial_condition)
+```
+
+It's important to note that the state class is an R6 class. This mean that _any changes you make to the state are final_. Other important things to note include
+
+##### New Parameters need to be public
+
+The line `public = list(#customValue,` shows where this should happen. Making them public allows you to access them while writing your algorithms and when accessing them to plot data.
+
+##### You Have Flexibility
+The subclass can take any number of the new properties in the initialize method. For example, the following is an equivilent.
+``` {r}
+#' @importFrom R6 R6Class
+customState <- R6::R6Class("demographicState",
+                          inherit = VillageState,
+                          public = list(customValue=NULL,
+                            customValue2=NULL,
+                            initialize = function(customValue, customValue2) {
+                                          # Let the base class initialize all of the other values
+                                          super$initialize()
+                                          self$customValue <-customValue
+                                          self$customValue2 <- customValue2
+                                                              }
+                                        )
+                          )
+initial_condition <- customState$new(customValue = 10, customValue2 = 5)
+print(initial_condition)
+```
