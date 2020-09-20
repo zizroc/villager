@@ -1,0 +1,72 @@
+---
+title: "trade-example"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{trade-example}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(villager)
+```
+
+```{r}
+
+set.seed(123)
+
+initialVillageState <- VillageState$new(farmers=5, fishers=5, population=as.integer(runif(1, 1, 15)))
+print(VillageState)
+```
+
+```{r}
+dynamics <- function(currentState, previousState, modelData){
+  currentState$population = as.integer(runif(1, 1, 15))
+}
+```
+
+
+
+```{r}
+village_a <- BaseVillage$new(name = "A", initialState = initialVillageState, models = dynamics)
+
+village_b <- BaseVillage$new(name = "B", initialState = initialVillageState, models = dynamics)
+
+```
+
+
+```{r}
+
+
+trade_fun <- function(currentState, partnerState){
+  #resources: ref. current village state
+  delta_pop <- currentState$population - partnerState$population
+    
+  if(delta_pop < 0)
+    currentState$population = currentState$population + as.integer(0.5*delta_pop)
+    partnerState$population = partnerState$population - as.integer(0.5*delta_pop)
+}
+
+
+village_a$add_trade_partner(village_b, trade_fun)
+
+```
+
+
+```{r}
+
+mayanSimulation <- Simulation$new(length=10, #years
+                                   villages=c(village_a, village_b))
+# Call run_model to start the simulation
+mayanSimulation$run_model()
+mayanSimulation$show_results()
+
+```
+

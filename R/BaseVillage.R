@@ -26,6 +26,7 @@ BaseVillage <- R6::R6Class("BaseVillage",
                          tradePartners = NA,
                          models = NULL,
                          modelData = NULL,
+                         trades = NULL,
 
                          #' Initializes a village
                          #'
@@ -91,7 +92,10 @@ BaseVillage <- R6::R6Class("BaseVillage",
                            }
                            # If there's a new state, add it to the list of states
                            if (year != 1) {
+
                            self$StateRecords <- c(self$StateRecords, village_data)
+
+                           self$trade()
                            }
                          },
 
@@ -100,24 +104,24 @@ BaseVillage <- R6::R6Class("BaseVillage",
                          #' @description Connects two villages together for trade
                          #' @details This method takes advantage of R6's reference semantics. Because classes that are derived
                          #' from BaseVillage are R6, they can be directly modified. This
-                         #'
+                         #' @importFrom sets tuple
                          #' @export
                          #' @param newTradePartner A derived BaseVillage object representing a village that this village
                          #' can trade with
                          #' @param addBack An optional parameter that, when true will
                          #'
-                         add_trade_partner = function(newTradePartner, addBack=TRUE) {
+                         add_trade_partner = function(newTradePartner, trade_fun, addBack=TRUE) {
 
                            # Make sure you don't copy the empty set into tradePartners
-                           if (length(self$tradePartners) < 0 ) {
-                             self$tradePartners <- c(newTradePartner)
+                           if (length(self$tradePartners) < 1 ) {
+                             self$tradePartners <- sets::tuple(newTradePartner)
                            } else {
-                             self$tradePartners <- c(self$tradePartners, newTradePartner)
+                             self$tradePartners <- c(self$tradePartners, sets::tuple(newTradePartner, trade_fun))
                            }
 
                            if (addBack) {
                              # Check if the other village should be connected back to this one
-                             newTradePartner$add_trade_partner(self, FALSE)
+                             newTradePartner$add_trade_partner(self, trade_fun, FALSE)
                            }
                          },
 
@@ -128,17 +132,34 @@ BaseVillage <- R6::R6Class("BaseVillage",
                          #' @export
                          trade = function() {
 
+                           for ( trade_partner in self$selfTradePartners) {
+                             x <- tradePartner[1]
+                             y <- tradePartner[2]
+                             print(type(x))
+                             print(type(y))
+
+
+
+                             village_data <-self$StateRecords[[length(self$StateRecords)]]
+                             trade_partner_data <- x$StateRecords[[length(x$StateRecords)]]
+
+
+
+                             y(village_data, trade_partner_data)
+
+                         }
+
                          },
 
-                        #' @description Gives a tibbble representation of the state
+                        #' @description Gives a tibble representation of the state
                         #' @export
                         #' @return Returns a tibble composing of rows which are
                         #' properties from VillageState.
                          as_tibble = function() {
-                           big_tibble <- tibbble::tibble()
+                           big_tibble <- tibble::tibble()
                            for (data_record in self$StateRecords) {
                              tidy_row <- data_record$as_tibble()
-                             big_tibble <- bind_rows(tidy_row, big_tibble)
+                             big_tibble <- dplyr::bind_rows(tidy_row, big_tibble)
 
                            }
                            return(big_tibble)
@@ -153,7 +174,8 @@ BaseVillage <- R6::R6Class("BaseVillage",
                          plot = function(dependent_variable = "population") {
                            # Get the data as a tibble
                            tidy_data <- self$as_tibble()
-                           p <- ggplot(data=tidy_data, aes(x=year, y=!!sym(dependent_variable)))+ geom_line()
+                           p <- ggplot2::ggplot(data=tidy_data, ggplot2::aes(x=year, y=!!rlang::sym(dependent_variable))) +
+                             ggplot2::geom_line()
                            return (p)
                          }
                        )
