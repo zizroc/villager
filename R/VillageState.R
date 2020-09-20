@@ -86,7 +86,7 @@ VillageState <- R6::R6Class("VillageState", cloneable = TRUE,
                           #' @return Returns a tibble representation of the state
                           as_tibble = function() {
 
-                            return(tibble(
+                            return(tibble::tibble(
                               birthRate = self$birthRate,
                               deathRate = self$deathRate,
                               carryingCapacity = self$carryingCapacity,
