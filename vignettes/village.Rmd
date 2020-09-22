@@ -1,0 +1,66 @@
+---
+title: "village"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{village}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(villager)
+```
+
+## The `village` Class
+
+The `village` class represents a village. Internally, the village has 
+
+
+### Initializing the Village
+The `village` object relies on an initial condition, which is a VillageState class.
+
+```{R}
+# Start by creating an initial condition
+initial_condition = VillageState$new()
+
+# Create the village with the initial condition
+village = BaseVillage$new(initialState=initial_condition)
+```
+
+
+```{R}
+new_population <- function(currentState, previousState, modelData) {
+  # Set the population to 10
+  currentState$population <- 10
+}
+# Start by creating an initial condition
+initial_condition = VillageState$new()
+
+# Create the village with the initial condition
+village = BaseVillage$new(initialState=initial_condition, models=new_population)
+```
+
+
+
+### Propagating Through Time
+The village `propagate` method advances the village a single time step. In doing so, it calls the user-defined models. It also creates the new
+state for the new time. This state and the previous are passed to the user's models where they can be changed according to the model's rules
+
+
+### Adding Trade Partners
+Villages can be connected to other villages for trade by calling `add_trade_partner(newTradePartner, addBack=TRUE)`. Internally, this appends a reference to `newTradePartner` to the list of villages that can be traded with: `tradePartners`.
+
+Since trade is generally bi-directional between villages but not always (it should be possible for 'donations'), `addBack` can be used to make trading one directional.
+
+
+
+
+
+
