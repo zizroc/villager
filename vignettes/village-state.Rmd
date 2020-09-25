@@ -71,10 +71,10 @@ We'll model the population at each year as a random number between 10 and 15.
 initialVillageState <- VillageState$new(farmers=5, fishers=5, population=15)
 # Copy the initial state so that all the other variables are the same
 yearOneState <- initialVillageState$clone()
-yearOneState$population <- runif(10, 15)
+yearOneState$population <- runif(1,10,15)
 # Base the second year off of the first year
 yearTwoState <- yearOneState$clone()
-yearTwoState$population <- runif(10, 15)
+yearTwoState$population <- runif(1,10,15)
 
 states <-list(initialVillageState, yearOneState, yearTwoState)
 ```
