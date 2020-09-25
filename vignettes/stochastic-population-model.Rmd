@@ -28,7 +28,7 @@ The first step is to define the function that will change the population at each
 ``` {R}
 newPopulation <- function(currentState, previousState, modelData) {
   # Set the population to a random value
-  currentState$population <- runif(10, 15)
+  currentState$population <- runif(1,10,15)
 }
 
 ```
