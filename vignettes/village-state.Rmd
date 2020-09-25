@@ -52,7 +52,7 @@ print(initialVillageState$population)
 
 To change it's value to a random number between 10 and 15, 
 ``` {r }
-initialVillageState$population = runif(10, 15)
+initialVillageState$population = runif(1,10,15)
 ```
 
 
