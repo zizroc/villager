@@ -1,5 +1,7 @@
 # villager
-
+  <!-- badges: start -->
+  [![Codecov test coverage](https://codecov.io/gh/zizroc/villager/branch/master/graph/badge.svg)](https://codecov.io/gh/zizroc/villager?branch=master)
+  <!-- badges: end -->
 
 ## Installing
 To install villager, you'll need to have the [`devtools`](https://github.com/r-lib/devtools) library installed. This is because the package hasn't been published to a repository yet, and `devtools` has a way to install from a GitHub repository.
