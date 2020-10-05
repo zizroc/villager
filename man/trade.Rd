@@ -113,7 +113,7 @@ Connects two villages so that they can trade with each other.
 \subsection{Method \code{add_trade_partner()}}{
 Connects two villages together for trade
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{BaseVillage$add_trade_partner(newTradePartner, trade_fun, addBack = TRUE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{BaseVillage$add_trade_partner(newTradePartner, addBack = TRUE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

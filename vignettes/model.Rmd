@@ -1,0 +1,320 @@
+---
+title: "model"
+author: "Marcus J Thomson"
+date: "10/4/2020"
+output: html_document
+---
+
+---
+title: "basic_age_model.Rmd"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Base Model
+
+This is a simulation that
+
+1. Has a death rate based on age + calorie deficit + noise
+2. Has a fishing rate based on a constant + noise
+3. Has a farming rate based on a constant + noise
+4. Has profession system consisting of fishers and farmers, that are determined randomly at birth
+5. Has a partner and birth system
+
+This is simulated on a _daily_ time scale.
+
+### Initial Conditions
+
+This is a village that starts with
+  1. 40 villagers, none of which are in relationships. 50% chance the villager is a female or male
+  2. All of the bloodlines are unique
+  3. A random percentage of the population as fishers and farmers
+  4. Enough crop to supply 1 year of food stock for the 40 villagers
+  5. Enough fish to supply 1 month of food stock for the 40 villagers
+  
+### Goal
+
+Given the initial conditions above, the goal is to model three generations of villagers while exhibiting stable dynamics. The ultimate goal is to show how various things are compartmentalized (and how they can be extended) and which small but impactful decisions must be made.
+
+### Modeling the Villager
+
+This model talks about properties that belong to a villager. It's hard to model this behavior without properly encapsulating that logic; so I've created a villager class. The villager holds properties like age, last name, age, fertility , etc. I've done this as a class because from an ontological point of view, I'm capturing the behavior of what a villager is in a discrete object. 
+
+Ideally this will move into the _villager_ library, and the _village_ class will hold and array of them. Then the village will be responsible for keeping track of village related things (staying true to ontological design) like overall death rate, assigning jobs, assigning relationships, distributing food, etc. Because it's not, it's in the model code.
+
+The basic idea is that a villager can be created with the properties that are listed in the _initialize_ method. Instead of living in the `village` class, this will belong in the `villageData` object. Since it's an R6 class, it can be updated.
+
+```{R Create villager class}
+library(villager)
+library(R6)
+# age is in days
+villager <- R6::R6Class("villager",
+                        public = list(identifier = NULL,
+                                      first_name=NULL,
+                                      last_name=NULL,
+                                      age=NULL,
+                                      mother_id=NULL,
+                                      father_id=NULL,
+                                      profession=NULL,
+                                      partner=NULL,
+                                      children=NULL,
+                                      gender=NULL,
+                                      alive=NULL,
+                                      time_since_last_birth = NULL,
+                                      initialize = function(first_name=NA,
+                                                            last_name=NA,
+                                                            age=0,
+                                                            mother_id=NULL,
+                                                            father_id=NULL,
+                                                            partner=NULL,
+                                                            children=list(),
+                                                            gender=NULL) {
+                                        self$alive <- TRUE
+                                        self$identifier <- uuid::UUIDgenerate()
+                                        self$first_name <- first_name
+                                        self$last_name <- last_name
+                                        self$age <- age
+                                        self$mother_id <- mother_id
+                                        self$father_id <- mother_id
+                                        self$profession <- self$get_profession()
+                                        if (is.null(gender))
+                                          self$gender <- self$get_gender()
+                                        
+                                        self$daily_food_unit_needs <- 4
+                                        self$food_unit_deficit <- 0
+                                        self$partner <- partner
+                                        self$children <-children
+                                        self$time_since_last_birth <- 0
+                                      },
+                                      
+                                      # Gets a random number between 0 and 1; Treat
+                                      # 0: female
+                                      # 1: male
+                                      get_gender = function() {
+                                        self$gender <- runif(1,0,1)
+                                        if (self$gender)
+                                          return ("male")
+                                        return ("female")
+                                      },
+                                      
+                                      # Gets a random number between 0 and 1; Treat that as
+                                      # 0: farmer
+                                      # 1: fisher
+                                      get_profession = function() {
+                                        if (age < 9)
+                                          return (NULL)
+                                        profession <- runif(1,0,1)
+                                        if (profession)
+                                          return ("fisher")
+                                      },
+                                      
+                                      # Advance one time step
+                                      propegate = function() {
+                                        # Check to see if they die
+                                        self$should_die()
+                                        
+                                        # Check to see if they have a profession
+                                        if (is.null(self$profession))
+                                          self$get_profession()
+                                      },
+                                    
+                                      # A function that returns true or false whether they die that day
+                                      should_die = function() {
+                                        
+                                        # See if they starve (40 days of no food)
+                                        defecit <- (self$food_unit_deficit / self$food_unit_needs)
+                                        if (defecit > 40){
+                                          return (TRUE)
+                                        }
+                                        
+                                        # See if they die based on their age
+                                        # roll_dice(percentage) doesn't exist but should produce 1 or 0. It should produce the number 1 
+                                        # some percentage of the time (passed in).
+                                        
+                                        # Get the age in years
+                                        age <- get_age()
+                                        if (age < 5)
+                                          # There's a .02% chance that they die, each day
+                                          # res <- roll_dice(.0002)
+                                          1+1
+                                        else if ((20 > age) && (age > 5))
+                                          # There's a .01% chance that they die, each day
+                                          # res <- roll_dice(.0001)
+                                          1+1
+                                        else if ((45> age) && (age > 20))
+                                          # Then there's a 0.015% chance that they die each day
+                                          # res <- roll_dice(.00015)
+                                          1+1
+                                        else if ((55 > age) && (age > 45))
+                                          # There's a 1% chance that they die each day
+                                          1+1
+                                          # res <- roll_dice(.01)
+                                        else if ((55 < age) (age > 65))
+                                          # There's a 2% chance that they die each day
+                                          1+1
+                                          # res <- roll_dice(.02)
+                                        # Check if some statistical event happens (tree falls on them)
+                                        # .0001% chance that they die by an unfortunate event
+                                        # res <- roll_dice(.000001)
+                                        # Check to see if the result was a '1', which means they'll die
+                                        if (is.bool(res))
+                                          return(TRUE)
+                                                                                
+                                        # The villager survived the day
+                                        return(FALSE)
+                                      },
+                                      
+                                      # Feeds the villager food units
+                                      feed = function(food_unit) {
+                                        # Remove or add some number to the deficit
+                                        self$food_unit_deficit <- self$food_unit_deficit - food_unit
+                                      },
+                                      
+                                      birth_child = function() {
+                                        if ( (self$age > 14) && (self$time_since_last_birth > 364) && !is.null(self$partner) && (self$gender == 'female'))
+                                          child <- villager$new(first_name=NA,
+                                                                last_name=self$last_name,
+                                                                age=0,
+                                                                mother_id=self$identifier,
+                                                                father_id=self$partner$identifier,
+                                                                partner=NULL,
+                                                                children=list(),
+                                                                gender=NULL)
+                                          return (child)
+                                        
+                                        # Return nothing otherwise
+                                        return (NULL)
+                                      },
+                                      
+                                      # Adds a partner the villager
+                                      add_partner = function(new_partner, add_back = TRUE) {
+                                        self$partner <- new_partner
+                                        new_partner$partner <- self
+                                      },
+                                      
+                                      # Since age is stored as days, convert it to years
+                                      get_age <- function() {
+                                        return (self$age/364)
+                                      }
+                        ))
+```
+
+
+The details of _how_ the villagers are used in the simulation are found in the models section. It's important to note that some methods like `should_die` can be extended to include things like job-related accidental deaths.
+
+The initialize method can be thought of as saying, when a villager is created, they're by default 0 years old. At that age, they're either 
+
+#### Death Rate
+
+Death rate is a term that refers to a species, or more generall an aggregation. In this case the aggregation is a set of villagers, represented by a village. The village death rate will be updated to be 
+
+(deaths_at_current_year/total_population) * (10^2) # Which is per 100 people (I think)
+
+You might be interested in getting the death rate as a time series to see how it changed over time. This can be done by getting the value at each year in the village state.
+
+#### Partner System
+This model assumes a monogamous relationship between females (Partner A) and males (Partner B). Two people are able to form a relationship if the following conditions are met
+  1. There is at least one other villager of the opposite sex that is capable of having a partner
+  2. The villager is at least 14
+
+When a partner dies, the now single villager will take a new partner if possible regardless of age difference.
+
+#### Mating System
+
+The woman will have a baby if she:
+  1. Is between 14 and 35
+  2. Has a partner
+  3. Has not had a child within a year
+
+#### Profession System
+In an ideal model, the village would be creating jobs based on the village's overall needs (or some other model). We don't have that feature, so the job is set to 
+either fisher or farmer. There's a 50% chance for either. This is set when the villager reaches 9 years old.
+
+#### Food
+
+Villagers need to have a number of _food units_ per day. The food units are produced from farming and fishing.
+
+If the villager has a total of 40 days of missed food, they will day. Note that this is _not_ 40 continuous days. This should be changed.
+
+#### Aging
+
+Villagers age each day. As they move into different age brackets, their chance of dying each day changes.
+
+
+### The Food System
+
+
+#### Fish Stock
+
+The fish stock is for the entire village. The fish are distributed full to each villager at the start of each day. This means that in a famine, some villagers will be fully fed and others will not.
+
+Each day, fish are caught (or so the villagers should hope). The number of fish caught are proportional to the number of people fishing with a stochastic parrt at the end. The stochastic part scales the catch up or down, and can be thought of as 'fisher's luck'.
+
+#### Maize Stock
+
+Like fish, the village has a stock of maize. This is also distributed to the villagers at the start of each day. The number of crops harvested is proportional to the number of farmers available at the time. It _also_ has a stochastic element at the end.
+
+
+#### Distribution of Food to Villagers
+
+Because we have two types of food, each with different food_unit properties, a decision _had_ to make on how to map the food stocks to villagers.
+
+This is done by putting the fish and crop stocks in one hat and all the villagers in another. Pick a villager, and then randomly pick from the food hat until the villager's food_unit needs are satisfied. Put the villager aside, and then pick a new villager and repeat the process. 
+
+
+## Modeling With villager
+`villager` is used as a platform to do the model in. The process is the standard:
+
+1. Determine additional properties needed that are not present in the stock `villager` object
+2. Add them to the `modelData` parameter when creating the village
+3. Create a function that is called at the beginning of each day
+4. Place model logic in there and access `modelData` in it.
+
+### Additional Properties Needed
+
+Properties are typically contained in the `State` class that belongs to the village. Because we're introducing a whole new concept that doesn't exist in `villager` (the idea of a villager), we'll have to short circuit `villager` and put our own in `villageData`.
+
+
+
+
+
+
+
+### Creating the Initial State
+
+
+
+#### Creating the Base Population
+This village needs to have a base population of 40 people. Making this by hand would be a horrible task. The method below is a helper function that will create a number of villagers and returns a list of them.
+
+```{r generate-villagers}
+```
+
+
+#### Calculatng the Initial Number of Crop Stock
+
+
+#### Calculating the Initial Number of Fish Stock
+
+
+### Creating the Propegation Model
+
+model <- function(currentState, previousState, modelData) {
+ 
+ }
+
+
+### Running the simulation
+
+
+
+### Visualizing Results
+
+
+
+
+
+
