@@ -16,6 +16,7 @@ RoxygenNote: 7.1.1
 Suggests: 
     knitr,
 <<<<<<< HEAD
+<<<<<<< HEAD
     rmarkdown
 VignetteBuilder: knitr
 Imports: 
@@ -25,6 +26,11 @@ Imports:
     rlang
 
 
+=======
+    rmarkdown,
+    R6
+VignetteBuilder: knitr
+>>>>>>> effb530a2879622e0feda0ffbf961e56d903f3c4
 =======
     rmarkdown,
     R6
