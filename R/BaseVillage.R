@@ -40,7 +40,6 @@ BaseVillage <- R6::R6Class("BaseVillage",
                                                initialState = NULL,
                                                models = list(),
                                                modelData=NULL) {
-
                            # If the initial state wasn't set, set one.
                            # DEVNOTE: Do we want to allow that?
                            # if (is.null(initialState)) {
@@ -135,10 +134,10 @@ BaseVillage <- R6::R6Class("BaseVillage",
                         #' @return Returns a tibble composing of rows which are
                         #' properties from VillageState.
                          as_tibble = function() {
-                           big_tibble <- tibbble::tibble()
+                           big_tibble <- tibble::tibble()
                            for (data_record in self$StateRecords) {
                              tidy_row <- data_record$as_tibble()
-                             big_tibble <- bind_rows(tidy_row, big_tibble)
+                             big_tibble <- dplyr::bind_rows(tidy_row, big_tibble)
 
                            }
                            return(big_tibble)
@@ -153,7 +152,7 @@ BaseVillage <- R6::R6Class("BaseVillage",
                          plot = function(dependent_variable = "population") {
                            # Get the data as a tibble
                            tidy_data <- self$as_tibble()
-                           p <- ggplot(data=tidy_data, aes(x=year, y=!!sym(dependent_variable)))+ geom_line()
+                           p <- ggplot2::ggplot(data=tidy_data, ggplot2::aes(x=year, y=!!rlang::sym(dependent_variable)))+ ggplot2::geom_line()
                            return (p)
                          }
                        )

@@ -16,5 +16,8 @@ RoxygenNote: 7.1.1
 Suggests: 
     knitr,
     rmarkdown,
-    R6
+    R6,
+    testthat,
+    covr,
+    tibble
 VignetteBuilder: knitr
