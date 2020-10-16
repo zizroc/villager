@@ -3,3 +3,5 @@
 export(BaseVillage)
 export(Simulation)
 export(VillageState)
+export(winik)
+export(winik_manager)
