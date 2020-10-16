@@ -17,5 +17,7 @@ Suggests:
     knitr,
     rmarkdown,
     R6,
-    testthat
+    testthat,
+    covr,
+    tibble
 VignetteBuilder: knitr
