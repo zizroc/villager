@@ -26,7 +26,7 @@ This is an example of how to build a village with a stochastic population model.
 The first step is to define the function that will change the population at each year. Recall that it _must_ take `currentState`, `previousState`, and `modelData` as parameters.
 
 ``` {R}
-newPopulation <- function(currentState, previousState, modelData) {
+newPopulation <- function(currentState, previousState, modelData, population_manager) {
   # Set the population to a random value
   currentState$population <- runif(1,10,15)
 }

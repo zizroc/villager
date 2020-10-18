@@ -85,10 +85,13 @@ BaseVillage <- R6::R6Class("BaseVillage",
                            # Run each of the models
                            for (model in self$models) {
                              if (year == 1) {
-                               # At year==1 there won't be a previousState, set it to NULL
-                               model(currentState=village_data, previousState=NULL, modelData=self$modelData)
+                               # At year==1 there won't be a previous_state, set it to NULL
+                               model(currentState=village_data, previousState=NULL, modelData=self$modelData,
+                                     population_manager=self$population_manager)
                              } else {
-                               model(currentState=village_data, previousState=self$StateRecords[[length(self$StateRecords)]]$clone(deep=TRUE), modelData=self$modelData)
+                               previous_state_copy <- self$StateRecords[[length(self$StateRecords)]]$clone(deep=TRUE)
+                               model(currentState=village_data, previousState=previous_state_copy, modelData=self$modelData,
+                                     population_manager=self$population_manager)
                                }
                            }
                            # If there's a new state, add it to the list of states
