@@ -78,7 +78,7 @@ be called by subclasses during initialization.
   fishStock = 200,
   farmers = 0,
   fishers = 0,
-  winik_states = NA
+  winik_states = vector()
 )}\if{html}{\out{</div>}}
 }
 
