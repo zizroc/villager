@@ -1,3 +1,4 @@
+# Unit tests for the winik class
 
 test_that("the default constructor works", {
   test_winik <- winik$new()
@@ -9,7 +10,6 @@ test_that("the default constructor works", {
   expect_true(test_winik$age == 0)
 })
 
-
 test_that("custom constructor values work", {
   first_name <- 'Bonnie'
   test_winik <- winik$new(age = 10, first_name = first_name)
@@ -18,20 +18,8 @@ test_that("custom constructor values work", {
 
 })
 
-test_that("get_gender returns male or female", {
-  test_winik <- winik$new()
-  gender <- test_winik$get_gender()
-  expect_true(gender == "female" || gender == "male")
-})
-
 test_that("is_alive returns true or false", {
-
-})
-
-test_that("add_partner connects one winik to another", {
-
-})
-
-test_that("add_partner connects two winiks together", {
-
+  test_winik <- winik$new()
+  is_alive <- test_winik$is_alive()
+  expect_true(isTRUE(is_alive) || isFALSE(is_alive))
 })
