@@ -14,7 +14,6 @@
 #'   \item{\code{get_states()}}{Returns all of the villager states in a vector}
 #'   \item{\code{get_winik_index()}}{Retrieves the index of a winik in the internal list}
 #'   \item{\code{get_average_age()}}{Returns the average age in years of the winiks}
-#'
 #'   }
 winik_manager <- R6::R6Class("winik_manager",
                      public = list(winiks = NULL,

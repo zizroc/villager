@@ -38,7 +38,11 @@ winik <- R6::R6Class("winik",
                                       models=NULL,
 
                                       #' Create a new winik
-                                      #' @param identifier: The winik's identifier
+                                      #'
+                                      #' @description Used to created new winik objects.
+                                      #'
+                                      #' @export
+                                      #' @param identifier The winik's identifier
                                       #' @param first_name The winik's first name
                                       #' @param last_name The winik's last naem
                                       #' @param age The age of the winik
@@ -49,7 +53,7 @@ winik <- R6::R6Class("winik",
                                       #' @param profession The winik's profession
                                       #' @param gender The gender of the winik
                                       #' @param models Unknown
-                                      #'
+                                      #' @return A new winik object
                                       initialize = function(identifier=NULL,
                                                             first_name=NA,
                                                             last_name=NA,
@@ -95,10 +99,11 @@ winik <- R6::R6Class("winik",
 
                                       #' Returns a tibble representation of the winik
                                       #'
-                                      #' @description I hope there's a more scaleable way to do this in R; Adding every new attribute to this
+                                      #' @description I hope there's a more scalable way to do this in R; Adding every new attribute to this
                                       #' function isn't practical
                                       #' @details The village_state holds a copy of all of the villagers at each timestep; this method is used to turn
-                                      #' the winik properties into the object insertedin the villag_state.
+                                      #' the winik properties into the object inserted in the village_state.
+                                      #' @export
                                       #' @return A tibble representation of the winik
                                       as_tibble = function() {
 
