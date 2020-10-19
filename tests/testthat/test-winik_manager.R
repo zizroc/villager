@@ -2,7 +2,7 @@
 
 test_that("the constructor works", {
     winik_mgr <- winik_manager$new()
-    expect_true(length(winik_manager$winiks) == 0)
+    testthat::expect_equal(length(winik_manager$winiks), 0)
   })
 
 test_that("winiks are correctly added to the manager", {
@@ -13,10 +13,10 @@ test_that("winiks are correctly added to the manager", {
   test_winik_2 = winik$new(identifier=winik_2_id)
 
   winik_mgr$add_winik(test_winik_1)
-  expect_true(length(winik_mgr$winiks) == 1)
-  expect_true(winik_mgr$winiks[[1]]$identifier == winik_1_id)
+  testthat::expect_equal(length(winik_mgr$winiks), 1)
+  testthat::expect_equal(winik_mgr$winiks[[1]]$identifier, winik_1_id)
   winik_mgr$add_winik(test_winik_2)
-  expect_true(length(winik_mgr$winiks) == 2)
+  testthat::expect_equal(length(winik_mgr$winiks), 2)
   })
 
 test_that("the manager gets the correct winiks", {
@@ -33,7 +33,7 @@ test_that("the manager gets the correct winiks", {
   winik_mgr$add_winik(test_winik_3)
 
   should_be_winik_1 <- winik_mgr$get_winik(test_winik_1$identifier)
-  expect_true(should_be_winik_1$identifier == test_winik_1$identifier)
+  testthat::expect_equal(should_be_winik_1$identifier, test_winik_1$identifier)
 })
 
 test_that("the manager returns the correct winik index", {
@@ -67,7 +67,7 @@ test_that("the manager removes winiks", {
   winik_mgr$add_winik(test_winik_3)
 
   winik_mgr$remove_winik(test_winik_1$identifier)
-  expect_true(length(winik_mgr$winiks) == 2)
+  testthat::expect_length(winik_mgr$winiks, 2)
 })
 
 #test_that("add_partner connects one winik to another", {
