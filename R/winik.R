@@ -107,7 +107,7 @@ winik <- R6::R6Class("winik",
                                       #' @return A tibble representation of the winik
                                       as_tibble = function() {
 
-                                       return(tibble(
+                                       return(tibble::tibble(
                                          identifier = self$identifier,
                                          first_name = self$first_name,
                                          last_name = self$last_name,
