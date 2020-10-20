@@ -7,9 +7,8 @@ test_that("The consrtructor works", {
 
   mayanSimulation <- Simulation$new(length=10, #years
                                     villages=c(village))
-
-  expect_true (length(mayanSimulation$villages) > 0)
-  expect_true (mayanSimulation$length == 10)
+  testthat::expect_length(mayanSimulation$villages, 1)
+  testthat::expect_equal(mayanSimulation$length, 10)
 })
 
 test_that("the number of villages added is correct", {

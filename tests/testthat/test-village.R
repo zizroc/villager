@@ -1,12 +1,23 @@
 # Unit tests for the village
 
 test_that("propagate doesn't copy the initial state on year 1", {
+  # Check that the initial state is passed into the user's model on the first year
+  # This makes sure that models can set initial states inside their code
 
-})
+  test_model <- function(currentState, previousState, modelData, population_manager) {
+    if(currentState$year == 1)
+      currentState$carryingCapacity <- 999
 
+  }
+  new_state <- VillageState$new()
+  new_village <- BaseVillage$new(initialState=new_state, models=test_model)
+  simulator <- Simulation$new(length = 2, villages = list(new_village))
+  simulator$run_model()
 
-test_that("propagate creates a new state from a copied previous state", {
-
+  # Check that the initial state is 999
+  testthat::expect_equal(simulator$villages[[1]]$StateRecords[[1]]$carryingCapacity, 999)
+  # Check that it was copied to the second day's state
+  testthat::expect_equal(simulator$villages[[1]]$StateRecords[[1]]$carryingCapacity, 999)
 })
 
 test_that("propagate runs a custom model", {

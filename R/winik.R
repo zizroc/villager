@@ -94,7 +94,7 @@ winik <- R6::R6Class("winik",
                                       #' @return A boolean whether the winik is alive (true for yes)
                                       is_alive = function() {
                                         # The villager survived the day
-                                        return(TRUE)
+                                        return (self$alive)
                                       },
 
                                       #' Returns a tibble representation of the winik
