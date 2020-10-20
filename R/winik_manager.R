@@ -94,6 +94,17 @@ winik_manager <- R6::R6Class("winik_manager",
                                      winik_b$partner <- winik_a$identifier
                                    },
 
+                                   #' Returns the total number of winiks that are alive
+                                   #' @export
+                                   #' @return The numnber of living winiks
+                                   get_living_population = function(){
+                                     total_living_population <- 0
+                                     for (winik in self$winiks)
+                                       if (winik$alive)
+                                         total_living_population <- total_living_population + 1
+                                      return (total_living_population)
+                                    },
+
                                    #' Returns the averag age, in years, of all of the winiks
                                    #'
                                    #' @details This is an *example* of the kind of logic that the manager might handle. In this case,
