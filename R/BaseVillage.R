@@ -10,8 +10,10 @@
 #' @field tradePartners A list of villages that this village can trade with
 #' @field models A list of functions or a single function that should be run at each timestep
 #' @field modelData Optional data that models may need
+#' @field population_manager The manager that handles all of the winiks
 #' @section Methods:
 #' \describe{
+#'   \item{\code{initialize()}}{Creates a new village}
 #'   \item{\code{propagate()}}{Advances the village a single time step}
 #'   \item{\code{add_trade_partner(newTradePartner, addBack)}}{Adds a trde partner}.
 #'   \item{\code{trade()}}{Executes a trade at a time step}.
@@ -26,6 +28,7 @@ BaseVillage <- R6::R6Class("BaseVillage",
                          tradePartners = NA,
                          models = NULL,
                          modelData = NULL,
+                         population_manager = NULL,
 
                          #' Initializes a village
                          #'
@@ -36,16 +39,15 @@ BaseVillage <- R6::R6Class("BaseVillage",
                          #' @param initialState A VillageSTate object that will be used as the village's initial state
                          #' @param models A list of functions or a single function that should be run at each timestep
                          #' @param modelData Optional data that models may need
+                         #' @param population_manager A population manager that may have winiks inside
                          initialize = function(name = NA,
                                                initialState = NULL,
                                                models = list(),
-                                               modelData=NULL) {
-                           # If the initial state wasn't set, set one.
-                           # DEVNOTE: Do we want to allow that?
-                           # if (is.null(initialState)) {
-                           #   initialState <- VillageState$new()
-                           # }
+                                               modelData=NULL,
+                                               population_manager=NULL) {
 
+                           if (is.null(population_manager))
+                             self$population_manager <- winik_manager$new()
                            # Check to see if the user supplied a single model, outside of a list
                            # If so, put it in a vector because other code expects 'models' to be a list
                            if(!is.list(models) && !is.null(models)) {
@@ -53,6 +55,7 @@ BaseVillage <- R6::R6Class("BaseVillage",
                            } else {
                              self$models<-models
                            }
+
                            self$name <- name
                            # Holds a list of VillageState objects. Is the record of the village's state though time. Place the initial state as the first element
                            self$StateRecords <- c(initialState$clone())
@@ -82,16 +85,22 @@ BaseVillage <- R6::R6Class("BaseVillage",
                            # Run each of the models
                            for (model in self$models) {
                              if (year == 1) {
-                               # At year==1 there won't be a previousState, set it to NULL
-                               model(currentState=village_data, previousState=NULL, modelData=self$modelData)
+                               # At year==1 there won't be a previous_state, set it to NULL
+                               model(currentState=village_data, previousState=NULL, modelData=self$modelData,
+                                     population_manager=self$population_manager)
                              } else {
-                               model(currentState=village_data, previousState=self$StateRecords[[length(self$StateRecords)]], modelData=self$modelData)
+                               previous_state_copy <- self$StateRecords[[length(self$StateRecords)]]$clone(deep=TRUE)
+                               model(currentState=village_data, previousState=previous_state_copy, modelData=self$modelData,
+                                     population_manager=self$population_manager)
                                }
                            }
                            # If there's a new state, add it to the list of states
                            if (year != 1) {
                            self$StateRecords <- c(self$StateRecords, village_data)
                            }
+
+                           village_data$winik_states <- self$population_manager$get_states()
+
                          },
 
                          #' Connects two villages so that they can trade with each other.

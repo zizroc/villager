@@ -26,9 +26,9 @@ This is an example of how to build a village with a stochastic population model.
 The first step is to define the function that will change the population at each year. Recall that it _must_ take `currentState`, `previousState`, and `modelData` as parameters.
 
 ``` {R}
-newPopulation <- function(currentState, previousState, modelData) {
-  # Set the population to a random value
-  currentState$population <- runif(1,10,15)
+newPopulation <- function(currentState, previousState, modelData, population_manager) {
+  # Set the stock to a random number
+  currentState$fishStock <- runif(1,10,15)
 }
 
 ```
@@ -38,15 +38,15 @@ The village creation is done the standard way. An initial condition is created u
 ``` {R}
 # Create the village
 library(tibble)
-village_initial_condition = VillageState$new()
-village = BaseVillage$new(name="Random Population Village",
+village_initial_condition = VillageState$new(fishStock=10)
+village = BaseVillage$new(name="Random fish stock Village",
                           initialState=village_initial_condition,
                           models = newPopulation)
 
-mayanSimulation <- Simulation$new(length=10, #years
+mayanSimulation <- Simulation$new(length=10, #days
                                    villages=c(village))
 
 # Call run_model to start the simulation
 mayanSimulation$run_model()
-mayanSimulation$show_results()
+mayanSimulation$show_results(dependent_variable="fishStock")
 ```

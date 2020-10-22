@@ -15,6 +15,7 @@
 #' @field fishStock The number of fish in the village
 #' @field farmers The number of farmers in the village
 #' @field fishers The number of fishers in the village
+#' @field winik_states A list of winik states
 #' @section Methods:
 #' \describe{
 #'   \item{\code{propagate()}}{Advances the village a single time step}
@@ -33,6 +34,7 @@ VillageState <- R6::R6Class("VillageState", cloneable = TRUE,
                           fishStock = NA,
                           population = NA,
                           year = NA,
+                          winik_states = NA,
 
                           #' Creates a new State
                           #'
@@ -47,22 +49,18 @@ VillageState <- R6::R6Class("VillageState", cloneable = TRUE,
                           #' @param cropProductivity Productivity for crops
                           #' @param fishCatchRate Rate of fish caught
                           #' @param year The year that the state represents
-                          #' @param population The number of villagers in the village
                           #' @param cropStock The number of crops in the village
                           #' @param fishStock The number of fish in the village
-                          #' @param farmers The number of farmers in the village
-                          #' @param fishers The number of fishers in the village
+                          #' @param winik_states A vector of tibbles representing the states of the winiks
                           initialize = function(birthRate = 0.085,
                                                 deathRate = 0.070,
                                                 carryingCapacity = 300,
                                                 cropProductivity  = 3.0,
                                                 fishCatchRate  = 2.0,
                                                 year = 1,
-                                                population = 100,
                                                 cropStock = 300,
                                                 fishStock = 200,
-                                                farmers = 0,
-                                                fishers = 0
+                                                winik_states = vector()
                           ) {
                             self$birthRate  <- birthRate
                             self$deathRate  <- deathRate
@@ -70,11 +68,9 @@ VillageState <- R6::R6Class("VillageState", cloneable = TRUE,
                             self$cropProductivity  <- cropProductivity
                             self$fishCatchRate  <- fishCatchRate
                             self$year <- year
-                            self$population <- population
                             self$cropStock <- cropStock
                             self$fishStock <- fishStock
-                            self$farmers <-farmers
-                            self$fishers <-fishers
+                            self$winik_states <- winik_states
                           },
 
                           #' Returns a tibble representation of the state
