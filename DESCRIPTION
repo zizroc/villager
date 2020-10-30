@@ -1,38 +1,24 @@
 Package: villager
 Title: What the Package Does (One Line, Title Case)
 Version: 0.0.0.9000
-Authors@R: 
-    person(given = "First",
-           family = "Last",
-           role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+Authors@R:
+  person(given = "First",
+         family = "Last",
+         role = c("aut", "cre"),
+         email = "first.last@example.com",
+         comment = c(ORCID = "YOUR-ORCID-ID"))
 Description: What the package does (one paragraph).
+Depends: R (>= 3.2.4)
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
-Suggests: 
-    knitr,
-<<<<<<< HEAD
-<<<<<<< HEAD
-    rmarkdown
+Suggests:
+  knitr,
+  rmarkdown,
+  R6,
+  testthat,
+  covr,
+  tibble
 VignetteBuilder: knitr
-Imports: 
-    sets, 
-    dplyr, 
-    ggplot2, 
-    rlang
-
-
-=======
-    rmarkdown,
-    R6
-VignetteBuilder: knitr
->>>>>>> effb530a2879622e0feda0ffbf961e56d903f3c4
-=======
-    rmarkdown,
-    R6
-VignetteBuilder: knitr
->>>>>>> effb530a2879622e0feda0ffbf961e56d903f3c4
