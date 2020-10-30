@@ -3,5 +3,7 @@
 export(BaseVillage)
 export(Simulation)
 export(VillageState)
+export(resource)
+export(resource_manager)
 export(winik)
 export(winik_manager)

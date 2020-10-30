@@ -11,6 +11,7 @@
 #' @field models A list of functions or a single function that should be run at each timestep
 #' @field modelData Optional data that models may need
 #' @field population_manager The manager that handles all of the winiks
+#' @field resource_mgr The manager that handles all of the resources
 #' @section Methods:
 #' \describe{
 #'   \item{\code{initialize()}}{Creates a new village}
@@ -29,6 +30,7 @@ BaseVillage <- R6::R6Class("BaseVillage",
                          models = NULL,
                          modelData = NULL,
                          population_manager = NULL,
+                         resource_mgr = NULL,
 
                          #' Initializes a village
                          #'
@@ -48,6 +50,7 @@ BaseVillage <- R6::R6Class("BaseVillage",
 
                            if (is.null(population_manager))
                              self$population_manager <- winik_manager$new()
+                           self$resource_mgr <- resource_manager$new()
                            # Check to see if the user supplied a single model, outside of a list
                            # If so, put it in a vector because other code expects 'models' to be a list
                            if(!is.list(models) && !is.null(models)) {
@@ -87,11 +90,11 @@ BaseVillage <- R6::R6Class("BaseVillage",
                              if (year == 1) {
                                # At year==1 there won't be a previous_state, set it to NULL
                                model(currentState=village_data, previousState=NULL, modelData=self$modelData,
-                                     population_manager=self$population_manager)
+                                     population_manager=self$population_manager, resource_mgr=self$resource_mgr)
                              } else {
                                previous_state_copy <- self$StateRecords[[length(self$StateRecords)]]$clone(deep=TRUE)
                                model(currentState=village_data, previousState=previous_state_copy, modelData=self$modelData,
-                                     population_manager=self$population_manager)
+                                     population_manager=self$population_manager, resource_mgr=self$resource_mgr)
                                }
                            }
                            # If there's a new state, add it to the list of states
@@ -100,6 +103,7 @@ BaseVillage <- R6::R6Class("BaseVillage",
                            }
 
                            village_data$winik_states <- self$population_manager$get_states()
+                           village_data$resource_states <- self$resource_mgr$get_states()
 
                          },
 
