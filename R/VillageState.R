@@ -7,12 +7,8 @@
 #' @field birthRate The average birth rate of the village's citizens
 #' @field deathRate The average death rate of the village's citizens
 #' @field carryingCapacity The maximum number of villagers the village can sustain
-#' @field cropProductivity Productivity for crops
-#' @field fishCatchRate Rate of fish caught
 #' @field year The year that the state represents
 #' @field population The number of villagers in the village
-#' @field farmers The number of farmers in the village
-#' @field fishers The number of fishers in the village
 #' @field winik_states A list of winik states
 #' @field resource_states A list of resource states
 #' @section Methods:
@@ -25,10 +21,6 @@ VillageState <- R6::R6Class("VillageState", cloneable = TRUE,
                           birthRate = NA,
                           deathRate = NA,
                           carryingCapacity = NA,
-                          cropProductivity  = NA,
-                          farmers = NA,
-                          fishers = NA,
-                          fishCatchRate  = NA,
                           population = NA,
                           year = NA,
                           winik_states = NA,
@@ -44,16 +36,12 @@ VillageState <- R6::R6Class("VillageState", cloneable = TRUE,
                           #' @param birthRate The average birth rate of the village's citizens
                           #' @param deathRate The average death rate of the village's citizens
                           #' @param carryingCapacity The maximum number of villagers the village can sustain
-                          #' @param cropProductivity Productivity for crops
-                          #' @param fishCatchRate Rate of fish caught
                           #' @param year The year that the state represents
                           #' @param winik_states A vector of tibbles representing the states of the winiks
                           #' @param resource_states A vector of tibbles representing the states of the resources
                           initialize = function(birthRate = 0.085,
                                                 deathRate = 0.070,
                                                 carryingCapacity = 300,
-                                                cropProductivity  = 3.0,
-                                                fishCatchRate  = 2.0,
                                                 year = 1,
                                                 winik_states = vector(),
                                                 resource_states = vector()
@@ -61,8 +49,6 @@ VillageState <- R6::R6Class("VillageState", cloneable = TRUE,
                             self$birthRate  <- birthRate
                             self$deathRate  <- deathRate
                             self$carryingCapacity  <- carryingCapacity
-                            self$cropProductivity  <- cropProductivity
-                            self$fishCatchRate  <- fishCatchRate
                             self$year <- year
                             self$winik_states <- winik_states
                             self$resource_states <- resource_states
@@ -81,12 +67,8 @@ VillageState <- R6::R6Class("VillageState", cloneable = TRUE,
                               birthRate = self$birthRate,
                               deathRate = self$deathRate,
                               carryingCapacity = self$carryingCapacity,
-                              cropProductivity = self$cropProductivity,
-                              fishCatchRate = self$fishCatchRate,
                               year = self$year,
                               population = self$population,
-                              farmers = self$farmers,
-                              fishers = self$fishers
                             ))
                           }
                         )
