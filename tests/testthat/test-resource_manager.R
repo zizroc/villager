@@ -85,3 +85,22 @@ test_that("the manager removes resources", {
   resource_mgr$remove_resource(resource_1_name)
   testthat::expect_length(resource_mgr$resources, 2)
 })
+
+test_that("the manager can load resources from disk", {
+  resource_mgr <- resource_manager$new()
+  file_path = "test-files/test-resources.csv"
+  resource_mgr$load(file_path)
+
+  # Test that the resources exist with the expected quantities
+  corn <- resource_mgr$get_resource("maize")
+  testthat::expect_equal(corn$quantity, 10)
+
+  corn <- resource_mgr$get_resource("salmon")
+  testthat::expect_equal(corn$quantity, 5)
+
+  corn <- resource_mgr$get_resource("cashews")
+  testthat::expect_equal(corn$quantity, 0)
+
+  corn <- resource_mgr$get_resource("trout")
+  testthat::expect_equal(corn$quantity, 1)
+})
