@@ -67,12 +67,17 @@ resource_manager <- R6::R6Class("resource_manager",
                                               #'
                                               #' @return A list of data frames
                                               get_states = function() {
-                                                states = list(length = length(self$resources))
                                                 # Create a data frame to hold the states
-                                                for (res in self$resources) {
-                                                  states <- append(vector_states, res$as_tibble())
+                                                state_tibble <- tibble::tibble()
+                                                for (i in seq_along(self$resources)) {
+                                                  if (i ==1) {
+                                                    state_tibble <- self$resources[[i]]$as_tibble()
+                                                  }
+                                                  else {
+                                                    state_tibble <- rbind(state_tibble, self$resources[[i]]$as_tibble())
+                                                  }
                                                 }
-                                                return (bind_rows(states))
+                                                return (state_tibble)
                                               },
 
                                               #' Loads a csv file of resources into the manager
