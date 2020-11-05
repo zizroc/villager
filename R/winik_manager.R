@@ -51,6 +51,10 @@ winik_manager <- R6::R6Class("winik_manager",
                                    #' @param new_winik The winik to add
                                    #' @return None
                                    add_winik = function(new_winik) {
+                                     # Create an identifier if it's null
+                                     if(is.null(new_winik$identifier)) {
+                                      new_winik$identifier <- uuid::UUIDgenerate()
+                                     }
                                      self$winiks <- append(self$winiks, new_winik)
                                    },
 
@@ -63,14 +67,22 @@ winik_manager <- R6::R6Class("winik_manager",
                                     self$winiks<-self$winiks[- winik_index]
                                    },
 
-                                   #' Returns a vector of villagers represented as tibbles
+                                   #' Returns a tibble of winiks
                                    #'
-                                   #' @return A list of data frames
+                                   #' @details Each row of the tibble represents a winik object
+                                   #' @return A single tibble of all winiks
                                    get_states = function() {
-                                     winik_states = vector(length = length(self$winiks))
                                      # Create a data frame to hold the states
-                                     for (winik in self$winiks)
-                                        winik_states <- append(winik_states, winik$as_tibble())
+                                     state_tibble <- tibble::tibble()
+                                     for (i in seq_along(self$winiks)) {
+                                       if (i ==1) {
+                                         state_tibble <- self$winiks[[i]]$as_tibble()
+                                       }
+                                       else {
+                                         state_tibble <- rbind(state_tibble, self$winiks[[i]]$as_tibble())
+                                       }
+                                     }
+                                     return (state_tibble)
                                    },
 
                                    #' Returns the index of a winik in the internal winik list
