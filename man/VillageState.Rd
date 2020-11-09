@@ -46,6 +46,9 @@ Creates a new State
 \item{\code{farmers}}{The number of farmers in the village}
 
 \item{\code{fishers}}{The number of fishers in the village}
+
+\item{\code{winik_states}}{A list of winik states}
+
 }
 \if{html}{\out{</div>}}
 }
@@ -75,7 +78,8 @@ be called by subclasses during initialization.
   cropStock = 300,
   fishStock = 200,
   farmers = 0,
-  fishers = 0
+  fishers = 0,
+  winik_states = vector()
 )}\if{html}{\out{</div>}}
 }
 
@@ -102,9 +106,10 @@ be called by subclasses during initialization.
 
 \item{\code{farmers}}{The number of farmers in the village}
 
-\item{\code{fishers}}{The number of fishers in the village
-Returns a tibble representation of the state}
-}
+\item{\code{fishers}}{The number of fishers in the village}
+
+\item{\code{winik_states}}{A vector of tibbles representing the states of the winiks
+
 \if{html}{\out{</div>}}
 }
 \subsection{Details}{

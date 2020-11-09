@@ -1,0 +1,42 @@
+---
+title: "winik_manager"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{winik_manager}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(villager)
+```
+
+## The winik_manager Class
+The winik_manager class is concerned with controlling the winiks in the village. Each village has a single instance of a winik_manager, which is available to custom models via the `population_manager` parameter. 
+
+## Creating a winik_manager
+
+
+## Using the winik_manager in Models
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
