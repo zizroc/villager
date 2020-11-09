@@ -1,9 +1,7 @@
 # villager
-
   <!-- badges: start -->
   [![Codecov test coverage](https://codecov.io/gh/zizroc/villager/branch/master/graph/badge.svg)](https://codecov.io/gh/zizroc/villager?branch=master)
   <!-- badges: end -->
-
 
 ## Installing
 To install villager, you'll need to have the [`devtools`](https://github.com/r-lib/devtools) library installed. This is because the package hasn't been published to a repository yet, and `devtools` has a way to install from a GitHub repository.
@@ -30,8 +28,7 @@ villager is an open source project and welcomes contributions. Before making a c
 When contributing code, issue a pull request to the `master` branch. The pull request should have a summary of what was done and how to test that it works. These are generally reviewed by one to two people. Expect up to a weeks time for a complete code review.
 
 ### Unit Tests
-
-Code additions and changes should be accompanied by relavant unit tests. After issuing a pull request, make sure that the test coverage hasn't decreased.
+Code additions and changes should be accompanied by relavant unit tests. After issuing a pull request, make sure that the test coverage hasn't decreased (when this is implimented). The unit tests can be run with the standard `devtools::test()`. To check the coverage
 
 ### Developing
 To work on the library, clone the repository with `git clone https://github.com/zizroc/villager.git`

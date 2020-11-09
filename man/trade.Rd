@@ -15,7 +15,6 @@ to include more variables that aren't present.
 \section{Methods}{
 
 \describe{
-
 \item{\code{initialize()}}{Creates a new village}
 \item{\code{propagate()}}{Advances the village a single time step}
 \item{\code{add_trade_partner(newTradePartner, addBack)}}{Adds a trde partner}.
@@ -42,7 +41,6 @@ Initializes a village
 \item{\code{modelData}}{Optional data that models may need}
 
 \item{\code{population_manager}}{The manager that handles all of the winiks}
-
 }
 \if{html}{\out{</div>}}
 }
@@ -71,7 +69,6 @@ time.
   models = list(),
   modelData = NULL,
   population_manager = NULL
-
 )}\if{html}{\out{</div>}}
 }
 
@@ -87,7 +84,6 @@ time.
 \item{\code{modelData}}{Optional data that models may need}
 
 \item{\code{population_manager}}{A population manager that may have winiks inside
-
 Propagates the village a single time step}
 }
 \if{html}{\out{</div>}}
