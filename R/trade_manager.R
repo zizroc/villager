@@ -20,55 +20,55 @@ trade_manager <- R6::R6Class("trade_manager",
                                               #'
                                               #' @description Used to create a new manager to handle trade
                                               initialize = function() {
-                                                self$resources <- vector()
+                                                self$trade_events <- vector()
                                               },
 
                                               #' Gets a resource given a resource name
                                               #'
                                               #' @param name The name of the requested resource
                                               #' @return A resource object
-                                              get_resource = function(name) {
-                                                for (res in self$resources)
-                                                  if (res$name == name)
-                                                    return (res)
+                                              get_trade_event = function(identifier) {
+                                                for (res in self$trade_events)
+                                                  if (res$identifier == identifier)
+                                                    return (identifier)
                                               },
 
                                               #' Adds a resource to the manager.
                                               #'
                                               #' @param new_resource The resource to add
                                               #' @return None
-                                              add_resource = function(new_resource) {
-                                                self$resources <- append(self$resources, new_resource)
+                                              add_trade_event = function(new_trade_event) {
+                                                self$trade_events <- append(self$trade_events, new_trade_event)
                                               },
 
                                               #' Removes a resource from the manager
                                               #'
                                               #' @param name The name of the resource being removed
                                               #' @return None
-                                              remove_resource = function(name) {
-                                                resource_index <- self$get_resource_index(name)
-                                                self$resources<-self$resources[- resource_index]
+                                              remove_trade_event = function(identifier) {
+                                                trade_event_index <- self$get_resource_index(identifier)
+                                                self$trade_events <- self$trade_events[-trade_event_index]
                                               },
 
                                               #' Returns the index of a resource in the internal resource list
                                               #'
                                               #' @param name The name of the resource being located
                                               #' @return The index in the list, or R's default return value
-                                              get_resource_index = function(name) {
-                                                for (i in seq_along(length(self$resources))) {
-                                                  if (self$resources[[i]]$name == name) {
+                                              get_trade_event_index = function(identifier) {
+                                                for (i in seq_along(length(self$trade_events))) {
+                                                  if (self$trade_events[[i]]$identifier == identifier) {
                                                     return (i)
                                                   }
                                                 }
                                               },
 
-                                              #' Returns a vector of resources represented as tibbles
+                                              #' Returns a vector of trade_events represented as tibbles
                                               #'
                                               #' @return A list of data frames
                                               get_states = function() {
-                                                vector_states = vector(length = length(self$resources))
+                                                vector_states = vector(length = length(self$trade_events))
                                                 # Create a data frame to hold the states
-                                                for (res in self$resources)
+                                                for (res in self$trade_events)
                                                   vector_states <- append(vector_states, res$as_tibble())
                                               }
                                 ))
