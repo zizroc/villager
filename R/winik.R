@@ -80,7 +80,7 @@ winik <- R6::R6Class("winik",
                                         self$last_name <- last_name
                                         self$age <- age
                                         self$mother_id <- mother_id
-                                        self$father_id <- mother_id
+                                        self$father_id <- father_id
                                         self$profession <- profession
                                         self$gender <- self$gender
 
