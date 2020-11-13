@@ -70,6 +70,47 @@ test_that("the manager removes winiks", {
   testthat::expect_length(winik_mgr$winiks, 2)
 })
 
+test_that("the manager can load winiks from disk", {
+  winik_mgr <- winik_manager$new()
+  file_path = "test-files/test-winiks.csv"
+  winik_mgr$load(file_path)
+
+  # Test that the resources exist with the expected quantities
+  jimi_hendrix <- winik_mgr$get_winik(1)
+  print(jimi_hendrix$fater_id)
+  testthat::expect_equal(jimi_hendrix$first_name, "Jimi")
+  testthat::expect_equal(jimi_hendrix$last_name, "Hendrix")
+  testthat::expect_equal(jimi_hendrix$mother_id, NA)
+  testthat::expect_equal(jimi_hendrix$fater_id, NA)
+  testthat::expect_equal(jimi_hendrix$profession, "musician")
+  testthat::expect_equal(jimi_hendrix$partner, 2)
+  testthat::expect_equal(jimi_hendrix$gender, "male")
+  testthat::expect_equal(jimi_hendrix$alive, FALSE)
+  testthat::expect_equal(jimi_hendrix$age, 27)
+
+  janis_joplin <- winik_mgr$get_winik(2)
+  testthat::expect_equal(janis_joplin$first_name, "Janis")
+  testthat::expect_equal(janis_joplin$last_name, "Joplin")
+  testthat::expect_equal(janis_joplin$mother_id, NA)
+  testthat::expect_equal(janis_joplin$fater_id, NA)
+  testthat::expect_equal(janis_joplin$profession, "musician")
+  testthat::expect_equal(janis_joplin$partner, 1)
+  testthat::expect_equal(janis_joplin$gender, "female")
+  testthat::expect_equal(janis_joplin$alive, FALSE)
+  testthat::expect_equal(janis_joplin$age, 27)
+
+  jim_morrison <- winik_mgr$get_winik(3)
+  testthat::expect_equal(jim_morrison$first_name, "Jim")
+  testthat::expect_equal(jim_morrison$last_name, "Morrison")
+  testthat::expect_equal(jim_morrison$mother_id, NA)
+  testthat::expect_equal(jim_morrison$fater_id, NA)
+  testthat::expect_equal(jim_morrison$profession, "musician")
+  testthat::expect_equal(jim_morrison$partner, NA)
+  testthat::expect_equal(jim_morrison$gender, "male")
+  testthat::expect_equal(jim_morrison$alive, FALSE)
+  testthat::expect_equal(jim_morrison$age, 27)
+})
+
 #test_that("add_partner connects one winik to another", {
 #  female_winik <- winik$new()
 #  male_winik <- winik$new()

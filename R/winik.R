@@ -58,12 +58,12 @@ winik <- R6::R6Class("winik",
                                                             first_name=NA,
                                                             last_name=NA,
                                                             age=0,
-                                                            mother_id=NULL,
-                                                            father_id=NULL,
-                                                            partner=NULL,
+                                                            mother_id=NA,
+                                                            father_id=NA,
+                                                            partner=NA,
                                                             children=list(),
-                                                            gender=NULL,
-                                                            profession=NULL,
+                                                            gender=NA,
+                                                            profession=NA,
                                                             models = vector()) {
 
                                         # Check to see if the user supplied a single model, outside of a list

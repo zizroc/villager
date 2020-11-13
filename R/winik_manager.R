@@ -131,5 +131,18 @@ winik_manager <- R6::R6Class("winik_manager",
 
                                     average_age_days = total_age/length(self$winiks)
                                     return (average_age_days/364)
+                                   },
+
+                                   #' Loads winiks from disk
+                                   load = function(file_name) {
+                                     winiks <- read.csv(file_name)
+                                     for(i in 1:nrow(winiks)) {
+                                       winiks_row <- winiks[i,]
+                                       self$add_winik(winik$new(identifier=winiks_row$id, first_name= winiks_row$first_name,
+                                                                   last_name=winiks_row$last_name,age=winiks_row$age,
+                                                                   mother_id=winiks_row$mother_id, father_id=winiks_row$father_id,
+                                                                   partner=winiks_row$partner, gender=winiks_row$gender,
+                                                                   profession=winiks_row$profession))
+                                     }
                                    }
                      ))
