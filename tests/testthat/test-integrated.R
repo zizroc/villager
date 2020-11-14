@@ -8,8 +8,7 @@ test_that("models can add winiks each day", {
   }
 
   # Create a default village
-  new_state <- VillageState$new()
-  plains_village  <- BaseVillage$new(initialState=new_state, models=population_model)
+  plains_village  <- BaseVillage$new(models=population_model)
   # Run for 5 days
   days_to_run <- 5
   new_siumulator <- Simulation$new(length = days_to_run, villages = list(plains_village))
@@ -28,21 +27,20 @@ test_that("models can add and change resource quantities", {
     if (currentState$year == 1) {
       crop_resource <- resource$new(name="corn", quantity=0)
       resource_mgr$add_resource(crop_resource)
-      return()
-    }
+    } else {
     corn <- resource_mgr$get_resource("corn")
     corn$quantity <-corn$quantity + 3
+    }
   }
 
   # Create a default village
-  new_state <- VillageState$new()
-  plains_village  <- BaseVillage$new(initialState=new_state, models=deterministic_crop_stock_model)
+  plains_village  <- BaseVillage$new(models=deterministic_crop_stock_model)
   new_siumulator <- Simulation$new(length = 3, villages = list(plains_village))
   new_siumulator$run_model()
   record_length <- length(new_siumulator$villages[[1]]$StateRecords)
   last_record <- new_siumulator$villages[[1]]$StateRecords[[record_length]]
-  print(last_record)
-  testthat::expect_equal(last_record$cropStock, 6)
+  corn <- dplyr::filter(last_record$resource_states, name=="corn")
+  testthat::expect_equal(corn$quantity, 6)
 })
 
 test_that("models can change resoources based on information from the winik_manager", {
@@ -65,16 +63,15 @@ test_that("models can change resoources based on information from the winik_mana
   }
 
   # Create a default village
-  new_state <- VillageState$new()
-  plains_village  <- BaseVillage$new(initialState=new_state, models=crop_stock_model)
+  plains_village  <- BaseVillage$new(models=crop_stock_model)
   new_siumulator <- Simulation$new(length = 3, villages = list(plains_village))
   new_siumulator$run_model()
 
   # Check to see if the correct number are left
   record_length <- length(new_siumulator$villages[[1]]$StateRecords)
   last_record <- new_siumulator$villages[[1]]$StateRecords[[record_length]]
-  print(last_record)
-  testthat::expect_equal(last_record$cropStock, 8)
+  crops <- dplyr::filter(last_record$resource_states, name=="crops")
+  testthat::expect_equal(crops$quantity, 8)
 })
 
 test_that("models can have dynamics based on winik behavior", {
@@ -98,8 +95,7 @@ test_that("models can have dynamics based on winik behavior", {
   }
 
   # Create a default village
-  new_state <- VillageState$new()
-  plains_village  <- BaseVillage$new(initialState=new_state, models=crop_stock_model)
+  plains_village  <- BaseVillage$new(models=crop_stock_model)
   new_siumulator <- Simulation$new(length = 3, villages = list(plains_village))
   new_siumulator$run_model()
 

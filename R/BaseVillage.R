@@ -5,7 +5,6 @@
 #' @details This class acts as a type of record that holds the values of the different village variables. This class can be subclassed
 #' to include more variables that aren't present.
 #' @field name An optional name for the village
-#' @field initialState The initial state that the village has
 #' @field StateRecords A list of state objects, one for each time step
 #' @field tradePartners A list of villages that this village can trade with
 #' @field models A list of functions or a single function that should be run at each timestep
@@ -24,7 +23,6 @@
 BaseVillage <- R6::R6Class("BaseVillage",
                        public = list(
                          name = NA,
-                         initialState = NULL,
                          StateRecords = NA,
                          tradePartners = NA,
                          models = NULL,
@@ -38,12 +36,10 @@ BaseVillage <- R6::R6Class("BaseVillage",
                          #' time.
                          #' @details Any villages that derive this class should call this method's initialize method.
                          #' @param name An optional name for the village
-                         #' @param initialState A VillageSTate object that will be used as the village's initial state
                          #' @param models A list of functions or a single function that should be run at each timestep
                          #' @param modelData Optional data that models may need
                          #' @param population_manager A population manager that may have winiks inside
                          initialize = function(name = NA,
-                                               initialState = NULL,
                                                models = list(),
                                                modelData=NULL,
                                                population_manager=NULL) {
@@ -61,7 +57,7 @@ BaseVillage <- R6::R6Class("BaseVillage",
 
                            self$name <- name
                            # Holds a list of VillageState objects. Is the record of the village's state though time. Place the initial state as the first element
-                           self$StateRecords <- c(initialState$clone())
+                           self$StateRecords <- c(VillageState$new())
                            # Set the data
                            self$modelData<-modelData
                            # Initialize the trade partners to an empty list

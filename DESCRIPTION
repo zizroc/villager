@@ -19,5 +19,6 @@ Suggests:
     R6,
     testthat,
     covr,
-    tibble
+    tibble,
+    dplyr
 VignetteBuilder: knitr
