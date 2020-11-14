@@ -12,6 +12,7 @@
 #'   \item{\code{remove_resource()}}{Removes a resource from the manager}
 #'   \item{\code{get_resource_index()}}{Retrieves the index of the resource}
 #'   \item{\code{get_states()}}{Returns a list of states}
+#'   \item{\code{load()}}{Loads a csv file of resources and adds them to the manager.}
 #'   }
 resource_manager <- R6::R6Class("resource_manager",
                                 public = list(resources = NULL,
@@ -66,9 +67,28 @@ resource_manager <- R6::R6Class("resource_manager",
                                               #'
                                               #' @return A list of data frames
                                               get_states = function() {
-                                                vector_states = vector(length = length(self$resources))
                                                 # Create a data frame to hold the states
-                                                for (res in self$resources)
-                                                  vector_states <- append(vector_states, res$as_tibble())
+                                                state_tibble <- tibble::tibble()
+                                                for (i in seq_along(self$resources)) {
+                                                  if (i ==1) {
+                                                    state_tibble <- self$resources[[i]]$as_tibble()
+                                                  }
+                                                  else {
+                                                    state_tibble <- rbind(state_tibble, self$resources[[i]]$as_tibble())
+                                                  }
+                                                }
+                                                return (state_tibble)
+                                              },
+
+                                              #' Loads a csv file of resources into the manager
+                                              #'
+                                              #' @param file_name The path to the csv file
+                                              #' @return None
+                                              load = function(file_name) {
+                                                resources <- read.csv(file_name)
+                                                for(i in 1:nrow(resources)) {
+                                                  resource_row <- resources[i,]
+                                                  self$add_resource(resource$new(name=resource_row$name, quantity=resource_row$quantity))
+                                                }
                                               }
                                 ))
