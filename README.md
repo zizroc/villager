@@ -11,7 +11,7 @@ To install `devtools` run the following from RStudio
 install.packages("devtools")
 ```
 
-To install `villager`, run the following
+Use the `devtools` library to install villager. Note that as of when this was written, this repository is private and the following won't work. Instead, clone the repositoy and install it through RStudio.
 
 ```
 devtools::install_github("zizroc/villager")
@@ -20,18 +20,73 @@ devtools::install_github("zizroc/villager")
 ## Using villager
 Use `library(villager)` to import _villager_.
 
+### Creating a Base Model
 
-## Developing
-villager is an open source project and welcomes contributions. Before making a contribution, be sure to create an issue ahead of time for feedback. In some cases features may already be planned and in work.
+The most basic model: one that doesn't do anything, can be created from two classes. In fact, all simulations will involve these two classes.
+```
+  plains_village <- BaseVillage$new()
+  new_siumulator <- Simulation$new(length = 3, villages = list(plains_village))
+  new_siumulator$run_model()
+```
 
-### Pull Requests
-When contributing code, issue a pull request to the `master` branch. The pull request should have a summary of what was done and how to test that it works. These are generally reviewed by one to two people. Expect up to a weeks time for a complete code review.
+### Adding a Model to a Village
+To create an add a new model to village, start by creating the model template, shown below.
+```
+  test_model <- function(currentState, previousState, modelData, population_manager, resource_mgr) {
+    if (currentState$year == 1) {
+      # initial condition logic here
+    } else {
+      # 
+  }
+```
+The model is then passed into the BaseVillage constructor.
+```
+  plains_village <- BaseVillage$new(models=test_model)
+  new_siumulator <- Simulation$new(length = 3, villages = list(plains_village))
+  new_siumulator$run_model()
+```
 
-### Unit Tests
-Code additions and changes should be accompanied by relavant unit tests. After issuing a pull request, make sure that the test coverage hasn't decreased (when this is implimented). The unit tests can be run with the standard `devtools::test()`. To check the coverage
+#### Adding Winiks to a Village
+The `population_manager` object that passed into the model is used to add winiks to the village.
 
-### Developing
-To work on the library, clone the repository with `git clone https://github.com/zizroc/villager.git`
+```
+  test_model <- function(currentState, previousState, modelData, population_manager, resource_mgr) {
+    if (currentState$year == 1) {
+      # Load a number of winiks from a theoretic winik file
+      population_manager$load("winiks.csv")
+    } else {
+      # If it's not year 1, add a winik
+      new_winik<-winik$new()
+      population_manager$add_winik(new_winik)
+  }
+```
+The model is then passed into the BaseVillage constructor.
+```
+  plains_village <- BaseVillage$new(models=test_model)
+  new_siumulator <- Simulation$new(length = 3, villages = list(plains_village))
+  new_siumulator$run_model()
+```
 
-Open the project in RStudio, and use the `Build` tab in the upper right quadrant to check and install the package.
-The tidyverse style _should_ be used, right now it's not (but there's an issuer for it).
+
+#### Adding Resources to a Model
+The `resource_manager` class is used to add resources to a village.
+```
+  test_model <- function(currentState, previousState, modelData, population_manager, resource_mgr) {
+    if (currentState$year == 1) {
+      # Load any resources from disk
+      resource_mgr$load("resources.csv")
+      
+      # Add a resource that wasn't in the file
+      corn <- resource$new(name="corn", quantity=10)
+    } else {
+      # Add 1 to the corn stocks
+      corn <- resource_mgr$get_resource("corn")
+      corn$quantity <- corn$quantity + 1
+  }
+```
+The model is then passed into the BaseVillage constructor.
+```
+  plains_village <- BaseVillage$new(models=test_model)
+  new_siumulator <- Simulation$new(length = 3, villages = list(plains_village))
+  new_siumulator$run_model()
+```
