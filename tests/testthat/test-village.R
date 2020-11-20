@@ -4,14 +4,14 @@ test_that("propagate doesn't copy the initial state on year 1", {
   # Check that the initial state is passed into the user's model on the first year
   # This makes sure that models can set initial states inside their code
 
+
   test_model <- function(currentState, previousState, modelData, population_manager, resource_mgr) {
     if(currentState$year == 1)
       resource_mgr$add_resource(resource$new(name="corn", quantity=5))
       resource_mgr$add_resource(resource$new(name="salmon", quantity=6))
 
   }
-  new_state <- VillageState$new()
-  new_village <- BaseVillage$new(initialState=new_state, models=test_model)
+  new_village <- BaseVillage$new(models=test_model)
   simulator <- Simulation$new(length = 2, villages = list(new_village))
   simulator$run_model()
 
@@ -41,8 +41,7 @@ test_that("propagate runs a custom model", {
     }
   }
 
-  new_state <- VillageState$new()
-  new_village <- BaseVillage$new(initialState=new_state, models=corn_model)
+  new_village <- BaseVillage$new(models=corn_model)
   simulator <- Simulation$new(length = 3, villages = list(new_village))
   simulator$run_model()
 
@@ -73,8 +72,8 @@ test_that("propagate runs multiple custom models", {
       salmon$quantity <-salmon$quantity + 1
     }
   }
-  new_state <- VillageState$new()
-  new_village <- BaseVillage$new(initialState=new_state, models=list(corn_model, salmon_model))
+
+  new_village <- BaseVillage$new(models=list(corn_model, salmon_model))
 
   simulator <- Simulation$new(length = 2, villages = list(new_village))
   simulator$run_model()

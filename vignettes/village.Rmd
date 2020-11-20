@@ -27,11 +27,8 @@ The `village` class represents a village. Internally, the village has
 The `village` object relies on an initial condition, which is a VillageState class.
 
 ```{R}
-# Start by creating an initial condition
-initial_condition = VillageState$new()
-
 # Create the village with the initial condition
-village = BaseVillage$new(initialState=initial_condition)
+village = BaseVillage$new()
 ```
 
 
@@ -40,11 +37,9 @@ new_population <- function(currentState, previousState, modelData) {
   # Set the population to 10
   currentState$population <- 10
 }
-# Start by creating an initial condition
-initial_condition = VillageState$new()
 
 # Create the village with the initial condition
-village = BaseVillage$new(initialState=initial_condition, models=new_population)
+village = BaseVillage$new(models=new_population)
 ```
 
 
