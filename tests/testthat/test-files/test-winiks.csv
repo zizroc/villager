@@ -1,0 +1,4 @@
+identifier,first_name,last_name,mother_id,father_id,profession,partner,gender,alive,age
+1,Jimi,Hendrix,NA,NA,musician,2,male,FALSE,27
+2,Janis,Joplin,NA,NA,musician,1,female,FALSE,27
+3,Jim,Morrison,NA,NA,musician,NA,male,FALSE,27
