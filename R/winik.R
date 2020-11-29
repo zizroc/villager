@@ -52,6 +52,7 @@ winik <- R6::R6Class("winik",
                                       #' @param children A list of identifiers of the children from this winik
                                       #' @param profession The winik's profession
                                       #' @param gender The gender of the winik
+                                      #' @param alive Boolean whether the winik is alive or not
                                       #' @param models Unknown
                                       #' @return A new winik object
                                       initialize = function(identifier=NULL,
@@ -64,6 +65,7 @@ winik <- R6::R6Class("winik",
                                                             children=list(),
                                                             gender=NA,
                                                             profession=NA,
+                                                            alive=TRUE,
                                                             models = vector()) {
 
                                         # Check to see if the user supplied a single model, outside of a list
@@ -74,7 +76,7 @@ winik <- R6::R6Class("winik",
                                           self$models<-models
                                         }
 
-                                        self$alive <- TRUE
+                                        self$alive <- alive
                                         self$identifier <- identifier
                                         self$first_name <- first_name
                                         self$last_name <- last_name
@@ -82,8 +84,7 @@ winik <- R6::R6Class("winik",
                                         self$mother_id <- mother_id
                                         self$father_id <- father_id
                                         self$profession <- profession
-                                        self$gender <- self$gender
-
+                                        self$gender <- gender
                                         self$partner <- partner
                                         self$children <-children
                                       },
@@ -106,20 +107,18 @@ winik <- R6::R6Class("winik",
                                       #' @export
                                       #' @return A tibble representation of the winik
                                       as_tibble = function() {
-
-                                       return(tibble::tibble(
-                                         identifier = self$identifier,
-                                         first_name = self$first_name,
-                                         last_name = self$last_name,
-                                         mother_id = self$mother_id,
-                                         father_id = self$father_id,
-                                         profession = self$profession,
-                                         population = self$population,
-                                         partner = self$partner,
-                                         children = self$children,
-                                         gender = self$gender,
-                                         alive = self$alive,
-                                         age = self$age
-                                       ))
+                                        winik_tibble <- tibble::tibble(
+                                          identifier = self$identifier,
+                                          first_name = self$first_name,
+                                          last_name = self$last_name,
+                                          mother_id = self$mother_id,
+                                          father_id = self$father_id,
+                                          profession = self$profession,
+                                          partner = self$partner,
+                                          gender = self$gender,
+                                          alive = self$alive,
+                                          age = self$age
+                                        )
+                                       return(winik_tibble)
                                       }
                         ))

@@ -43,9 +43,7 @@ BaseVillage <- R6::R6Class("BaseVillage",
                                                models = list(),
                                                modelData=NULL,
                                                population_manager=NULL) {
-
-                           if (is.null(population_manager))
-                             self$population_manager <- winik_manager$new()
+                           self$population_manager <- winik_manager$new()
                            self$resource_mgr <- resource_manager$new()
                            # Check to see if the user supplied a single model, outside of a list
                            # If so, put it in a vector because other code expects 'models' to be a list
