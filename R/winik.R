@@ -109,7 +109,8 @@ winik <- R6::R6Class("winik",
                                           partner = self$partner,
                                           gender = self$gender,
                                           alive = self$alive,
-                                          age = self$age
+                                          age = self$age,
+                                          health = self$health
                                         )
                                        return(winik_tibble)
                                       }

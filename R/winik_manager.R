@@ -127,8 +127,9 @@ winik_manager <- R6::R6Class("winik_manager",
                                    get_living_population = function(){
                                      total_living_population <- 0
                                      for (winik in self$winiks)
-                                       if (winik$alive)
+                                       if (winik$alive == TRUE) {
                                          total_living_population <- total_living_population + 1
+                                       }
                                       return (total_living_population)
                                     },
 
