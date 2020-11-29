@@ -166,7 +166,8 @@ winik_manager <- R6::R6Class("winik_manager",
                                                                partner=winiks_row$partner,
                                                                gender=winiks_row$gender,
                                                                profession=winiks_row$profession,
-                                                               alive=winiks_row$alive)
+                                                               alive=winiks_row$alive,
+                                                               health=winiks_row$health)
                                        self$add_winik(new_winik)
                                      }
                                    }

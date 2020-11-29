@@ -15,7 +15,7 @@
 #' @field gender The winik's gender
 #' @field alive A boolean flag that represents whether the villager is alive or dead
 #' @field children A list of children identifiers
-#' @field models Unknown
+#' @field health A percentage value of the winik's current health
 #' @section Methods:
 #' \describe{
 #'   \item{\code{initialize()}}{Create a new winik}
@@ -35,7 +35,7 @@ winik <- R6::R6Class("winik",
                                       children=NULL,
                                       gender=NULL,
                                       alive=NULL,
-                                      models=NULL,
+                                      health=NULL,
 
                                       #' Create a new winik
                                       #'
@@ -53,7 +53,7 @@ winik <- R6::R6Class("winik",
                                       #' @param profession The winik's profession
                                       #' @param gender The gender of the winik
                                       #' @param alive Boolean whether the winik is alive or not
-                                      #' @param models Unknown
+                                      #' @param health A percentage value of the winik's current health
                                       #' @return A new winik object
                                       initialize = function(identifier=NULL,
                                                             first_name=NA,
@@ -66,16 +66,7 @@ winik <- R6::R6Class("winik",
                                                             gender=NA,
                                                             profession=NA,
                                                             alive=TRUE,
-                                                            models = vector()) {
-
-                                        # Check to see if the user supplied a single model, outside of a list
-                                        # If so, put it in a vector because other code expects 'models' to be a list
-                                        if(!is.vector(models) && !is.null(models)) {
-                                          self$models <- append(self$models, models)
-                                        } else {
-                                          self$models<-models
-                                        }
-
+                                                            health=100) {
                                         self$alive <- alive
                                         self$identifier <- identifier
                                         self$first_name <- first_name
@@ -87,6 +78,7 @@ winik <- R6::R6Class("winik",
                                         self$gender <- gender
                                         self$partner <- partner
                                         self$children <-children
+                                        self$health <- health
                                       },
 
                                       #' A function that returns true or false whether the villager dies
