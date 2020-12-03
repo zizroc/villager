@@ -9,11 +9,13 @@
 #'   \item{\code{initialize()}}{Creates a new manager}
 #'   \item{\code{propegate()}}{Advances the winik one timestep}
 #'   \item{\code{get_winik()}}{Retrieves a minik from the manager}
+#'   \item{\code{get_living_winiks()}}{Returns the winik objects for winiks that are alive}
 #'   \item{\code{add_winik()}}{Adds a winik to the manager}
 #'   \item{\code{remove_winik()}}{Removes a winik from the manager}
 #'   \item{\code{get_states()}}{Returns all of the villager states in a vector}
 #'   \item{\code{get_winik_index()}}{Retrieves the index of a winik in the internal list}
 #'   \item{\code{get_average_age()}}{Returns the average age in years of the winiks}
+#'   \item{\code{load()}}{Loads winiks from disk}
 #'   }
 winik_manager <- R6::R6Class("winik_manager",
                      public = list(winiks = NULL,
@@ -44,6 +46,19 @@ winik_manager <- R6::R6Class("winik_manager",
                                      for (winik in self$winiks)
                                        if (winik$identifier == winik_identifier)
                                         return (winik)
+                                   },
+
+                                   #' Returns a list of all the winiks that are currently alive
+                                   #'
+                                   #' @return A list of living winiks
+                                   get_living_winiks = function() {
+                                     living_winiks <- list()
+                                     for (winik in self$winiks) {
+                                       if (winik$alive) {
+                                         living_winiks <- append(living_winiks, winik)
+                                       }
+                                     }
+                                     return (living_winiks)
                                    },
 
                                    #' Adds a winik to the manager.
@@ -112,8 +127,9 @@ winik_manager <- R6::R6Class("winik_manager",
                                    get_living_population = function(){
                                      total_living_population <- 0
                                      for (winik in self$winiks)
-                                       if (winik$alive)
+                                       if (winik$alive == TRUE) {
                                          total_living_population <- total_living_population + 1
+                                       }
                                       return (total_living_population)
                                     },
 
@@ -134,15 +150,26 @@ winik_manager <- R6::R6Class("winik_manager",
                                    },
 
                                    #' Loads winiks from disk
+                                   #'
+                                   #' @details Populates the winik manager with a set of winiks defined in a csv file
+                                   #' @param file_name The location of the file holding the winiks=
+                                   #' @return None
                                    load = function(file_name) {
-                                     winiks <- read.csv(file_name)
+                                     winiks <- read.csv(file_name, row.names=NULL)
                                      for(i in 1:nrow(winiks)) {
                                        winiks_row <- winiks[i,]
-                                       self$add_winik(winik$new(identifier=winiks_row$id, first_name= winiks_row$first_name,
-                                                                   last_name=winiks_row$last_name,age=winiks_row$age,
-                                                                   mother_id=winiks_row$mother_id, father_id=winiks_row$father_id,
-                                                                   partner=winiks_row$partner, gender=winiks_row$gender,
-                                                                   profession=winiks_row$profession))
+                                         new_winik <- winik$new(identifier = winiks_row$identifier,
+                                                               first_name= winiks_row$first_name,
+                                                               last_name=winiks_row$last_name,
+                                                               age=winiks_row$age,
+                                                               mother_id=winiks_row$mother_id,
+                                                               father_id=winiks_row$father_id,
+                                                               partner=winiks_row$partner,
+                                                               gender=winiks_row$gender,
+                                                               profession=winiks_row$profession,
+                                                               alive=winiks_row$alive,
+                                                               health=winiks_row$health)
+                                       self$add_winik(new_winik)
                                      }
                                    }
                      ))

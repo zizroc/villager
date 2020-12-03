@@ -15,7 +15,7 @@
 #' @field gender The winik's gender
 #' @field alive A boolean flag that represents whether the villager is alive or dead
 #' @field children A list of children identifiers
-#' @field models Unknown
+#' @field health A percentage value of the winik's current health
 #' @section Methods:
 #' \describe{
 #'   \item{\code{initialize()}}{Create a new winik}
@@ -35,7 +35,7 @@ winik <- R6::R6Class("winik",
                                       children=NULL,
                                       gender=NULL,
                                       alive=NULL,
-                                      models=NULL,
+                                      health=NULL,
 
                                       #' Create a new winik
                                       #'
@@ -52,7 +52,8 @@ winik <- R6::R6Class("winik",
                                       #' @param children A list of identifiers of the children from this winik
                                       #' @param profession The winik's profession
                                       #' @param gender The gender of the winik
-                                      #' @param models Unknown
+                                      #' @param alive Boolean whether the winik is alive or not
+                                      #' @param health A percentage value of the winik's current health
                                       #' @return A new winik object
                                       initialize = function(identifier=NULL,
                                                             first_name=NA,
@@ -64,17 +65,9 @@ winik <- R6::R6Class("winik",
                                                             children=list(),
                                                             gender=NA,
                                                             profession=NA,
-                                                            models = vector()) {
-
-                                        # Check to see if the user supplied a single model, outside of a list
-                                        # If so, put it in a vector because other code expects 'models' to be a list
-                                        if(!is.vector(models) && !is.null(models)) {
-                                          self$models <- append(self$models, models)
-                                        } else {
-                                          self$models<-models
-                                        }
-
-                                        self$alive <- TRUE
+                                                            alive=TRUE,
+                                                            health=100) {
+                                        self$alive <- alive
                                         self$identifier <- identifier
                                         self$first_name <- first_name
                                         self$last_name <- last_name
@@ -82,10 +75,10 @@ winik <- R6::R6Class("winik",
                                         self$mother_id <- mother_id
                                         self$father_id <- father_id
                                         self$profession <- profession
-                                        self$gender <- self$gender
-
+                                        self$gender <- gender
                                         self$partner <- partner
                                         self$children <-children
+                                        self$health <- health
                                       },
 
                                       #' A function that returns true or false whether the villager dies
@@ -106,20 +99,19 @@ winik <- R6::R6Class("winik",
                                       #' @export
                                       #' @return A tibble representation of the winik
                                       as_tibble = function() {
-
-                                       return(tibble::tibble(
-                                         identifier = self$identifier,
-                                         first_name = self$first_name,
-                                         last_name = self$last_name,
-                                         mother_id = self$mother_id,
-                                         father_id = self$father_id,
-                                         profession = self$profession,
-                                         population = self$population,
-                                         partner = self$partner,
-                                         children = self$children,
-                                         gender = self$gender,
-                                         alive = self$alive,
-                                         age = self$age
-                                       ))
+                                        winik_tibble <- tibble::tibble(
+                                          identifier = self$identifier,
+                                          first_name = self$first_name,
+                                          last_name = self$last_name,
+                                          mother_id = self$mother_id,
+                                          father_id = self$father_id,
+                                          profession = self$profession,
+                                          partner = self$partner,
+                                          gender = self$gender,
+                                          alive = self$alive,
+                                          age = self$age,
+                                          health = self$health
+                                        )
+                                       return(winik_tibble)
                                       }
                         ))

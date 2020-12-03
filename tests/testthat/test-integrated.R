@@ -102,5 +102,51 @@ test_that("models can have dynamics based on winik behavior", {
   # Check to see if the correct number are left
   record_length <- length(new_siumulator$villages[[1]]$StateRecords)
   last_record <- new_siumulator$villages[[1]]$StateRecords[[record_length]]
+
   testthat::expect_equal(plains_village$population_manager$get_living_population(), 4)
+})
+
+test_that("winiks and resources can have properties changed in models", {
+  # Create a model where winiks are set to alive/dead
+
+  crop_stock_model <- function(currentState, previousState, modelData, population_manager, resource_mgr) {
+    if (currentState$year == 1) {
+      # Create an initial state of 4 winiks, all alive and marine resources
+      resource_mgr$add_resource(resource$new(name = "marine", quantity = 100))
+      dead_winik_id <- "dead_winik_1"
+      dead_winik2_id <- "dead_winik_2"
+
+      population_manager$add_winik(winik$new(identifier = dead_winik_id, alive=FALSE))
+      population_manager$add_winik(winik$new(identifier = dead_winik2_id, alive=FALSE))
+      population_manager$add_winik(winik$new(alive=TRUE))
+      population_manager$add_winik(winik$new(alive=TRUE))
+    } else if (currentState$year == 4) {
+      # Check that the values were changed on the last day
+      testthat::expect_false(population_manager$get_winik("dead_winik_1")$alive)
+      testthat::expect_false(population_manager$get_winik("dead_winik_2")$alive)
+      testthat::expect_equal(resource_mgr$get_resource("marine")$quantity, 50)
+    }
+    else {
+      # If it's not the first year, then set two winiks to the dead state
+      winik_1 <- population_manager$get_winik("dead_winik_1")
+      winik_2 <- population_manager$get_winik("dead_winik_2")
+      winik_1$alive <- FALSE
+      winik_2$alive <- FALSE
+
+      marine_resource <- resource_mgr$get_resource("marine")
+      marine_resource$quantity <- 50
+    }
+  }
+
+  # Create a default village
+  plains_village  <- BaseVillage$new(models=crop_stock_model)
+  new_siumulator <- Simulation$new(length = 4, villages = list(plains_village))
+  new_siumulator$run_model()
+
+  # Check to see if the correct number are left
+  record_length <- length(new_siumulator$villages[[1]]$StateRecords)
+  last_record <- new_siumulator$villages[[1]]$StateRecords[[record_length]]
+
+  testthat::expect_equal(plains_village$population_manager$get_living_population(), 2)
+  testthat::expect_equal(plains_village$population_manager$get_living_population(), 2)
 })
