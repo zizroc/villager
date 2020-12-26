@@ -56,7 +56,7 @@ resource_manager <- R6::R6Class("resource_manager",
                                               #' @param name The name of the resource being located
                                               #' @return The index in the list, or R's default return value
                                               get_resource_index = function(name) {
-                                                for (i in seq_along(length(self$resources))) {
+                                                for (i in 1:length(self$resources)) {
                                                   if (self$resources[[i]]$name == name) {
                                                     return (i)
                                                   }

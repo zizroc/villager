@@ -50,7 +50,7 @@ test_that("the manager returns the correct winik index", {
   winik_mgr$add_winik(test_winik_3)
 
   index <- winik_mgr$get_winik_index(test_winik_2$identifier)
-  expect_true(index == winik_2_id)
+  expect_true(index == 2)
 })
 
 test_that("the manager removes winiks", {

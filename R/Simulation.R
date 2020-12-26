@@ -1,8 +1,9 @@
 #' @title Simulator
 #' @docType class
 #' @description Advances one or more villages through time
+#' @field start_date The Gregorian date that the simulation starts on
+#' @field end_date The Gregorian date that the simulation ends on
 #' @field villages A list of villages that the simulator will run
-#' @field length The number of time steps in the simulation
 #' @export
 #' @section Methods:
 #' \describe{
@@ -11,38 +12,50 @@
 #'   }
 Simulation <- R6::R6Class("Simulation",
                       public = list(
+                        start_date = NA,
+                        end_date = NA,
                         villages = NA,
-                        length = NA,
 
                         #' Creates a new Simulation instance
                         #'
-                        #' @export
-                        #' @param length The number of years to run the simulation for
+                        #' @param start_date The date to start the simulation
+                        #' @param end_date The date that the simulation should end
                         #' @param villages A list of villages that will be simulated
-                        initialize = function(length = NA,
-                                              villages = NULL) {
+                        initialize = function(start_date,
+                                              end_date,
+                                              villages) {
                           self$villages <- villages
-                          self$length <- length
+                          self$start_date <- gregorian::as_gregorian(start_date)
+                          self$end_date <- gregorian::as_gregorian(end_date)
                         },
 
-                        #' Advances each village a single time step
+                        #' Runs the simulation
                         #'
-                        #' @description This this how the simulator 'runs' through the simulation
-                        #'
-                        #' @export
                         #' @return None
                         run_model = function() {
+
+                          # Loop over each village and run the user defined initial condition function
+                          computation_start_date <- gregorian::add_days(self$start_date, 1)
                           for (village in self$villages) {
-                            for(t in 1:self$length){
-                              village$propagate(year=t)
+                            village$set_initial_state(computation_start_date)
+                          }
+                          current_date <- computation_start_date
+                          date_diff <- gregorian::diff_days(computation_start_date, self$end_date)
+                          while (date_diff >= 0) {
+                          # Iterate the villages a single timestep
+                            for(village in self$villages){
+                              village$propagate(current_date)
                             }
+                            # Add '1' to the current day
+                            current_date <- gregorian::add_days(current_date, 1)
+                            date_diff <- gregorian::diff_days(current_date, self$end_date)
+
                           }
                         },
 
                         #' Prints the plots of the data from each village in the simulator
                         #'
                         #' @details This should be done better; the plots look like garbage
-                        #' @export
                         #' @param dependent_variable The
                         #' @return None
                         show_results = function(dependent_variable = "population") {

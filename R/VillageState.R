@@ -7,7 +7,7 @@
 #' @field birthRate The average birth rate of the village's citizens
 #' @field deathRate The average death rate of the village's citizens
 #' @field carryingCapacity The maximum number of villagers the village can sustain
-#' @field year The year that the state represents
+#' @field date The date that the state is relevant to
 #' @field population The number of villagers in the village
 #' @field winik_states A list of winik states
 #' @field resource_states A list of resource states
@@ -22,7 +22,7 @@ VillageState <- R6::R6Class("VillageState", cloneable = TRUE,
                           deathRate = NA,
                           carryingCapacity = NA,
                           population = NA,
-                          year = NA,
+                          date = NA,
                           winik_states = NA,
                           resource_states = NA,
 
@@ -36,20 +36,20 @@ VillageState <- R6::R6Class("VillageState", cloneable = TRUE,
                           #' @param birthRate The average birth rate of the village's citizens
                           #' @param deathRate The average death rate of the village's citizens
                           #' @param carryingCapacity The maximum number of villagers the village can sustain
-                          #' @param year The year that the state represents
+                          #' @param date The date that the state is relevant to. This should be a date from the gregorian package
                           #' @param winik_states A vector of tibbles representing the states of the winiks
                           #' @param resource_states A vector of tibbles representing the states of the resources
                           initialize = function(birthRate = 0.085,
                                                 deathRate = 0.070,
                                                 carryingCapacity = 300,
-                                                year = 1,
+                                                date = NA,
                                                 winik_states = vector(),
                                                 resource_states = vector()
                           ) {
                             self$birthRate  <- birthRate
                             self$deathRate  <- deathRate
                             self$carryingCapacity  <- carryingCapacity
-                            self$year <- year
+                            self$date <- date
                             self$winik_states <- winik_states
                             self$resource_states <- resource_states
                           },
@@ -67,7 +67,7 @@ VillageState <- R6::R6Class("VillageState", cloneable = TRUE,
                               birthRate = self$birthRate,
                               deathRate = self$deathRate,
                               carryingCapacity = self$carryingCapacity,
-                              year = self$year,
+                              date = self$date,
                               population = self$population,
                             ))
                           }
