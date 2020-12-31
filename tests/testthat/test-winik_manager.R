@@ -132,6 +132,18 @@ test_that("the manager can load winiks from disk", {
   testthat::expect_equal(jim_morrison$age, 27)
 })
 
+test_that("increment_winik_ages increases the age of the winik by one day", {
+  winik_mgr <- winik_manager$new()
+  winik_mgr$load("test-files/test-winiks.csv")
+  for (living_winik in winik_mgr$get_living_winiks()) {
+    testthat::expect_equal(living_winik$age, 35)
+  }
+  winik_mgr$increment_winik_ages()
+  for (living_winik in winik_mgr$get_living_winiks()) {
+    testthat::expect_equal(living_winik$age, 36)
+  }
+})
+
 #test_that("add_partner connects one winik to another", {
 #  female_winik <- winik$new()
 #  male_winik <- winik$new()
