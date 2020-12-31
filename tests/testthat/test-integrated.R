@@ -144,3 +144,84 @@ test_that("winiks and resources can have properties changed in models", {
   testthat::expect_equal(plains_village$population_manager$get_living_population(), 2)
   testthat::expect_equal(plains_village$population_manager$get_living_population(), 2)
 })
+
+
+test_that("winiks profession can change based on age", {
+
+  initial_condition <- function(currentState, modelData, winik_manager, resource_mgr) {
+    # 40 years old male
+    winik_manager$add_winik(winik$new(identifier = "male1", age=14610, alive=TRUE, gender="Male"))
+    # 20 year old male
+    winik_manager$add_winik(winik$new(identifier = "male2", age=7305, alive=TRUE, gender="Male"))
+    # 13 year old female
+    winik_manager$add_winik(winik$new(identifier = "female1", age=4748, alive=TRUE, gender="Female"))
+    # 8 year old female
+    winik_manager$add_winik(winik$new(identifier = "female2", age=2292, alive=TRUE, gender="Female"))
+  }
+
+  winik_model <- function(currentState, previousState, modelData, winik_mgr, resource_mgr) {
+    # Get the new list of living winiks and assign professions
+    for (living_winik in winik_mgr$get_living_winiks()) {
+      if (living_winik$age >= 14610) {
+        living_winik$profession <- "Forager"
+      } else if (living_winik$age >= 3287 && living_winik$age < 14610 && living_winik$gender == "Male") {
+        living_winik$profession <- "Fisher"
+      } else if (living_winik$age >= 5113 && living_winik$age <= 14610 && living_winik$gender == "Female") {
+        living_winik$profession <- "Farmer"
+      } else if (living_winik$age >= 5113 && living_winik$age <= 5113 && living_winik$gender == "Female") {
+        living_winik$profession <- "Fisher"
+      } else if (living_winik$age < 3287) {
+        living_winik$profession <- "Child"
+      }
+    }
+  }
+
+  # Create a default village
+  plains_village  <- BaseVillage$new("Test Village", initial_condition, models=winik_model)
+  # Run the simulationn for a year so that the winiks get assigned new professionns
+  new_siumulator <- Simulation$new(start_date="-100-01-01", end_date = "-99-01-01", villages = list(plains_village))
+  new_siumulator$run_model()
+
+  # Check to see that the professions are correct
+  village_winik_mgr <- new_siumulator$villages[[1]]$population_manager
+  testthat::expect_equal(village_winik_mgr$get_winik("male1")$profession, "Forager")
+  testthat::expect_equal(village_winik_mgr$get_winik("male2")$profession, "Fisher")
+  testthat::expect_equal(village_winik_mgr$get_winik("female1")$profession, "Farmer")
+  testthat::expect_equal(village_winik_mgr$get_winik("female2")$profession, "Child")
+
+})
+
+test_that("winiks can be killed after a particular age", {
+
+  initial_condition <- function(currentState, modelData, winik_manager, resource_mgr) {
+    # 40 years old male
+    winik_manager$add_winik(winik$new(identifier = "male1", age=15705, alive=TRUE, gender="Male"))
+    # 20 year old male
+    winik_manager$add_winik(winik$new(identifier = "male2", age=15705, alive=TRUE, gender="Male"))
+  }
+
+  # Create a model where winiks are set to alive/dead
+  winik_model <- function(currentState, previousState, modelData, winik_mgr, resource_mgr) {
+    # Loop over each winik that is alive and check if they should expire
+    for (living_winik in winik_mgr$get_living_winiks()) {
+      if (living_winik$age >= 16436) {
+        living_winik$alive <- FALSE
+      }
+    }
+  }
+
+  # Create a default village
+  plains_village  <- BaseVillage$new("Test Village", initial_condition, models=winik_model)
+  # Run the simulationn for two years to age the winiks to 45
+  new_siumulator <- Simulation$new(start_date="-100-01-01", end_date = "-98-01-02", villages = list(plains_village))
+  new_siumulator$run_model()
+
+  # Check to see that the professions are correct
+  village_winik_mgr <- new_siumulator$villages[[1]]$population_manager
+  testthat::expect_equal(village_winik_mgr$get_winik("male1")$alive, FALSE)
+  testthat::expect_equal(village_winik_mgr$get_winik("male2")$alive, FALSE)
+
+  testthat::expect_length(village_winik_mgr$get_living_winiks(), 0)
+  testthat::expect_equal(village_winik_mgr$get_living_population(), 0)
+
+})
