@@ -32,7 +32,7 @@ The most basic model: one that doesn't do anything, can be created from two clas
 ### Adding a Model to a Village
 To create an add a new model to village, start by creating the model template, shown below.
 ```
-  test_model <- function(currentState, previousState, modelData, population_manager, resource_mgr) {
+  test_model <- function(currentState, previousState, modelData, winik_mgr, resource_mgr) {
     if (currentState$year == 1) {
       # initial condition logic here
     } else {
@@ -47,17 +47,17 @@ The model is then passed into the BaseVillage constructor.
 ```
 
 #### Adding Winiks to a Village
-The `population_manager` object that passed into the model is used to add winiks to the village.
+The `winik_mgr` object that passed into the model is used to add winiks to the village.
 
 ```
-  test_model <- function(currentState, previousState, modelData, population_manager, resource_mgr) {
+  test_model <- function(currentState, previousState, modelData, winik_mgr, resource_mgr) {
     if (currentState$year == 1) {
       # Load a number of winiks from a theoretic winik file
-      population_manager$load("winiks.csv")
+      winik_mgr("winiks.csv")
     } else {
       # If it's not year 1, add a winik
       new_winik<-winik$new()
-      population_manager$add_winik(new_winik)
+      winik_mgr$add_winik(new_winik)
   }
 ```
 The model is then passed into the BaseVillage constructor.
@@ -71,7 +71,7 @@ The model is then passed into the BaseVillage constructor.
 #### Adding Resources to a Model
 The `resource_manager` class is used to add resources to a village.
 ```
-  test_model <- function(currentState, previousState, modelData, population_manager, resource_mgr) {
+  test_model <- function(currentState, previousState, modelData, winik_mgr, resource_mgr) {
     if (currentState$year == 1) {
       # Load any resources from disk
       resource_mgr$load("resources.csv")

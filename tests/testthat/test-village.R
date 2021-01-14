@@ -5,7 +5,7 @@ test_that("propagate doesn't copy the initial state on year 1", {
   # This makes sure that models can set initial states inside their code
 
 
-  test_model <- function(currentState, previousState, modelData, population_manager, resource_mgr) {
+  test_model <- function(currentState, previousState, modelData, winik_mgr, resource_mgr) {
     if(currentState$year == 1)
       resource_mgr$add_resource(resource$new(name="corn", quantity=5))
       resource_mgr$add_resource(resource$new(name="salmon", quantity=6))
@@ -28,7 +28,7 @@ test_that("propagate doesn't copy the initial state on year 1", {
 })
 
 test_that("propagate runs a custom model", {
-  corn_model <- function(currentState, previousState, modelData, population_manager, resource_mgr) {
+  corn_model <- function(currentState, previousState, modelData, winik_mgr, resource_mgr) {
     if(currentState$year == 1) {
       resource_mgr$add_resource(resource$new(name="corn", quantity=5))
     }
@@ -53,7 +53,7 @@ test_that("propagate runs a custom model", {
 })
 
 test_that("propagate runs multiple custom models", {
-  corn_model <- function(currentState, previousState, modelData, population_manager, resource_mgr) {
+  corn_model <- function(currentState, previousState, modelData, winik_mgr, resource_mgr) {
     if(currentState$year == 1) {
       resource_mgr$add_resource(resource$new(name="corn", quantity=5))
     }
@@ -63,7 +63,7 @@ test_that("propagate runs multiple custom models", {
     }
   }
 
-  salmon_model <- function(currentState, previousState, modelData, population_manager, resource_mgr) {
+  salmon_model <- function(currentState, previousState, modelData, winik_mgr, resource_mgr) {
     if(currentState$year == 1) {
       resource_mgr$add_resource(resource$new(name="salmon", quantity=1))
     }
