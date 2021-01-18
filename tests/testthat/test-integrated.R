@@ -11,9 +11,9 @@ test_that("models can add winiks each day", {
     # Do nothing
   }
   # Create a default village
-  plains_village  <- BaseVillage$new("Test village", initial_condition, models=population_model)
+  plains_village  <- village$new("Test village", initial_condition, models=population_model)
   # Run for 5 days
-  new_siumulator <- Simulation$new(start_date="100-01-01", end_date = "100-01-05", villages = list(plains_village))
+  new_siumulator <- simulation$new(start_date="100-01-01", end_date = "100-01-05", villages = list(plains_village))
   new_siumulator$run_model()
   testthat::expect_length(new_siumulator$villages[[1]]$population_manager$winiks, 4)
   ending_population <- new_siumulator$villages[[1]]$population_manager$get_living_population()
@@ -35,8 +35,8 @@ test_that("models can add and change resource quantities", {
   }
 
   # Create a default village
-  plains_village  <- BaseVillage$new("Test village", initial_condition,models=deterministic_crop_stock_model)
-  new_siumulator <- Simulation$new(start_date="100-01-01", end_date = "100-01-04", villages = list(plains_village))
+  plains_village  <- village$new("Test village", initial_condition,models=deterministic_crop_stock_model)
+  new_siumulator <- simulation$new(start_date="100-01-01", end_date = "100-01-04", villages = list(plains_village))
   new_siumulator$run_model()
   record_length <- length(new_siumulator$villages[[1]]$StateRecords)
   last_record <- new_siumulator$villages[[1]]$StateRecords[[record_length]]
@@ -64,8 +64,8 @@ test_that("models can change resoources based on information from the winik_mana
   }
 
   # Create a default village
-  plains_village  <- BaseVillage$new("Test village", initial_condition, models=crop_stock_model)
-  new_siumulator <- Simulation$new(start_date="-100-01-01", end_date = "-100-01-04", villages = list(plains_village))
+  plains_village  <- village$new("Test village", initial_condition, models=crop_stock_model)
+  new_siumulator <- simulation$new(start_date="-100-01-01", end_date = "-100-01-04", villages = list(plains_village))
   new_siumulator$run_model()
 
   # Check to see if the correct number are left
@@ -96,8 +96,8 @@ test_that("models can have dynamics based on winik behavior", {
   }
 
   # Create a default village
-  plains_village  <- BaseVillage$new("Test village", initial_condition, models=crop_stock_model)
-  new_siumulator <- Simulation$new(start_date="-100-01-01", end_date = "-100-01-04", villages = list(plains_village))
+  plains_village  <- village$new("Test village", initial_condition, models=crop_stock_model)
+  new_siumulator <- simulation$new(start_date="-100-01-01", end_date = "-100-01-04", villages = list(plains_village))
   new_siumulator$run_model()
 
   # Check to see if the correct number are left
@@ -133,8 +133,8 @@ test_that("winiks and resources can have properties changed in models", {
   }
 
   # Create a default village
-  plains_village  <- BaseVillage$new("Test Village", initial_condition, models=crop_stock_model)
-  new_siumulator <- Simulation$new(start_date="-100-01-01", end_date = "-100-01-05", villages = list(plains_village))
+  plains_village  <- village$new("Test Village", initial_condition, models=crop_stock_model)
+  new_siumulator <- simulation$new(start_date="-100-01-01", end_date = "-100-01-05", villages = list(plains_village))
   new_siumulator$run_model()
 
   # Check to see if the correct number are left
@@ -177,9 +177,9 @@ test_that("winiks profession can change based on age", {
   }
 
   # Create a default village
-  plains_village  <- BaseVillage$new("Test Village", initial_condition, models=winik_model)
+  plains_village  <- village$new("Test Village", initial_condition, models=winik_model)
   # Run the simulationn for a year so that the winiks get assigned new professionns
-  new_siumulator <- Simulation$new(start_date="-100-01-01", end_date = "-99-01-01", villages = list(plains_village))
+  new_siumulator <- simulation$new(start_date="-100-01-01", end_date = "-99-01-01", villages = list(plains_village))
   new_siumulator$run_model()
 
   # Check to see that the professions are correct
@@ -211,9 +211,9 @@ test_that("winiks can be killed after a particular age", {
   }
 
   # Create a default village
-  plains_village  <- BaseVillage$new("Test Village", initial_condition, models=winik_model)
+  plains_village  <- village$new("Test Village", initial_condition, models=winik_model)
   # Run the simulationn for two years to age the winiks to 45
-  new_siumulator <- Simulation$new(start_date="-100-01-01", end_date = "-98-01-02", villages = list(plains_village))
+  new_siumulator <- simulation$new(start_date="-100-01-01", end_date = "-98-01-02", villages = list(plains_village))
   new_siumulator$run_model()
 
   # Check to see that the professions are correct

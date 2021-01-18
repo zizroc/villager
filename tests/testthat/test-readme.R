@@ -7,12 +7,12 @@ test_that("initial conditions with winiks work", {
     }
   }
 
-  coastal_village <- BaseVillage$new("Test village", initial_condition)
+  coastal_village <- village$new("Test village", initial_condition)
   start_date = "100-01-01"
   end_date = "100-01-04"
-  simulator <- Simulation$new(start_date=start_date, end_date=end_date, villages = list(coastal_village))
+  simulator <- simulation$new(start_date=start_date, end_date=end_date, villages = list(coastal_village))
 
-  new_siumulator <- Simulation$new(start_date=start_date, end_date = end_date,
+  new_siumulator <- simulation$new(start_date=start_date, end_date = end_date,
                                    villages = list(coastal_village))
   new_siumulator$run_model()
   testthat::expect_equal(coastal_village$population_manager$get_living_population(), 4)
@@ -27,12 +27,12 @@ test_that("initial conditions with resources work", {
     }
   }
 
-  coastal_village <- BaseVillage$new("Test village", initial_condition)
+  coastal_village <- village$new("Test village", initial_condition)
   start_date = "100-01-01"
   end_date = "100-01-04"
-  simulator <- Simulation$new(start_date=start_date, end_date=end_date, villages = list(coastal_village))
+  simulator <- simulation$new(start_date=start_date, end_date=end_date, villages = list(coastal_village))
 
-  new_siumulator <- Simulation$new(start_date=start_date, end_date = end_date,
+  new_siumulator <- simulation$new(start_date=start_date, end_date = end_date,
                                    villages = list(coastal_village))
   new_siumulator$run_model()
 
@@ -54,8 +54,8 @@ test_that("the basic population model works", {
     population_mgr$add_winik(new_winik)
   }
 
-  coastal_village <- BaseVillage$new("Test village", initial_condition, model)
-  simulator <- Simulation$new("-100-01-01", "-100-01-04", villages = list(coastal_village))
+  coastal_village <- village$new("Test village", initial_condition, model)
+  simulator <- simulation$new("-100-01-01", "-100-01-04", villages = list(coastal_village))
   simulator$run_model()
 
   testthat::expect_equal(coastal_village$population_manager$get_living_population(), 4)
@@ -87,8 +87,8 @@ test_that("winiks are added on even days, killed on odd", {
     }
   }
 
-  coastal_village <- BaseVillage$new("Test village", initial_condition, model)
-  simulator <- Simulation$new("-100-01-01", "-100-01-04", villages = list(coastal_village))
+  coastal_village <- village$new("Test village", initial_condition, model)
+  simulator <- simulation$new("-100-01-01", "-100-01-04", villages = list(coastal_village))
   simulator$run_model()
 
   testthat::expect_equal(coastal_village$population_manager$get_living_population(), 4)
@@ -107,8 +107,8 @@ test_that("resources are properly added", {
     corn$quantity <- corn$quantity + 1
   }
 
-  coastal_village <- BaseVillage$new("Test village", initial_condition, model)
-  simulator <- Simulation$new("-100-01-01", "-100-01-04", villages = list(coastal_village))
+  coastal_village <- village$new("Test village", initial_condition, model)
+  simulator <- simulation$new("-100-01-01", "-100-01-04", villages = list(coastal_village))
   simulator$run_model()
   coastal_village$resource_mgr$get_resource("corn")$quantity
   testthat::expect_equal(coastal_village$resource_mgr$get_resource("corn")$quantity, 13)

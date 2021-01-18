@@ -1,7 +1,7 @@
 # Unit tests for the state
 
 test_that("the default constructor works", {
-  new_state <- villager::VillageState$new()
+  new_state <- villager::village_state$new()
 
   testthat::expect_equal(new_state$birthRate, 0.085)
   testthat::expect_equal(new_state$deathRate, 0.070)
