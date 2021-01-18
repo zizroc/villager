@@ -80,7 +80,7 @@ BaseVillage <- R6::R6Class("BaseVillage",
                            village_data <- self$StateRecords[[length(self$StateRecords)]]$clone(deep=TRUE)
                            # Update the date in the state record to reflect the current date
                            village_data$date <- date
-
+                           self$population_manager$increment_winik_ages()
                            # Run each of the models
                            for (model in self$models) {
                              # Create a read only copy of the last state so that users can make decisions off of it

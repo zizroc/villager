@@ -15,6 +15,7 @@
 #'   \item{\code{get_states()}}{Returns all of the villager states in a vector}
 #'   \item{\code{get_winik_index()}}{Retrieves the index of a winik in the internal list}
 #'   \item{\code{get_average_age()}}{Returns the average age in years of the winiks}
+#'   \item{\code{increment_winik_ages()}}{Increases the age of each winik by a day}
 #'   \item{\code{load()}}{Loads winiks from disk}
 #'   }
 winik_manager <- R6::R6Class("winik_manager",
@@ -146,6 +147,16 @@ winik_manager <- R6::R6Class("winik_manager",
 
                                     average_age_days = total_age/length(self$winiks)
                                     return (average_age_days/364)
+                                   },
+
+                                   #' Increases the age of the winik by one day
+                                   #' @details Iterates over all of the winiks that the manager is managing and
+                                   #' increases the age by a single day.
+                                   #' @return None
+                                   increment_winik_ages = function() {
+                                     for (living_winik in self$get_living_winiks()) {
+                                       living_winik$age <- living_winik$age + 1
+                                     }
                                    },
 
                                    #' Loads winiks from disk
