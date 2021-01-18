@@ -105,7 +105,7 @@ winik_manager <- R6::R6Class("winik_manager",
                                    #' @param winik_identifier The identifier of the winik being located
                                    #' @return The index in the list, or R's default return value
                                    get_winik_index = function(winik_identifier) {
-                                     for (i in seq_along(length(self$winiks))) {
+                                     for (i in 1:length(self$winiks)) {
                                        if (self$winiks[[i]]$identifier == winik_identifier) {
                                          return (i)
                                        }
@@ -122,7 +122,6 @@ winik_manager <- R6::R6Class("winik_manager",
                                    },
 
                                    #' Returns the total number of winiks that are alive
-                                   #' @export
                                    #' @return The numnber of living winiks
                                    get_living_population = function(){
                                      total_living_population <- 0
