@@ -1,4 +1,4 @@
-#' @title Village State
+#' @title village_state
 #' @docType class
 #' @description This is an object that represents the state of a village at a particular time.
 #' @details This class acts as a type of record that holds the values of the different village variables. This class can be subclassed
@@ -16,7 +16,7 @@
 #'   \item{\code{propagate()}}{Advances the village a single time step}
 #'   \item{\code{as_tibble()}}{Turns the object into a tibble}.
 #'   }
-VillageState <- R6::R6Class("VillageState", cloneable = TRUE,
+village_state <- R6::R6Class("village_state", cloneable = TRUE,
                         public = list(
                           birthRate = NA,
                           deathRate = NA,

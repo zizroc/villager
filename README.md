@@ -45,7 +45,7 @@ initial_condition <- function(current_state, model_data, population_mgr, resourc
 
 Where
 
-1. `current_state`: The VillageState object for the first day
+1. `current_state`: The village_state object for the first day
 2. `model_data`: The optional model_data parameter in the village constructor
 3. `population_mgr`: The manager for population. Used to add and remove villagers
 4. `resource_mgr`: The manager for resources. Used to add and remove resources
@@ -84,9 +84,9 @@ model <- function(current_state, previous_state, model_data, population_mgr, res
 }
 ```
 
-Models are added to villages in the BaseVillage constructor,
+Models are added to villages in the village constructor,
 ```
-plains_village <- BaseVillage$new(models = model)
+plains_village <- village(models = model)
 ```
 
 A village can have any number of model functions defined for it, enabling logic to be encapsulated and organized. For example, a second model can be created and added to the village.
@@ -95,7 +95,7 @@ A village can have any number of model functions defined for it, enabling logic 
 model_2 <- function(current_state, previous_state, model_data, population_mgr, resource_mgr) {
   # Model logic here
 }
-plains_village <- BaseVillage$new(models = list(model, model_2))
+plains_village <- village(models = list(model, model_2))
 ```
 
 #### Modeling Populations
@@ -116,7 +116,7 @@ each day.
     new_winik <- winik$new(first_name <- name, last_name <- "Smith")
     population_mgr$add_winik(new_winik)
   }
-plains_village <- BaseVillage$new(models = list(model, model_2))
+plains_village <- village$new(models = list(model, model_2))
 ```
 
 
@@ -148,8 +148,8 @@ to get the current date in terms of the `gregorian` R package.
       living_winiks[[1]]$alive <- FALSE
     }
   }
-  coastal_village <- BaseVillage$new("Test village", initial_condition, model)
-  simulator <- Simulation$new("-100-01-01", "-100-01-04", villages = list(coastal_village))
+  coastal_village <- village$new("Test village", initial_condition, model)
+  simulator <- simulation$new("-100-01-01", "-100-01-04", villages = list(coastal_village))
   simulator$run_model()
   ```
 

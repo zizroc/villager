@@ -1,5 +1,5 @@
 #' @export
-#' @title Village State
+#' @title Village
 #' @docType class
 #' @description This is an object that represents the state of a village at a particular time.
 #' @details This class acts as a type of record that holds the values of the different village variables. This class can be subclassed
@@ -22,7 +22,7 @@
 #'   \item{\code{as_tibble()}}{Adds a trde partner}.
 #'   \item{\code{plot()}}{Plots the time dependant variables}.
 #'   }
-BaseVillage <- R6::R6Class("BaseVillage",
+village <- R6::R6Class("village",
                        public = list(
                          name = NA,
                          initial_condition = NA,
@@ -61,7 +61,7 @@ BaseVillage <- R6::R6Class("BaseVillage",
 
                            self$name <- name
                            # Creates an empty state that the initial condition will populate
-                           self$StateRecords <- c(VillageState$new())
+                           self$StateRecords <- c(village_state$new())
                            # Set the data
                            self$modelData<-modelData
                            # Initialize the trade partners to an empty list
@@ -99,8 +99,8 @@ BaseVillage <- R6::R6Class("BaseVillage",
                          #'
                          #' @description Connects two villages together for trade
                          #' @details This method takes advantage of R6's reference semantics. Because classes that are derived
-                         #' from BaseVillage are R6, they can be directly modified. This
-                         #' @param newTradePartner A derived BaseVillage object representing a village that this village
+                         #' from village are R6, they can be directly modified.
+                         #' @param newTradePartner A derived village object representing a village that this village
                          #' can trade with
                          #' @param addBack An optional parameter that, when true will
                          add_trade_partner = function(newTradePartner, addBack=TRUE) {
@@ -140,9 +140,9 @@ BaseVillage <- R6::R6Class("BaseVillage",
                            village_data$resource_states <- self$resource_mgr$get_states()
                          },
 
-                        #' @description Gives a tibbble representation of the state
+                        #' @description Gives a tibble representation of the state
                         #' @return Returns a tibble composing of rows which are
-                        #' properties from VillageState.
+                        #' properties from village_state
                          as_tibble = function() {
                            big_tibble <- tibble::tibble()
                            for (data_record in self$StateRecords) {

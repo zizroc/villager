@@ -1,4 +1,4 @@
-#' @title Simulator
+#' @title simulation
 #' @docType class
 #' @description Advances one or more villages through time
 #' @field start_date The Gregorian date that the simulation starts on
@@ -10,7 +10,7 @@
 #'   \item{\code{run_model()}}{Runs the simulation}
 #'   \item{\code{show_results(dependent_variable)}}{Displays the time dependant variables post-simulation}.
 #'   }
-Simulation <- R6::R6Class("Simulation",
+simulation <- R6::R6Class("simulation",
                       public = list(
                         start_date = NA,
                         end_date = NA,

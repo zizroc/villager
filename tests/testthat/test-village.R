@@ -9,8 +9,8 @@ test_that("the initial models can properly set village states", {
     resource_mgr$add_resource(resource$new(name="salmon", quantity=6))
   }
 
-  new_village <- BaseVillage$new("Test village", initial_condition=initial_condition, models=list())
-  simulator <- Simulation$new(start_date="100-01-01", end_date = "100-01-02", villages = list(new_village))
+  new_village <- village$new("Test village", initial_condition=initial_condition, models=list())
+  simulator <- simulation$new(start_date="100-01-01", end_date = "100-01-02", villages = list(new_village))
   simulator$run_model()
 
   last_record <- simulator$villages[[1]]$StateRecords[[1]]$resource_states
@@ -36,8 +36,8 @@ test_that("the initial condition is properly set", {
     resource_mgr$add_resource(resource$new(name="salmon", quantity=6))
   }
 
-  new_village <- BaseVillage$new("Test village", initial_condition)
-  simulator <- Simulation$new(start_date="100-01-01", end_date = "100-01-02", villages = list(new_village))
+  new_village <- village$new("Test village", initial_condition)
+  simulator <- simulation$new(start_date="100-01-01", end_date = "100-01-02", villages = list(new_village))
   simulator$run_model()
 
   last_record <- simulator$villages[[1]]$StateRecords[[1]]$resource_states
@@ -66,8 +66,8 @@ test_that("propagate runs a custom model", {
       }
   }
 
-  new_village <- BaseVillage$new("Test village", initial_condition, models=corn_model)
-  simulator <- Simulation$new(start_date="100-01-01", end_date = "100-01-04", villages = list(new_village))
+  new_village <- village$new("Test village", initial_condition, models=corn_model)
+  simulator <- simulation$new(start_date="100-01-01", end_date = "100-01-04", villages = list(new_village))
   simulator$run_model()
 
   last_record <- simulator$villages[[1]]$StateRecords[[4]]$resource_states
@@ -94,9 +94,9 @@ test_that("propagate runs multiple custom models", {
     salmon$quantity <-salmon$quantity + 1
   }
 
-  new_village <- BaseVillage$new("Test village", initial_conditions, models=list(corn_model, salmon_model))
+  new_village <- village$new("Test village", initial_conditions, models=list(corn_model, salmon_model))
 
-  simulator <- Simulation$new(start_date="100-01-01", end_date = "100-01-03", villages = list(new_village))
+  simulator <- simulation$new(start_date="100-01-01", end_date = "100-01-03", villages = list(new_village))
   simulator$run_model()
   testthat::expect_length(simulator$villages, 1)
 
