@@ -31,6 +31,7 @@ test_that("the initial condition is properly set", {
   # Check that the initial state is passed into the user's model on the first year
   # This makes sure that models can set initial states inside their code
 
+
   initial_condition <- function(currentState, modelData, population_manager, resource_mgr) {
     resource_mgr$add_resource(resource$new(name="corn", quantity=5))
     resource_mgr$add_resource(resource$new(name="salmon", quantity=6))
@@ -53,12 +54,11 @@ test_that("the initial condition is properly set", {
 })
 
 test_that("propagate runs a custom model", {
-
-  initial_condition <- function(currentState, modelData, population_manager, resource_mgr) {
+  initial_condition <- function(currentState, modelData, winik_mgr, resource_mgr) {
     resource_mgr$add_resource(resource$new(name="corn", quantity=5))
   }
 
-  corn_model <- function(currentState, previousState, modelData, population_manager, resource_mgr) {
+  corn_model <- function(currentState, previousState, modelData, winik_mgr, resource_mgr) {
       if(gregorian::diff_days(currentState$date, gregorian::as_gregorian("100-01-04")) == 0) {
         # On the third day add 5 corn
         corn_resource <- resource_mgr$get_resource("corn")
@@ -78,18 +78,17 @@ test_that("propagate runs a custom model", {
 })
 
 test_that("propagate runs multiple custom models", {
-
-  initial_conditions <-function(currentState, modelData, population_manager, resource_mgr) {
+  initial_conditions <-function(currentState, modelData, winik_mgr, resource_mgr) {
     resource_mgr$add_resource(resource$new(name="corn", quantity=5))
     resource_mgr$add_resource(resource$new(name="salmon", quantity=1))
   }
 
-  corn_model <- function(currentState, previousState, modelData, population_manager, resource_mgr) {
+  corn_model <- function(currentState, previousState, modelData, winik_mgr, resource_mgr) {
     corn <- resource_mgr$get_resource("corn")
     corn$quantity <-corn$quantity + 1
   }
 
-  salmon_model <- function(currentState, previousState, modelData, population_manager, resource_mgr) {
+  salmon_model <- function(currentState, previousState, modelData, winik_mgr, resource_mgr) {
     salmon <- resource_mgr$get_resource("salmon")
     salmon$quantity <-salmon$quantity + 1
   }

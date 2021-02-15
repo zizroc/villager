@@ -33,8 +33,6 @@ simulation <- R6::R6Class("simulation",
                         #'
                         #' @return None
                         run_model = function() {
-
-
                           for (village in self$villages) {
                             village$set_initial_state(self$start_date)
                           }

@@ -10,7 +10,7 @@
 #' @field tradePartners A list of villages that this village can trade with
 #' @field models A list of functions or a single function that should be run at each timestep
 #' @field modelData Optional data that models may need
-#' @field population_manager The manager that handles all of the winiks
+#' @field winik_mgr The manager that handles all of the winiks
 #' @field resource_mgr The manager that handles all of the resources
 #' @section Methods:
 #' \describe{
@@ -30,7 +30,7 @@ village <- R6::R6Class("village",
                          tradePartners = NA,
                          models = NULL,
                          modelData = NULL,
-                         population_manager = NULL,
+                         winik_mgr = NULL,
                          resource_mgr = NULL,
 
                          #' Initializes a village
@@ -42,14 +42,14 @@ village <- R6::R6Class("village",
                          #' @param initial_condition A function that gets called on the first timestep
                          #' @param models A list of functions or a single function that should be run at each timestep
                          #' @param modelData Optional data that models may need
-                         #' @param population_manager A population manager that may have winiks inside
+                         #' @param winik_mgr A population manager that may have winiks inside
                          initialize = function(name,
                                                initial_condition,
                                                models = list(),
                                                modelData=NULL,
-                                               population_manager=NULL) {
+                                               winik_mgr=NULL) {
                            self$initial_condition <- initial_condition
-                           self$population_manager <- winik_manager$new()
+                           self$winik_mgr <- winik_manager$new()
                            self$resource_mgr <- resource_manager$new()
                            # Check to see if the user supplied a single model, outside of a list
                            # If so, put it in a vector because other code expects 'models' to be a list
@@ -80,17 +80,14 @@ village <- R6::R6Class("village",
                            village_data <- self$StateRecords[[length(self$StateRecords)]]$clone(deep=TRUE)
                            # Update the date in the state record to reflect the current date
                            village_data$date <- date
-                           self$population_manager$increment_winik_ages()
+                           self$winik_mgr$increment_winik_ages()
                            # Run each of the models
                            for (model in self$models) {
                              # Create a read only copy of the last state so that users can make decisions off of it
                                previous_state_copy <- self$StateRecords[[length(self$StateRecords)]]$clone(deep=TRUE)
-                               model(village_data, previous_state_copy, self$modelData, self$population_manager,
-                                     self$resource_mgr)
-                               }
-
-                           # Update the states for each manager
-                           village_data$winik_states <- self$population_manager$get_states()
+                               model(village_data, previous_state_copy, self$modelData, self$winik_mgr, self$resource_mgr)
+                           }
+                           village_data$winik_states <- self$winik_mgr$get_states()
                            village_data$resource_states <- self$resource_mgr$get_states()
                            self$StateRecords <- c(self$StateRecords, village_data)
                          },
@@ -134,9 +131,8 @@ village <- R6::R6Class("village",
                            # Get a reference to the first village record that was set in the 'initialize' method. This is
                            # populated in the model.
                            village_data <- self$StateRecords[[length(self$StateRecords)]]
-                           village_data$date <- date
-                           self$initial_condition(village_data, self$modelData, self$population_manager, self$resource_mgr)
-                           village_data$winik_states <- self$population_manager$get_states()
+                           self$initial_condition(village_data, self$modelData, self$winik_mgr, self$resource_mgr)
+                           village_data$winik_states <- self$winik_mgr$get_states()
                            village_data$resource_states <- self$resource_mgr$get_states()
                          },
 

@@ -2,12 +2,12 @@
 
 test_that("models can add winiks each day", {
   # Create a model that creates a new winik each day
-  population_model <- function(currentState, previousState, modelData, population_manager, resource_mgr) {
+  population_model <- function(currentState, previousState, modelData, winik_mgr, resource_mgr) {
     new_winik <- winik$new()
-    population_manager$add_winik(new_winik)
+    winik_mgr$add_winik(new_winik)
   }
 
-  initial_condition <- function(currentState, modelData, population_manager, resource_mgr){
+  initial_condition <- function(currentState, modelData, winik_mgr, resource_mgr){
     # Do nothing
   }
   # Create a default village
@@ -15,8 +15,8 @@ test_that("models can add winiks each day", {
   # Run for 5 days
   new_siumulator <- simulation$new(start_date="100-01-01", end_date = "100-01-05", villages = list(plains_village))
   new_siumulator$run_model()
-  testthat::expect_length(new_siumulator$villages[[1]]$population_manager$winiks, 4)
-  ending_population <- new_siumulator$villages[[1]]$population_manager$get_living_population()
+  testthat::expect_length(new_siumulator$villages[[1]]$winik_mgr$winiks, 4)
+  ending_population <- new_siumulator$villages[[1]]$winik_mgr$get_living_population()
   testthat::expect_equal(ending_population, 4)
 })
 
@@ -24,12 +24,12 @@ test_that("models can add and change resource quantities", {
   # Create a model that creates a stock of corn
   # At the end of three days, make sure that there are 6 corn stocks
 
-  initial_condition <- function(currentState, modelData, population_manager, resource_mgr) {
+  initial_condition <- function(currentState, modelData, winik_mgr, resource_mgr) {
     crop_resource <- resource$new(name="corn", quantity=0)
     resource_mgr$add_resource(crop_resource)
   }
 
-  deterministic_crop_stock_model <- function(currentState, previousState, modelData, population_manager, resource_mgr) {
+  deterministic_crop_stock_model <- function(currentState, previousState, modelData, winik_mgr, resource_mgr) {
     corn <- resource_mgr$get_resource("corn")
     corn$quantity <-corn$quantity + 3
   }
@@ -49,18 +49,18 @@ test_that("models can change resoources based on information from the winik_mana
   # For this unit test, the population is constant.
   # If things are working properly, there should be 8 crops left after 3 days
 
-  initial_condition <- function(currentState, modelData, population_manager, resource_mgr) {
+  initial_condition <- function(currentState, modelData, winik_mgr, resource_mgr) {
     # Create an initial stock of crops and add 2 winiks
     crop_resource <- resource$new(name="crops", quantity=20)
     resource_mgr$add_resource(crop_resource)
-    population_manager$add_winik(winik$new())
-    population_manager$add_winik(winik$new())
+    winik_mgr$add_winik(winik$new())
+    winik_mgr$add_winik(winik$new())
   }
 
-  crop_stock_model <- function(currentState, previousState, modelData, population_manager, resource_mgr) {
+  crop_stock_model <- function(currentState, previousState, modelData, winik_mgr, resource_mgr) {
     crops <- resource_mgr$get_resource("crops")
     # Each villager eats 2 crops each day
-    crops$quantity <- crops$quantity - 2 * population_manager$get_living_population()
+    crops$quantity <- crops$quantity - 2 * winik_mgr$get_living_population()
   }
 
   # Create a default village
@@ -77,22 +77,22 @@ test_that("models can change resoources based on information from the winik_mana
 
 test_that("models can have dynamics based on winik behavior", {
 
-  initial_condition <- function(currentState, modelData, population_manager, resource_mgr) {
+  initial_condition <- function(currentState, modelData, winik_mgr, resource_mgr) {
     # Create an initial stock of crops and add 2 winiks
     crop_resource <- resource$new(name="crops", quantity=20)
     resource_mgr$add_resource(crop_resource)
 
-    population_manager$add_winik(winik$new())
-    population_manager$add_winik(winik$new())
+    winik_mgr$add_winik(winik$new())
+    winik_mgr$add_winik(winik$new())
   }
 
   # Create a model where winiks are added if there is extra food available
-  crop_stock_model <- function(currentState, previousState, modelData, population_manager, resource_mgr) {
-      crops <- resource_mgr$get_resource("crops")
-      crops$quantity <- crops$quantity + 1
-      if(crops$quantity-population_manager$get_living_population() > 0) {
-        population_manager$add_winik(winik$new())
-      }
+  crop_stock_model <- function(currentState, previousState, modelData, winik_mgr, resource_mgr) {
+    crops <- resource_mgr$get_resource("crops")
+    crops$quantity <- crops$quantity + 1
+    if(crops$quantity-winik_mgr$get_living_population() > 0) {
+      winik_mgr$add_winik(winik$new())
+    }
   }
 
   # Create a default village
@@ -104,28 +104,28 @@ test_that("models can have dynamics based on winik behavior", {
   record_length <- length(new_siumulator$villages[[1]]$StateRecords)
   last_record <- new_siumulator$villages[[1]]$StateRecords[[record_length]]
 
-  testthat::expect_equal(plains_village$population_manager$get_living_population(), 5)
+  testthat::expect_equal(plains_village$winik_mgr$get_living_population(), 5)
 })
 
 test_that("winiks and resources can have properties changed in models", {
 
-  initial_condition <- function(currentState, modelData, population_manager, resource_mgr) {
+  initial_condition <- function(currentState, modelData, winik_mgr, resource_mgr) {
     # Create an initial state of 4 winiks, all alive and marine resources
     resource_mgr$add_resource(resource$new(name = "marine", quantity = 100))
     dead_winik_id <- "dead_winik_1"
     dead_winik2_id <- "dead_winik_2"
 
-    population_manager$add_winik(winik$new(identifier = dead_winik_id, alive=FALSE))
-    population_manager$add_winik(winik$new(identifier = dead_winik2_id, alive=FALSE))
-    population_manager$add_winik(winik$new(alive=TRUE))
-    population_manager$add_winik(winik$new(alive=TRUE))
+    winik_mgr$add_winik(winik$new(identifier = dead_winik_id, alive=FALSE))
+    winik_mgr$add_winik(winik$new(identifier = dead_winik2_id, alive=FALSE))
+    winik_mgr$add_winik(winik$new(alive=TRUE))
+    winik_mgr$add_winik(winik$new(alive=TRUE))
   }
 
   # Create a model where winiks are set to alive/dead
-  crop_stock_model <- function(currentState, previousState, modelData, population_manager, resource_mgr) {
+  crop_stock_model <- function(currentState, previousState, modelData, winik_mgr, resource_mgr) {
     # If it's not the first year, then set two winiks to the dead state
-    winik_1 <- population_manager$get_winik("dead_winik_1")
-    winik_2 <- population_manager$get_winik("dead_winik_2")
+    winik_1 <- winik_mgr$get_winik("dead_winik_1")
+    winik_2 <- winik_mgr$get_winik("dead_winik_2")
     winik_1$alive <- FALSE
     winik_2$alive <- FALSE
     marine_resource <- resource_mgr$get_resource("marine")
@@ -141,8 +141,8 @@ test_that("winiks and resources can have properties changed in models", {
   record_length <- length(new_siumulator$villages[[1]]$StateRecords)
   last_record <- new_siumulator$villages[[1]]$StateRecords[[record_length]]
   testthat::expect_equal(plains_village$resource_mgr$get_resource("marine")$quantity, 50)
-  testthat::expect_equal(plains_village$population_manager$get_living_population(), 2)
-  testthat::expect_equal(plains_village$population_manager$get_living_population(), 2)
+  testthat::expect_equal(plains_village$winik_mgr$get_living_population(), 2)
+  testthat::expect_equal(plains_village$winik_mgr$get_living_population(), 2)
 })
 
 
@@ -179,49 +179,20 @@ test_that("winiks profession can change based on age", {
   # Create a default village
   plains_village  <- village$new("Test Village", initial_condition, models=winik_model)
   # Run the simulationn for a year so that the winiks get assigned new professionns
-  new_siumulator <- simulation$new(start_date="-100-01-01", end_date = "-99-01-01", villages = list(plains_village))
+  new_siumulator <- simulation$new(start_date="100-01-01", end_date = "101-01-01", villages = list(plains_village))
   new_siumulator$run_model()
 
   # Check to see that the professions are correct
-  village_winik_mgr <- new_siumulator$villages[[1]]$population_manager
+  village_winik_mgr <- new_siumulator$villages[[1]]$winik_mgr
+  print(plains_village$StateRecords[[1]]$winik_states)
+  print(village_winik_mgr$get_winik("male1"))
+  print(village_winik_mgr$get_winik("male1")$profession)
+  print(village_winik_mgr$get_winik("male1")$profession)
+  print(village_winik_mgr$get_winik("male1")$profession)
+
   testthat::expect_equal(village_winik_mgr$get_winik("male1")$profession, "Forager")
   testthat::expect_equal(village_winik_mgr$get_winik("male2")$profession, "Fisher")
   testthat::expect_equal(village_winik_mgr$get_winik("female1")$profession, "Farmer")
   testthat::expect_equal(village_winik_mgr$get_winik("female2")$profession, "Child")
-
-})
-
-test_that("winiks can be killed after a particular age", {
-
-  initial_condition <- function(currentState, modelData, winik_manager, resource_mgr) {
-    # 40 years old male
-    winik_manager$add_winik(winik$new(identifier = "male1", age=15705, alive=TRUE, gender="Male"))
-    # 20 year old male
-    winik_manager$add_winik(winik$new(identifier = "male2", age=15705, alive=TRUE, gender="Male"))
-  }
-
-  # Create a model where winiks are set to alive/dead
-  winik_model <- function(currentState, previousState, modelData, winik_mgr, resource_mgr) {
-    # Loop over each winik that is alive and check if they should expire
-    for (living_winik in winik_mgr$get_living_winiks()) {
-      if (living_winik$age >= 16436) {
-        living_winik$alive <- FALSE
-      }
-    }
-  }
-
-  # Create a default village
-  plains_village  <- village$new("Test Village", initial_condition, models=winik_model)
-  # Run the simulationn for two years to age the winiks to 45
-  new_siumulator <- simulation$new(start_date="-100-01-01", end_date = "-98-01-02", villages = list(plains_village))
-  new_siumulator$run_model()
-
-  # Check to see that the professions are correct
-  village_winik_mgr <- new_siumulator$villages[[1]]$population_manager
-  testthat::expect_equal(village_winik_mgr$get_winik("male1")$alive, FALSE)
-  testthat::expect_equal(village_winik_mgr$get_winik("male2")$alive, FALSE)
-
-  testthat::expect_length(village_winik_mgr$get_living_winiks(), 0)
-  testthat::expect_equal(village_winik_mgr$get_living_population(), 0)
 
 })

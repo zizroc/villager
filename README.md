@@ -54,10 +54,10 @@ Where
 Suppose you wanted to create a village that has an initial population of three winiks. The initial condition would look like
 
 ```
-  initial_condition <- function(current_state, model_data, population_mgr, resource_mgr) {
+  initial_condition <- function(current_state, model_data, winik_mgr, resource_mgr) {
     for (i in 0:3) {
       new_winik <- winik$new(first_name <- i, last_name <- "smith")
-      population_mgr$add_winik(new_winik)
+      winik_mgr$add_winik(new_winik)
     }
   }
 ```
@@ -66,7 +66,7 @@ Suppose you wanted to create a village that has an initial population of three w
 Suppose you wanted to add reasources to the initial state. This is possible with the resource_mgr parameter.
 
 ```
-initial_condition <- function(current_state, model_data, population_mgr, resource_mgr) {
+initial_condition <- function(current_state, model_data, winik_mgr, resource_mgr) {
   for (i in 0:3) {
     new_resource <- resource$new(name="corn", quantity = 10)
     resource_mgr$add_resource(new_resource)
@@ -74,12 +74,26 @@ initial_condition <- function(current_state, model_data, population_mgr, resourc
 }
 ```
 
+#### Adding Winiks to a Village
+The `winik_mgr` object that passed into the model is used to add winiks to the village.
+
+```
+  test_model <- function(currentState, previousState, modelData, winik_mgr, resource_mgr) {
+    if (currentState$year == 1) {
+      # Load a number of winiks from a theoretic winik file
+      winik_mgr("winiks.csv")
+    } else {
+      # If it's not year 1, add a winik
+      new_winik<-winik$new()
+      winik_mgr$add_winik(new_winik)
+  }
+=======
 ### Modeling
 
 Like the initial condition, models are defined as functions. The template for a valid function is
 
 ```
-model <- function(current_state, previous_state, model_data, population_mgr, resource_mgr) {
+model <- function(current_state, previous_state, model_data, winik_mgr, resource_mgr) {
   # Model logic here
 }
 ```
@@ -92,6 +106,18 @@ plains_village <- village(models = model)
 A village can have any number of model functions defined for it, enabling logic to be encapsulated and organized. For example, a second model can be created and added to the village.
 
 ```
+  test_model <- function(currentState, previousState, modelData, winik_mgr, resource_mgr) {
+    if (currentState$year == 1) {
+      # Load any resources from disk
+      resource_mgr$load("resources.csv")
+      
+      # Add a resource that wasn't in the file
+      corn <- resource$new(name="corn", quantity=10)
+    } else {
+      # Add 1 to the corn stocks
+      corn <- resource_mgr$get_resource("corn")
+      corn$quantity <- corn$quantity + 1
+  }
 model_2 <- function(current_state, previous_state, model_data, population_mgr, resource_mgr) {
   # Model logic here
 }
@@ -125,13 +151,13 @@ It's also possible to encompass population logic within other structures. For ex
 two winiks to the village on even days and kills one on odd days. In this case, the `$ate` slot in `current_state` is used
 to get the current date in terms of the `gregorian` R package.
 ```
-  initial_condition <- function(current_state, model_data, population_mgr, resource_mgr) {
+  initial_condition <- function(current_state, model_data, winik_mgr, resource_mgr) {
     # Add a single winik. This is the equivalent to saying the model starts with a single villager.
     new_winik <- winik$new(first_name <- "Sally", last_name <- "Smith")
-    population_mgr$add_winik(new_winik)
+    winik_mgr$add_winik(new_winik)
   }
 
-  model <- function(current_state, previous_state, model_data, population_mgr, resource_mgr) {
+  model <- function(current_state, previous_state, model_data, winik_mgr, resource_mgr) {
     current_day <- current_state$date$day
     if((current_day%%2) == 0) {
       # Then it's an even day
@@ -139,11 +165,11 @@ to get the current date in terms of the `gregorian` R package.
       for (i in 1:2) {
         name <- runif(1, 0.0, 100)
         new_winik <- winik$new(first_name <- name, last_name <- "Smith")
-        population_mgr$add_winik(new_winik)
+        winik_mgr$add_winik(new_winik)
       }
     } else {
       # It's an odd day
-      living_winiks <- population_mgr$get_living_winiks()
+      living_winiks <- winik_mgr$get_living_winiks()
       # Kill the first one
       living_winiks[[1]]$alive <- FALSE
     }
