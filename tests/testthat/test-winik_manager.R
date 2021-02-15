@@ -50,7 +50,7 @@ test_that("the manager returns the correct winik index", {
   winik_mgr$add_winik(test_winik_3)
 
   index <- winik_mgr$get_winik_index(test_winik_2$identifier)
-  expect_true(index == winik_2_id)
+  expect_true(index == 2)
 })
 
 test_that("the manager removes winiks", {
@@ -130,6 +130,18 @@ test_that("the manager can load winiks from disk", {
   testthat::expect_equal(jim_morrison$gender, "male")
   testthat::expect_equal(jim_morrison$alive, FALSE)
   testthat::expect_equal(jim_morrison$age, 27)
+})
+
+test_that("increment_winik_ages increases the age of the winik by one day", {
+  winik_mgr <- winik_manager$new()
+  winik_mgr$load("test-files/test-winiks.csv")
+  for (living_winik in winik_mgr$get_living_winiks()) {
+    testthat::expect_equal(living_winik$age, 35)
+  }
+  winik_mgr$increment_winik_ages()
+  for (living_winik in winik_mgr$get_living_winiks()) {
+    testthat::expect_equal(living_winik$age, 36)
+  }
 })
 
 #test_that("add_partner connects one winik to another", {

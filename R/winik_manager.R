@@ -15,6 +15,7 @@
 #'   \item{\code{get_states()}}{Returns all of the villager states in a vector}
 #'   \item{\code{get_winik_index()}}{Retrieves the index of a winik in the internal list}
 #'   \item{\code{get_average_age()}}{Returns the average age in years of the winiks}
+#'   \item{\code{increment_winik_ages()}}{Increases the age of each winik by a day}
 #'   \item{\code{load()}}{Loads winiks from disk}
 #'   }
 winik_manager <- R6::R6Class("winik_manager",
@@ -105,7 +106,7 @@ winik_manager <- R6::R6Class("winik_manager",
                                    #' @param winik_identifier The identifier of the winik being located
                                    #' @return The index in the list, or R's default return value
                                    get_winik_index = function(winik_identifier) {
-                                     for (i in seq_along(length(self$winiks))) {
+                                     for (i in 1:length(self$winiks)) {
                                        if (self$winiks[[i]]$identifier == winik_identifier) {
                                          return (i)
                                        }
@@ -122,7 +123,6 @@ winik_manager <- R6::R6Class("winik_manager",
                                    },
 
                                    #' Returns the total number of winiks that are alive
-                                   #' @export
                                    #' @return The numnber of living winiks
                                    get_living_population = function(){
                                      total_living_population <- 0
@@ -147,6 +147,16 @@ winik_manager <- R6::R6Class("winik_manager",
 
                                     average_age_days = total_age/length(self$winiks)
                                     return (average_age_days/364)
+                                   },
+
+                                   #' Increases the age of the winik by one day
+                                   #' @details Iterates over all of the winiks that the manager is managing and
+                                   #' increases the age by a single day.
+                                   #' @return None
+                                   increment_winik_ages = function() {
+                                     for (living_winik in self$get_living_winiks()) {
+                                       living_winik$age <- living_winik$age + 1
+                                     }
                                    },
 
                                    #' Loads winiks from disk
