@@ -85,8 +85,7 @@ village <- R6::R6Class("village",
                            for (model in self$models) {
                              # Create a read only copy of the last state so that users can make decisions off of it
                                previous_state_copy <- self$StateRecords[[length(self$StateRecords)]]$clone(deep=TRUE)
-                               model(currentState=village_data, previousState=previous_state_copy, modelData=self$modelData,
-                                     winik_mgr=self$winik_mgr, resource_mgr=self$resource_mgr)
+                               model(village_data, previous_state_copy, self$modelData, self$winik_mgr, self$resource_mgr)
                            }
                            village_data$winik_states <- self$winik_mgr$get_states()
                            village_data$resource_states <- self$resource_mgr$get_states()
