@@ -6,17 +6,17 @@
 #' @field winiks A list of winiks
 #' @section Methods:
 #' \describe{
-#'   \item{\code{initialize()}}{Creates a new manager}
-#'   \item{\code{propegate()}}{Advances the winik one timestep}
-#'   \item{\code{get_winik()}}{Retrieves a minik from the manager}
-#'   \item{\code{get_living_winiks()}}{Returns the winik objects for winiks that are alive}
 #'   \item{\code{add_winik()}}{Adds a winik to the manager}
-#'   \item{\code{remove_winik()}}{Removes a winik from the manager}
-#'   \item{\code{get_states()}}{Returns all of the villager states in a vector}
-#'   \item{\code{get_winik_index()}}{Retrieves the index of a winik in the internal list}
 #'   \item{\code{get_average_age()}}{Returns the average age in years of the winiks}
-#'   \item{\code{increment_winik_ages()}}{Increases the age of each winik by a day}
+#'   \item{\code{get_living_winiks()}}{Returns the winik objects for winiks that are alive}
+#'   \item{\code{get_states()}}{Returns all of the villager states in a vector}
+#'   \item{\code{get_winik()}}{Retrieves a minik from the manager}
+#'   \item{\code{get_winik_index()}}{Retrieves the index of a winik in the internal list}
+#'   \item{\code{initialize()}}{Creates a new manager}
 #'   \item{\code{load()}}{Loads winiks from disk}
+#'   \item{\code{propegate()}}{Advances the winik one timestep}
+#'   \item{\code{propagate()}}{Runs every day}
+#'   \item{\code{remove_winik()}}{Removes a winik from the manager}
 #'   }
 winik_manager <- R6::R6Class("winik_manager",
                      public = list(winiks = NULL,
@@ -149,13 +149,26 @@ winik_manager <- R6::R6Class("winik_manager",
                                     return (average_age_days/364)
                                    },
 
-                                   #' Increases the age of the winik by one day
-                                   #' @details Iterates over all of the winiks that the manager is managing and
-                                   #' increases the age by a single day.
+                                   #' Winik manager code that needs to run every day
                                    #' @return None
-                                   increment_winik_ages = function() {
+                                   propagate = function() {
                                      for (living_winik in self$get_living_winiks()) {
-                                       living_winik$age <- living_winik$age + 1
+                                       living_winik$propagate()
+                                     }
+                                   },
+
+                                   #' Takes all of the winiks in the manager and reconstructs the children
+                                   #' @return None
+                                   add_children = function() {
+                                     for (winik in self$winiks) {
+                                       if(!is.na(winik$mother_id)) {
+                                         mother <- self$get_winik(winik$mother_id)
+                                         mother$add_child(winik)
+                                       }
+                                       if(!is.na(winik$father_id)) {
+                                         father <- self$get_winik(winik$father_id)
+                                         father$add_child(winik)
+                                       }
                                      }
                                    },
 
@@ -181,5 +194,6 @@ winik_manager <- R6::R6Class("winik_manager",
                                                                health=winiks_row$health)
                                        self$add_winik(new_winik)
                                      }
+                                     self$add_children()
                                    }
                      ))

@@ -184,15 +184,8 @@ test_that("winiks profession can change based on age", {
 
   # Check to see that the professions are correct
   village_winik_mgr <- new_siumulator$villages[[1]]$winik_mgr
-  print(plains_village$StateRecords[[1]]$winik_states)
-  print(village_winik_mgr$get_winik("male1"))
-  print(village_winik_mgr$get_winik("male1")$profession)
-  print(village_winik_mgr$get_winik("male1")$profession)
-  print(village_winik_mgr$get_winik("male1")$profession)
-
   testthat::expect_equal(village_winik_mgr$get_winik("male1")$profession, "Forager")
   testthat::expect_equal(village_winik_mgr$get_winik("male2")$profession, "Fisher")
   testthat::expect_equal(village_winik_mgr$get_winik("female1")$profession, "Farmer")
   testthat::expect_equal(village_winik_mgr$get_winik("female2")$profession, "Child")
-
 })
