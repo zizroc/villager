@@ -21,7 +21,7 @@
 #'   \item{\code{as_tibble()}}{Represents the current state of the winik as a tibble}
 #'   \item{\code{get_age()}}{Returns age in terms of years}
 #'   \item{\code{get_gender()}}{}
-#'   \item{\code{get_last_birth()}}{Get the number of days since the winik last gave birth}
+#'   \item{\code{get_days_sincelast_birth()}}{Get the number of days since the winik last gave birth}
 #'   \item{\code{initialize()}}{Create a new winik}
 #'   \item{\code{propagate()}}{Runs every day}
 #'   }
@@ -103,7 +103,7 @@ winik <- R6::R6Class("winik",
                                       #' the age of the most recently born winik
                                       #'
                                       #' @return The number of days since last birth
-                                      get_last_birth = function() {
+                                      get_days_since_last_birth = function() {
                                         if(length(self$children) > 0) {
                                           # This works because the children list is sorted
                                           return (self$children[[1]]$age)
