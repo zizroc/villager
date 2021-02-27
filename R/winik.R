@@ -18,41 +18,43 @@
 #' @field health A percentage value of the winik's current health
 #' @section Methods:
 #' \describe{
-#'   \item{\code{initialize()}}{Create a new winik}
-#'   \item{\code{get_gender()}}{}
-#'   \item{\code{get_age()}}{Returns age in terms of years}
 #'   \item{\code{as_tibble()}}{Represents the current state of the winik as a tibble}
+#'   \item{\code{get_age()}}{Returns age in terms of years}
+#'   \item{\code{get_gender()}}{}
+#'   \item{\code{get_days_sincelast_birth()}}{Get the number of days since the winik last gave birth}
+#'   \item{\code{initialize()}}{Create a new winik}
+#'   \item{\code{propagate()}}{Runs every day}
 #'   }
 winik <- R6::R6Class("winik",
-                        public = list(identifier = NULL,
-                                      first_name=NULL,
-                                      last_name=NULL,
-                                      age=NULL,
-                                      mother_id=NULL,
-                                      father_id=NULL,
-                                      profession=NULL,
-                                      partner=NULL,
-                                      children=NULL,
-                                      gender=NULL,
+                        public = list(age=NULL,
                                       alive=NULL,
+                                      children=NULL,
+                                      father_id=NULL,
+                                      first_name=NULL,
+                                      gender=NULL,
                                       health=NULL,
+                                      identifier = NULL,
+                                      last_name=NULL,
+                                      mother_id=NULL,
+                                      partner=NULL,
+                                      profession=NULL,
 
                                       #' Create a new winik
                                       #'
                                       #' @description Used to created new winik objects.
                                       #'
                                       #' @export
+                                      #' @param age The age of the winik
+                                      #' @param alive Boolean whether the winik is alive or not
+                                      #' @param children An ordered list of of the children from this winik
+                                      #' @param gender The gender of the winik
                                       #' @param identifier The winik's identifier
                                       #' @param first_name The winik's first name
                                       #' @param last_name The winik's last naem
-                                      #' @param age The age of the winik
                                       #' @param mother_id The identifier of the winik's monther
                                       #' @param father_id The identifier of the winik' father
                                       #' @param partner The identifier of the winik's partner
-                                      #' @param children A list of identifiers of the children from this winik
                                       #' @param profession The winik's profession
-                                      #' @param gender The gender of the winik
-                                      #' @param alive Boolean whether the winik is alive or not
                                       #' @param health A percentage value of the winik's current health
                                       #' @return A new winik object
                                       initialize = function(identifier=NULL,
@@ -62,7 +64,7 @@ winik <- R6::R6Class("winik",
                                                             mother_id=NA,
                                                             father_id=NA,
                                                             partner=NA,
-                                                            children=list(),
+                                                            children=vector(mode = "character"),
                                                             gender=NA,
                                                             profession=NA,
                                                             alive=TRUE,
@@ -77,7 +79,7 @@ winik <- R6::R6Class("winik",
                                         self$profession <- profession
                                         self$gender <- gender
                                         self$partner <- partner
-                                        self$children <-children
+                                        self$children <- children
                                         self$health <- health
                                       },
 
@@ -88,6 +90,58 @@ winik <- R6::R6Class("winik",
                                       is_alive = function() {
                                         # The villager survived the day
                                         return (self$alive)
+                                      },
+
+                                      #' Handles logic for the winik that's done each day
+                                      #'
+                                      #' @return None
+                                      propagate = function() {
+                                        self$age <- self$age + 1
+                                      },
+
+                                      #' Gets the number of days from the last birth. This is also
+                                      #' the age of the most recently born winik
+                                      #'
+                                      #' @return The number of days since last birth
+                                      get_days_since_last_birth = function() {
+                                        if(length(self$children) > 0) {
+                                          # This works because the children list is sorted
+                                          return (self$children[[1]]$age)
+                                        }
+                                        return (0)
+                                      },
+
+                                      #' Adds a child to the winik. This mehtod ensures that the
+                                      #' 'children' vector is ordered.
+                                      #'
+                                      #' @param child The Winik object representing the child
+                                      #' @return None
+                                      add_child = function(child) {
+
+                                        # HACK TURN THIS INTO ANYTHING ELSE
+                                        bubble_sort <- function() {
+                                          children_length <- length(self$children)
+                                          if(children_length<= 1) {
+                                            return()
+                                          }
+                                          for (i in 1:children_length) {
+                                            j_len <- children_length-1
+                                            for (j in 1:j_len) {
+                                              if (self$children[[j]]$age > self$children[[j+1]]$age) {
+                                                temp <- self$children[j+1]
+                                                self$children[j+1] <- self$children[j]
+                                                self$children[j] <- temp
+                                              }
+                                            }
+                                          }
+                                        }
+
+                                        if (length(self$children) == 0) {
+                                          self$children <- c(self$children, child)
+                                        } else {
+                                          self$children <- append(self$children, child, after = 0)
+                                          bubble_sort()
+                                        }
                                       },
 
                                       #' Returns a tibble representation of the winik

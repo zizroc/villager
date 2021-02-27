@@ -132,16 +132,59 @@ test_that("the manager can load winiks from disk", {
   testthat::expect_equal(jim_morrison$age, 27)
 })
 
-test_that("increment_winik_ages increases the age of the winik by one day", {
+test_that("propagate increases the age of the winik by one day", {
   winik_mgr <- winik_manager$new()
   winik_mgr$load("test-files/test-winiks.csv")
   for (living_winik in winik_mgr$get_living_winiks()) {
     testthat::expect_equal(living_winik$age, 35)
   }
-  winik_mgr$increment_winik_ages()
+  winik_mgr$propagate()
   for (living_winik in winik_mgr$get_living_winiks()) {
     testthat::expect_equal(living_winik$age, 36)
   }
+})
+
+test_that("the winik manager can properly add children to parents", {
+  winik_mgr <- winik_manager$new()
+
+  # Create two sets of parents
+  mother_1 = winik$new(identifier="mother1", alive=TRUE)
+  mother_2 = winik$new(identifier="mother2", alive=TRUE)
+  father_1 = winik$new(identifier="father1", alive=TRUE)
+  father_2 = winik$new(identifier="father2", alive=TRUE)
+  winik_mgr$add_winik(mother_1)
+  winik_mgr$add_winik(mother_2)
+  winik_mgr$add_winik(father_1)
+  winik_mgr$add_winik(father_2)
+  # Connect the mom and dads
+  winik_mgr$connect_winiks(mother_1, father_1)
+  winik_mgr$connect_winiks(mother_2, father_2)
+
+  # Make sure that they're really connected
+  testthat::expect_equal(mother_1$partner, father_1$identifier)
+  testthat::expect_equal(father_1$partner, mother_1$identifier)
+  testthat::expect_equal(mother_2$partner, father_2$identifier)
+  testthat::expect_equal(father_2$partner, mother_2$identifier)
+
+
+  # Create two children for the first set of parents
+  child1 = winik$new(identifier="child1", alive=TRUE, mother_id = mother_1$identifier, father_id = father_1$identifier)
+  child2 = winik$new(identifier="child2", alive=TRUE, mother_id = mother_1$identifier, father_id = father_1$identifier)
+  # Create another two for the other parents
+  child3 = winik$new(identifier="child3", alive=TRUE, mother_id = mother_2$identifier, father_id = father_2$identifier)
+  child4 = winik$new(identifier="child4", alive=TRUE, mother_id = mother_2$identifier, father_id = father_2$identifier)
+
+  winik_mgr$add_winik(child1)
+  winik_mgr$add_winik(child2)
+  winik_mgr$add_winik(child3)
+  winik_mgr$add_winik(child4)
+
+  # Use the winik manager to add the children to the parents
+  winik_mgr$add_children()
+  testthat::expect_length(mother_1$children, 2)
+  testthat::expect_length(father_1$children, 2)
+  testthat::expect_length(mother_2$children, 2)
+  testthat::expect_length(father_2$children, 2)
 })
 
 #test_that("add_partner connects one winik to another", {

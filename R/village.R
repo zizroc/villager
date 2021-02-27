@@ -80,7 +80,7 @@ village <- R6::R6Class("village",
                            village_data <- self$StateRecords[[length(self$StateRecords)]]$clone(deep=TRUE)
                            # Update the date in the state record to reflect the current date
                            village_data$date <- date
-                           self$winik_mgr$increment_winik_ages()
+                           self$winik_mgr$propagate()
                            # Run each of the models
                            for (model in self$models) {
                              # Create a read only copy of the last state so that users can make decisions off of it
@@ -131,6 +131,7 @@ village <- R6::R6Class("village",
                            # Get a reference to the first village record that was set in the 'initialize' method. This is
                            # populated in the model.
                            village_data <- self$StateRecords[[length(self$StateRecords)]]
+                           village_data$date <- date
                            self$initial_condition(village_data, self$modelData, self$winik_mgr, self$resource_mgr)
                            village_data$winik_states <- self$winik_mgr$get_states()
                            village_data$resource_states <- self$resource_mgr$get_states()
