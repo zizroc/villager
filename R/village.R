@@ -140,7 +140,8 @@ village <- R6::R6Class("village",
                            self$initial_condition(self$StateRecords[[1]], self$modelData, self$winik_mgr, self$resource_mgr)
                            self$StateRecords[[1]]$winik_states <- self$winik_mgr$get_states()
                            self$StateRecords[[1]]$resource_states <- self$resource_mgr$get_states()
-                         },
+                           self$StateRecords[[1]]$date <- date
+                          },
 
                         #' @description Gives a tibble representation of the state
                         #' @return Returns a tibble composing of rows which are
