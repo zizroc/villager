@@ -112,6 +112,7 @@ winik_manager <- R6::R6Class("winik_manager",
                                          return (i)
                                        }
                                      }
+                                     return(NA)
                                    },
 
                                    #' Connects two winiks together as mates
@@ -163,12 +164,16 @@ winik_manager <- R6::R6Class("winik_manager",
                                    add_children = function() {
                                      for (winik in self$winiks) {
                                        if(!is.na(winik$mother_id)) {
-                                         mother <- self$get_winik(winik$mother_id)
-                                         mother$add_child(winik)
+                                         if (!is.na(self$get_winik_index(winik$mother_id))) {
+                                          mother <- self$get_winik(winik$mother_id)
+                                          mother$add_child(winik)
+                                         }
                                        }
                                        if(!is.na(winik$father_id)) {
-                                         father <- self$get_winik(winik$father_id)
-                                         father$add_child(winik)
+                                         if (!is.na(self$get_winik_index(winik$father_id))) {
+                                          father <- self$get_winik(winik$father_id)
+                                          father$add_child(winik)
+                                         }
                                        }
                                      }
                                    },
