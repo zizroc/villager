@@ -83,22 +83,23 @@ winik_manager <- R6::R6Class("winik_manager",
                                     self$winiks<-self$winiks[- winik_index]
                                    },
 
-                                   #' Returns a tibble of winiks
+                                   #' Returns a data.frame of winiks
                                    #'
-                                   #' @details Each row of the tibble represents a winik object
-                                   #' @return A single tibble of all winiks
+                                   #' @details Each row of the data.frame represents a winik object
+                                   #' @return A single data.frame of all winiks
                                    get_states = function() {
-                                     # Create a data frame to hold the states
-                                     state_tibble <- tibble::tibble()
-                                     for (i in seq_along(self$winiks)) {
-                                       if (i ==1) {
-                                         state_tibble <- self$winiks[[i]]$as_tibble()
-                                       }
-                                       else {
-                                         state_tibble <- rbind(state_tibble, self$winiks[[i]]$as_tibble())
+                                     # Allocate the appropriate sized table so that the row can be emplaced instead of appended
+                                     winik_count <- length(self$winiks)
+                                     state_table <- data.frame(matrix(nrow=winik_count,
+                                                                      ncol=length(names(villager::winik$public_fields))))
+                                     if(winik_count > 0) {
+                                       # Name the columns the name of public fields in the winik
+                                       colnames(state_table) <- names(villager::winik$public_fields)
+                                       for (i in 1:winik_count) {
+                                         state_table[i, ] <-  self$winiks[[i]]$as_table()
                                        }
                                      }
-                                     return (state_tibble)
+                                     return(state_table)
                                    },
 
                                    #' Returns the index of a winik in the internal winik list

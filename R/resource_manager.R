@@ -63,21 +63,24 @@ resource_manager <- R6::R6Class("resource_manager",
                                                 }
                                               },
 
-                                              #' Returns a vector of resources represented as tibbles
+                                              #' Returns a dataframe where each row is a resource
                                               #'
-                                              #' @return A list of data frames
+                                              #' @return A single dataframe
                                               get_states = function() {
                                                 # Create a data frame to hold the states
-                                                state_tibble <- tibble::tibble()
-                                                for (i in seq_along(self$resources)) {
-                                                  if (i ==1) {
-                                                    state_tibble <- self$resources[[i]]$as_tibble()
-                                                  }
-                                                  else {
-                                                    state_tibble <- rbind(state_tibble, self$resources[[i]]$as_tibble())
+
+                                                # Allocate the appropriate sized table so that the row can be emplaced instead of appended
+                                                resource_count <- length(self$resources)
+                                                state_table <- data.frame(matrix(nrow=resource_count,
+                                                                                 ncol=length(names(villager::resource$public_fields))))
+                                                if(resource_count > 0) {
+                                                  # Name the columns the name of public fields in the resource
+                                                  colnames(state_table) <- names(villager::resource$public_fields)
+                                                  for (i in 1:resource_count) {
+                                                    state_table[i, ] <-  self$resources[[i]]$as_table()
                                                   }
                                                 }
-                                                return (state_tibble)
+                                                return(state_table)
                                               },
 
                                               #' Loads a csv file of resources into the manager

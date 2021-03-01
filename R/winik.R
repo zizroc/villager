@@ -144,16 +144,16 @@ winik <- R6::R6Class("winik",
                                         }
                                       },
 
-                                      #' Returns a tibble representation of the winik
+                                      #' Returns a data.frame representation of the winik
                                       #'
                                       #' @description I hope there's a more scalable way to do this in R; Adding every new attribute to this
                                       #' function isn't practical
                                       #' @details The village_state holds a copy of all of the villagers at each timestep; this method is used to turn
                                       #' the winik properties into the object inserted in the village_state.
                                       #' @export
-                                      #' @return A tibble representation of the winik
-                                      as_tibble = function() {
-                                        winik_tibble <- tibble::tibble(
+                                      #' @return A data.frame representation of the winik
+                                      as_table = function() {
+                                        winik_tibble <- data.frame(
                                           identifier = self$identifier,
                                           first_name = self$first_name,
                                           last_name = self$last_name,

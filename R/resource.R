@@ -25,12 +25,12 @@ resource <- R6::R6Class("resource",
                             self$quantity <- quantity
                           },
 
-                          #' Returns a tibble representation of the resource
+                          #' Returns a dataframe representation of the resource
                           #'
                           #' @export
-                          #' @return A tibble representation of the resource
-                          as_tibble = function() {
-                            return(tibble::tibble(
+                          #' @return A dataframe
+                          as_table = function() {
+                            return(data.frame(
                               name = self$name,
                               quantity = self$quantity
                             ))
