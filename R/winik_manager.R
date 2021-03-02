@@ -26,7 +26,7 @@ winik_manager <- R6::R6Class("winik_manager",
                                    #' @description Used to create a new manager to handle a population of
                                    #' winiks
                                    initialize = function() {
-                                    self$winiks <- vector()
+                                    self$winiks <- c()
                                    },
 
                                    #' Advances all of the winiks a single time step
@@ -93,8 +93,10 @@ winik_manager <- R6::R6Class("winik_manager",
                                      state_table <- data.frame(matrix(nrow=winik_count,
                                                                       ncol=length(names(villager::winik$public_fields))))
                                      if(winik_count > 0) {
-                                       # Name the columns the name of public fields in the winik
-                                       colnames(state_table) <- names(villager::winik$public_fields)
+                                       # Since we know that a winik exists and we need to match the columns here with the
+                                       # column names in winik::as_table, get the first winik and use its column names
+                                       sample_winik <- self$winiks[[1]]$as_table()
+                                       colnames(state_table) <- names(sample_winik)
                                        for (i in 1:winik_count) {
                                          state_table[i, ] <-  self$winiks[[i]]$as_table()
                                        }

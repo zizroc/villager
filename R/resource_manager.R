@@ -74,8 +74,9 @@ resource_manager <- R6::R6Class("resource_manager",
                                                 state_table <- data.frame(matrix(nrow=resource_count,
                                                                                  ncol=length(names(villager::resource$public_fields))))
                                                 if(resource_count > 0) {
-                                                  # Name the columns the name of public fields in the resource
-                                                  colnames(state_table) <- names(villager::resource$public_fields)
+                                                  # Name the columns in the proper order
+                                                  test_resource <- self$resources[[1]]$as_table()
+                                                  colnames(state_table) <- names(test_resource)
                                                   for (i in 1:resource_count) {
                                                     state_table[i, ] <-  self$resources[[i]]$as_table()
                                                   }
