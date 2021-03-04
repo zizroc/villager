@@ -110,6 +110,7 @@ test_that("get_states returns the appropriate winik states", {
 
   states <- winik_mgr$get_states()
   print(states)
+  browser()
   testthat::expect_equal(1, 1)
 
 })
