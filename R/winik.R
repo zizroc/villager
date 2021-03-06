@@ -57,7 +57,7 @@ winik <- R6::R6Class("winik",
                                       #' @param profession The winik's profession
                                       #' @param health A percentage value of the winik's current health
                                       #' @return A new winik object
-                                      initialize = function(identifier=NULL,
+                                      initialize = function(identifier=NA,
                                                             first_name=NA,
                                                             last_name=NA,
                                                             age=0,
@@ -69,6 +69,10 @@ winik <- R6::R6Class("winik",
                                                             profession=NA,
                                                             alive=TRUE,
                                                             health=100) {
+                                        if (is.na(identifier)) {
+                                          library(uuid)
+                                          identifier <- uuid::UUIDgenerate()
+                                        }
                                         self$alive <- alive
                                         self$identifier <- identifier
                                         self$first_name <- first_name

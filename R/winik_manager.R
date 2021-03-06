@@ -26,7 +26,7 @@ winik_manager <- R6::R6Class("winik_manager",
                                    #' @description Used to create a new manager to handle a population of
                                    #' winiks
                                    initialize = function() {
-                                    self$winiks <- c()
+                                    self$winiks <- vector()
                                    },
 
                                    #' Advances all of the winiks a single time step
