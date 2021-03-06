@@ -33,16 +33,21 @@ simulation <- R6::R6Class("simulation",
                         #'
                         #' @return None
                         run_model = function() {
+                          total_days <- gregorian::diff_days(self$start_date, self$end_date)
                           for (village in self$villages) {
+                            village$optimize(total_days)
+
                             village$set_initial_state(self$start_date)
                           }
                           # Loop over each village and run the user defined initial condition function
                           current_date <- gregorian::add_days(self$start_date, 1)
                           date_diff <- gregorian::diff_days(current_date, self$end_date)
+                          total_days_passed <- 1
                           while (date_diff >= 0) {
                           # Iterate the villages a single timestep
-                            for(village in self$villages){
-                              village$propagate(current_date)
+                            for(village in self$villages) {
+                              village$propagate(current_date, total_days_passed)
+                              total_days_passed <- total_days_passed + 1
                             }
                             # Add '1' to the current day
                             current_date <- gregorian::add_days(current_date, 1)

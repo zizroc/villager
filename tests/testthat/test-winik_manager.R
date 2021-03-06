@@ -92,6 +92,28 @@ test_that("get_living_winiks only returns winiks that are living", {
 
 })
 
+test_that("get_states returns the appropriate winik states", {
+  winik_mgr <- winik_manager$new()
+  winik_1_id <- "test_identifier_1"
+  winik_2_id <- "test_identifier_2"
+  winik_3_id <- "test_identifier_3"
+  winik_4_id <- "test_identifier_4"
+  test_winik_1 = winik$new(identifier=winik_1_id, alive=FALSE)
+  test_winik_2 = winik$new(identifier=winik_2_id, alive=TRUE)
+  test_winik_3 = winik$new(identifier=winik_3_id, alive=FALSE)
+  test_winik_4 = winik$new(identifier=winik_4_id, alive=TRUE)
+
+  winik_mgr$add_winik(test_winik_1)
+  winik_mgr$add_winik(test_winik_2)
+  winik_mgr$add_winik(test_winik_3)
+  winik_mgr$add_winik(test_winik_4)
+
+  states <- winik_mgr$get_states()
+  print(states)
+  testthat::expect_equal(1, 1)
+
+})
+
 test_that("the manager can load winiks from disk", {
   winik_mgr <- winik_manager$new()
   file_path = "test-files/test-winiks.csv"

@@ -61,11 +61,18 @@ village <- R6::R6Class("village",
 
                            self$name <- name
                            # Creates an empty state that the initial condition will populate
-                           self$StateRecords <- c(village_state$new())
+                           self$StateRecords <- NULL
                            # Set the data
                            self$modelData<-modelData
                            # Initialize the trade partners to an empty list
                            self$tradePartners <- list()
+                         },
+
+                         #' Utility method for optimizing particular aspects of the village class
+                         #' @details In particalr, it's used to set the size of large vectors
+                         #' @param simulation_days The number of days that the simulation will run for
+                         optimize = function(simulation_days) {
+                          self$StateRecords <- vector(mode="list", length=simulation_days)
                          },
 
                          #' Propagates the village a single time step
@@ -73,23 +80,24 @@ village <- R6::R6Class("village",
                          #' @details This method is used to advance the village a single timestep. It should NOT be used
                          #' to set initial conditions. See the set_initial_state method.
                          #' @param date The date that the village is computing the new state for
+                         #' @param total_days_passed Number of days that have passed since the village's creation
                          #' @return None
-                         propagate = function(date) {
+                         propagate = function(date, total_days_passed) {
                            # Create a new state representing this slice in time. Since many of the
                            # values will be the same as the previous state, clone the previous state
-                           village_data <- self$StateRecords[[length(self$StateRecords)]]$clone(deep=TRUE)
+                           village_data <- self$StateRecords[[total_days_passed]]$clone(deep=TRUE)
                            # Update the date in the state record to reflect the current date
                            village_data$date <- date
                            self$winik_mgr$propagate()
                            # Run each of the models
                            for (model in self$models) {
                              # Create a read only copy of the last state so that users can make decisions off of it
-                               previous_state_copy <- self$StateRecords[[length(self$StateRecords)]]$clone(deep=TRUE)
+                               previous_state_copy <- self$StateRecords[[total_days_passed]]$clone(deep=TRUE)
                                model(village_data, previous_state_copy, self$modelData, self$winik_mgr, self$resource_mgr)
                            }
                            village_data$winik_states <- self$winik_mgr$get_states()
                            village_data$resource_states <- self$resource_mgr$get_states()
-                           self$StateRecords <- c(self$StateRecords, village_data)
+                           self$StateRecords[[total_days_passed+1]] <- village_data
                          },
 
                          #' Connects two villages so that they can trade with each other.
@@ -128,14 +136,12 @@ village <- R6::R6Class("village",
                          #' @description Runs the initial condition model
                          #' @param date The date that the the initial condition represents
                          set_initial_state = function(date) {
-                           # Get a reference to the first village record that was set in the 'initialize' method. This is
-                           # populated in the model.
-                           village_data <- self$StateRecords[[length(self$StateRecords)]]
-                           village_data$date <- date
-                           self$initial_condition(village_data, self$modelData, self$winik_mgr, self$resource_mgr)
-                           village_data$winik_states <- self$winik_mgr$get_states()
-                           village_data$resource_states <- self$resource_mgr$get_states()
-                         },
+                           self$StateRecords[[1]] <- village_state$new()
+                           self$initial_condition(self$StateRecords[[1]], self$modelData, self$winik_mgr, self$resource_mgr)
+                           self$StateRecords[[1]]$winik_states <- self$winik_mgr$get_states()
+                           self$StateRecords[[1]]$resource_states <- self$resource_mgr$get_states()
+                           self$StateRecords[[1]]$date <- date
+                          },
 
                         #' @description Gives a tibble representation of the state
                         #' @return Returns a tibble composing of rows which are
