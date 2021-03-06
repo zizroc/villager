@@ -9,7 +9,7 @@
 #' @field StateRecords A list of state objects, one for each time step
 #' @field tradePartners A list of villages that this village can trade with
 #' @field models A list of functions or a single function that should be run at each timestep
-#' @field modelData Optional data that models may need
+#' @field model_data Optional data that models may need
 #' @field winik_mgr The manager that handles all of the winiks
 #' @field resource_mgr The manager that handles all of the resources
 #' @section Methods:
@@ -29,7 +29,7 @@ village <- R6::R6Class("village",
                          StateRecords = NA,
                          tradePartners = NA,
                          models = NULL,
-                         modelData = NULL,
+                         model_data = NULL,
                          winik_mgr = NULL,
                          resource_mgr = NULL,
 
@@ -41,13 +41,9 @@ village <- R6::R6Class("village",
                          #' @param name An optional name for the village
                          #' @param initial_condition A function that gets called on the first timestep
                          #' @param models A list of functions or a single function that should be run at each timestep
-                         #' @param modelData Optional data that models may need
-                         #' @param winik_mgr A population manager that may have winiks inside
                          initialize = function(name,
                                                initial_condition,
-                                               models = list(),
-                                               modelData=NULL,
-                                               winik_mgr=NULL) {
+                                               models = list()) {
                            self$initial_condition <- initial_condition
                            self$winik_mgr <- winik_manager$new()
                            self$resource_mgr <- resource_manager$new()
@@ -63,7 +59,7 @@ village <- R6::R6Class("village",
                            # Creates an empty state that the initial condition will populate
                            self$StateRecords <- NULL
                            # Set the data
-                           self$modelData<-modelData
+                           self$model_data<-model_data$new()
                            # Initialize the trade partners to an empty list
                            self$tradePartners <- list()
                          },
@@ -93,7 +89,7 @@ village <- R6::R6Class("village",
                            for (model in self$models) {
                              # Create a read only copy of the last state so that users can make decisions off of it
                                previous_state_copy <- self$StateRecords[[total_days_passed]]$clone(deep=TRUE)
-                               model(village_data, previous_state_copy, self$modelData, self$winik_mgr, self$resource_mgr)
+                               model(village_data, previous_state_copy, self$model_data, self$winik_mgr, self$resource_mgr)
                            }
                            village_data$winik_states <- self$winik_mgr$get_states()
                            village_data$resource_states <- self$resource_mgr$get_states()
@@ -137,7 +133,7 @@ village <- R6::R6Class("village",
                          #' @param date The date that the the initial condition represents
                          set_initial_state = function(date) {
                            self$StateRecords[[1]] <- village_state$new()
-                           self$initial_condition(self$StateRecords[[1]], self$modelData, self$winik_mgr, self$resource_mgr)
+                           self$initial_condition(self$StateRecords[[1]], self$model_data, self$winik_mgr, self$resource_mgr)
                            self$StateRecords[[1]]$winik_states <- self$winik_mgr$get_states()
                            self$StateRecords[[1]]$resource_states <- self$resource_mgr$get_states()
                            self$StateRecords[[1]]$date <- date
