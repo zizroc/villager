@@ -5,7 +5,6 @@
 #' @details This class acts as a type of record that holds the values of the different village variables. This class can be subclassed
 #' to include more variables that aren't present.
 #' @field name An optional name for the village
-#' @field identifier The village inherits a unique identifier from the agent class. (This could make the name variable redundant.)
 #' @field initial_condition A function that sets the initial state of the village
 #' @field StateRecords A list of state objects, one for each time step
 #' @field tradePartners A list of villages that this village can trade with
