@@ -29,18 +29,18 @@ winik <- R6::R6Class(
   "winik",
   inherit = agent,
   public = list(
-    age       = NULL,
-    alive     = NULL,
-    children  = NULL,
+    age = NULL,
+    alive = NULL,
+    children = NULL,
     father_id = NULL,
-    first_name= NULL,
-    gender    = NULL,
-    health    = NULL,
-    identifier= NULL,
+    first_name = NULL,
+    gender = NULL,
+    health = NULL,
+    identifier = NULL,
     last_name = NULL,
     mother_id = NULL,
-    partner   = NULL,
-    profession= NULL,
+    partner = NULL,
+    profession = NULL,
 
     #' Create a new winik
     #'
@@ -62,16 +62,16 @@ winik <- R6::R6Class(
     #' @return A new winik object
     initialize = function(identifier = NA,
                           first_name = NA,
-                          last_name  = NA,
-                          age        = 0,
-                          mother_id  = NA,
-                          father_id  = NA,
-                          partner    = NA,
-                          children   = vector(mode = "character"),
-                          gender     = NA,
+                          last_name = NA,
+                          age = 0,
+                          mother_id = NA,
+                          father_id = NA,
+                          partner = NA,
+                          children = vector(mode = "character"),
+                          gender = NA,
                           profession = NA,
-                          alive      = TRUE,
-                          health     = 100) {
+                          alive = TRUE,
+                          health = 100) {
       # if (is.na(identifier)) {
       #   library(uuid)
       #   identifier <- uuid::UUIDgenerate()
