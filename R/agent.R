@@ -38,20 +38,5 @@ agent <- R6::R6Class(
     #'
     #' @return None
     propagate = function() {
-      self$age <- self$age + 1
-    },
-    #' Returns a data.frame representation of the agent
-    #'
-    #' @description This is a container for agent-state
-    #' @details The agent_state holds a copy of all of the agents at each timestep; this method is used to turn
-    #' the agent properties into the object inserted in the agent_state.
-    #' @export
-    #' @return A data.frame representation of the agent
-    as_table = function() {
-      winik_tibble <- data.frame(
-        identifier = self$identifier,
-        age        = self$age
-      )
-      return(winik_tibble)
-    }
+   }
   ))
