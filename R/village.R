@@ -37,7 +37,6 @@ village <- R6::R6Class("village",
                          #'
                          #' @description This method is meant to set the variables that are needed for a village to propagate through
                          #' time.
-                         #' @details Any villages that derive this class should call this method's initialize method.
                          #' @param name An optional name for the village
                          #' @param initial_condition A function that gets called on the first timestep
                          #' @param models A list of functions or a single function that should be run at each timestep

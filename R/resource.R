@@ -1,9 +1,9 @@
 #' @title resource
 #' @docType class
-#' @description This is an object that represents a single resource
-#' @details This class abstracts the idea of a resource
+#' @description This is an object that represents a single resource.
 #' @field name The name of the resource
-#' @field quantity The quantity of the resource held
+#' @field quantity The quantity of the resource that exists
+#' @export
 #' @section Methods:
 #' \describe{
 #'   \item{\code{initialize()}}{Create a new resource}
@@ -15,7 +15,7 @@ resource <- R6::R6Class("resource",
                           name = NA,
                           quantity = NA,
 
-                          #' Creates a new resource
+                          #' Creates a new resource.
                           #'
                           #' @description Creates a new resource object
                           #' @param name The name of the resource
@@ -25,10 +25,9 @@ resource <- R6::R6Class("resource",
                             self$quantity <- quantity
                           },
 
-                          #' Returns a dataframe representation of the resource
+                          #' Returns a data.frame representation of the resource
                           #'
-                          #' @export
-                          #' @return A dataframe
+                          #' @return A data.frame of resources
                           as_table = function() {
                             return(data.frame(
                               name = self$name,
