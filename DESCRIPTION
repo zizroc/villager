@@ -13,6 +13,7 @@ Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
+Remotes: edgararuiz/gregorian,
 Imports:
     covr,
     dplyr,
@@ -20,6 +21,7 @@ Imports:
     uuid,
     R6,
     testthat,
-    tibble
-Remotes: edgararuiz-zz/maya,
+    tibble,
+    remotes,
+    edgararuiz/gregorian
 VignetteBuilder: knitr
