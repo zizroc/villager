@@ -17,9 +17,9 @@ Imports:
     covr,
     dplyr,
     knitr,
-    gregorian,
     uuid,
     R6,
     testthat,
     tibble
+Remotes: edgararuiz-zz/maya,
 VignetteBuilder: knitr
