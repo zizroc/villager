@@ -16,6 +16,7 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Remotes:
     edgararuiz/gregorian,
+    jimhester/lintr
 Imports:
     covr,
     dplyr,
@@ -26,4 +27,6 @@ Imports:
     tibble,
     remotes,
     gregorian
+Suggests:
+  lintr
 VignetteBuilder: knitr
