@@ -1,8 +1,7 @@
 #' @export
 #' @title Resource Manager
 #' @docType class
-#' @description This object manages all of the resources in a village
-#' @details This class acts as an abstraction for handling many resources
+#' @description This object manages all of the resources in a village.
 #' @field resources A list of resource objects
 #' @section Methods:
 #' \describe{
@@ -17,9 +16,8 @@
 resource_manager <- R6::R6Class("resource_manager",
                                 public = list(resources = NULL,
 
-                                              #' Creates a new resource manager
-                                              #'
-                                              #' @description Used to create a new manager to handle resources
+                                              #' Creates a new , empty, resource manager for a village.
+                                              #' @description Get a new instance of a resource_manager
                                               initialize = function() {
                                                 self$resources <- vector()
                                               },
@@ -29,9 +27,11 @@ resource_manager <- R6::R6Class("resource_manager",
                                               #' @param name The name of the requested resource
                                               #' @return A resource object
                                               get_resource = function(name) {
-                                                for (res in self$resources)
-                                                  if (res$name == name)
+                                                for (res in self$resources) {
+                                                  if (res$name == name) {
                                                     return (res)
+                                                  }
+                                                }
                                               },
 
                                               #' Adds a resource to the manager.
