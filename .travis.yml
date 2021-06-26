@@ -1,8 +1,7 @@
 language: r
 cache: packages
 r:
-  - oldrel
-  - release
   - devel
+  - release
 after_success:
   - Rscript -e 'library(covr);codecov()'
