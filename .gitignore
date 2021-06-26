@@ -2,7 +2,7 @@ inst/doc
 # History files
 .Rhistory
 .Rapp.history
-
+.DS_Store
 # Session Data files
 .RData
 

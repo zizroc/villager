@@ -1,13 +1,14 @@
 Package: villager
 Title: A framework for simulating ancient village structures
 Version: 0.0.0.9000
-Authors@R: 
-    person(given = "First",
-           family = "Last",
-           role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+Authors@R: c(
+  person(
+    given = "Thomas",
+    family = "Thelen",
+    role = c("aut", "cre"),
+    email = "thelen@nceas.ucsb.edu"
+  ))
+Description: Villager is an agent based modeling framework designed to fit the needs of scientists modeling populations.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

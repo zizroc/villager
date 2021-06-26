@@ -1,55 +1,46 @@
 #' @export
 #' @title Winik Manager
 #' @docType class
-#' @description This object manages all of the winiks in a village
-#' @details This class acts as an abstraction for handling many villagers.
-#' @field winiks A list of winiks
+#' @description A class that abstracts the management of aggregations of Winik classes. Each village should have an instance
+#' of a winik_manager to interface the winiks inside.
+#' @field winiks A list of winiks objects that the winik manager manages.
 #' @section Methods:
 #' \describe{
-#'   \item{\code{add_winik()}}{Adds a winik to the manager}
-#'   \item{\code{get_average_age()}}{Returns the average age in years of the winiks}
-#'   \item{\code{get_living_winiks()}}{Returns the winik objects for winiks that are alive}
-#'   \item{\code{get_states()}}{Returns all of the villager states in a vector}
-#'   \item{\code{get_winik()}}{Retrieves a minik from the manager}
-#'   \item{\code{get_winik_index()}}{Retrieves the index of a winik in the internal list}
-#'   \item{\code{initialize()}}{Creates a new manager}
-#'   \item{\code{load()}}{Loads winiks from disk}
-#'   \item{\code{propegate()}}{Advances the winik one timestep}
-#'   \item{\code{propagate()}}{Runs every day}
+#'   \item{\code{add_winik()}}{Adds a single winik to the manager.}
+#'   \item{\code{get_average_age()}}{Returns the average age, in years, of all the winiks.}
+#'   \item{\code{get_living_winiks()}}{Gets a list of all the winiks that are currently alive.}
+#'   \item{\code{get_states()}}{Returns a data.frame consisting of all of the managed winiks.}
+#'   \item{\code{get_winik()}}{Retrieves a particular winik from the manager.}
+#'   \item{\code{get_winik_index()}}{Retrieves the index of a winik.}
+#'   \item{\code{initialize()}}{Creates a new manager instance.}
+#'   \item{\code{load()}}{Loads a csv file defining a population of winiks and places them in the manager.}
 #'   \item{\code{remove_winik()}}{Removes a winik from the manager}
 #'   }
 winik_manager <- R6::R6Class("winik_manager",
                      public = list(winiks = NULL,
 
-                                   #' Creates a new winik manager
+                                   #' Creates a new winik manager instance.
                                    #'
-                                   #' @description Used to create a new manager to handle a population of
-                                   #' winiks
+                                   #' @description
                                    initialize = function() {
                                     self$winiks <- vector()
                                    },
 
-                                   #' Advances all of the winiks a single time step
+                                   #' Given the identifier of a winik, sort through all of the managed winiks and return it
+                                   #' if it exists.
                                    #'
-                                   #' @details This might go away
-                                   propegate = function() {
-                                     #for (winik in self$winiks)
-                                       #winik$propegate()
-                                   },
-
-                                   #' Gets a winik given an identifier
-                                   #'
-                                   #' @details Oftentimes the identifier of the winik is known, and the object needs to be retrieved.
-                                   #' This method  is used to get the object, given the identifier
-                                   #' @param winik_identifier The identifier of the requested winik
-                                   #' @return A winik object
+                                   #' @description Return the R6 instance of a winik with identiifier 'winik_identifier'.
+                                   #' @param winik_identifier The identifier of the requested winik.
+                                   #' @return An R6 winik object
                                    get_winik = function(winik_identifier) {
-                                     for (winik in self$winiks)
-                                       if (winik$identifier == winik_identifier)
+                                     for (winik in self$winiks) {
+                                       if (winik$identifier == winik_identifier) {
                                         return (winik)
+                                       }
+                                     }
                                    },
 
-                                   #' Returns a list of all the winiks that are currently alive
+                                   #' Returns a list of all the winiks that are currently alive.
                                    #'
                                    #' @return A list of living winiks
                                    get_living_winiks = function() {
@@ -64,7 +55,7 @@ winik_manager <- R6::R6Class("winik_manager",
 
                                    #' Adds a winik to the manager.
                                    #'
-                                   #' @param new_winik The winik to add
+                                   #' @param new_winik The winik to add to the manager
                                    #' @return None
                                    add_winik = function(new_winik) {
                                      # Create an identifier if it's null
@@ -153,7 +144,8 @@ winik_manager <- R6::R6Class("winik_manager",
                                     return (average_age_days/364)
                                    },
 
-                                   #' Winik manager code that needs to run every day
+                                   #' Propagates all of the winiks a single step in time.
+                                   #'
                                    #' @return None
                                    propagate = function() {
                                      for (living_winik in self$get_living_winiks()) {
@@ -162,6 +154,10 @@ winik_manager <- R6::R6Class("winik_manager",
                                    },
 
                                    #' Takes all of the winiks in the manager and reconstructs the children
+                                   #'
+                                   #' @details This is typically called when loading winiks from disk for the first time.
+                                   #' When children are created during the simulation, the family connections are made
+                                   #' through the winik class and added to the manager via add_winik.
                                    #' @return None
                                    add_children = function() {
                                      for (winik in self$winiks) {
@@ -180,10 +176,10 @@ winik_manager <- R6::R6Class("winik_manager",
                                      }
                                    },
 
-                                   #' Loads winiks from disk
+                                   #' Loads winiks from disk.
                                    #'
-                                   #' @details Populates the winik manager with a set of winiks defined in a csv file
-                                   #' @param file_name The location of the file holding the winiks=
+                                   #' @details Populates the winik manager with a set of winiks defined in a csv file.
+                                   #' @param file_name The location of the file holding the winiks.
                                    #' @return None
                                    load = function(file_name) {
                                      winiks <- read.csv(file_name, row.names=NULL)
