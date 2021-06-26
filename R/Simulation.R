@@ -18,6 +18,7 @@ simulation <- R6::R6Class("simulation",
 
                         #' Creates a new Simulation instance
                         #'
+                        #' @description Creates a new simulation object to control the experiment
                         #' @param start_date The date to start the simulation
                         #' @param end_date The date that the simulation should end
                         #' @param villages A list of villages that will be simulated
