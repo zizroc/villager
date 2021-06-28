@@ -3,6 +3,7 @@ cache: packages
 r:
   - devel
   - release
+  - covr
 after_success:
   - Rscript -e 'library(covr);codecov()'
   - R CMD INSTALL $PKG_TARBALL
