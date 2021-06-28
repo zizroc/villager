@@ -109,10 +109,17 @@ test_that("get_states returns the appropriate winik states", {
   winik_mgr$add_winik(test_winik_4)
 
   states <- winik_mgr$get_states()
-  print(states)
-  browser()
-  testthat::expect_equal(1, 1)
+  testthat::expect_equal(states[1,]$identifier, winik_1_id)
+  testthat::expect_equal(states[1,]$alive, FALSE)
 
+  testthat::expect_equal(states[2,]$identifier, winik_2_id)
+  testthat::expect_equal(states[2,]$alive, TRUE)
+
+  testthat::expect_equal(states[3,]$identifier, winik_3_id)
+  testthat::expect_equal(states[3,]$alive, FALSE)
+
+  testthat::expect_equal(states[4,]$identifier, winik_4_id)
+  testthat::expect_equal(states[4,]$alive, TRUE)
 })
 
 test_that("the manager can load winiks from disk", {

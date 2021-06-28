@@ -14,12 +14,12 @@ also has an associated
 \section{Methods}{
 
 \describe{
-\item{\code{initialize()}}{Create a new winik}
-\item{\code{get_gender()}}{}
-\item{\code{propegate()}}{Unknown}
-\item{\code{add_partner()}}{Adds a partner to the wink}
-\item{\code{get_age()}}{Returns age in terms of years}
 \item{\code{as_tibble()}}{Represents the current state of the winik as a tibble}
+\item{\code{get_age()}}{Returns age in terms of years}
+\item{\code{get_gender()}}{}
+\item{\code{get_days_sincelast_birth()}}{Get the number of days since the winik last gave birth}
+\item{\code{initialize()}}{Create a new winik}
+\item{\code{propagate()}}{Runs every day}
 }
 Create a new winik
 }
@@ -49,7 +49,7 @@ Create a new winik
 
 \item{\code{children}}{A list of children identifiers}
 
-\item{\code{models}}{Unknown}
+\item{\code{health}}{A percentage value of the winik's current health}
 }
 \if{html}{\out{</div>}}
 }
@@ -57,14 +57,11 @@ Create a new winik
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{winik$new()}}
-\item \href{#method-get_gender}{\code{winik$get_gender()}}
-\item \href{#method-get_profession}{\code{winik$get_profession()}}
-\item \href{#method-propegate}{\code{winik$propegate()}}
 \item \href{#method-is_alive}{\code{winik$is_alive()}}
-\item \href{#method-has_child}{\code{winik$has_child()}}
-\item \href{#method-add_partner}{\code{winik$add_partner()}}
-\item \href{#method-get_age}{\code{winik$get_age()}}
-\item \href{#method-as_tibble}{\code{winik$as_tibble()}}
+\item \href{#method-propagate}{\code{winik$propagate()}}
+\item \href{#method-get_days_since_last_birth}{\code{winik$get_days_since_last_birth()}}
+\item \href{#method-add_child}{\code{winik$add_child()}}
+\item \href{#method-as_table}{\code{winik$as_table()}}
 \item \href{#method-clone}{\code{winik$clone()}}
 }
 }
@@ -72,23 +69,29 @@ Create a new winik
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
+Used to created new winik objects.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{winik$new(
+  identifier = NA,
   first_name = NA,
   last_name = NA,
   age = 0,
-  mother_id = NULL,
-  father_id = NULL,
-  partner = NULL,
-  children = list(),
-  gender = NULL,
-  models = vector()
+  mother_id = NA,
+  father_id = NA,
+  partner = NA,
+  children = vector(mode = "character"),
+  gender = NA,
+  profession = NA,
+  alive = TRUE,
+  health = 100
 )}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
+\item{\code{identifier}}{The winik's identifier}
+
 \item{\code{first_name}}{The winik's first name}
 
 \item{\code{last_name}}{The winik's last naem}
@@ -101,61 +104,23 @@ Create a new winik
 
 \item{\code{partner}}{The identifier of the winik's partner}
 
-\item{\code{children}}{A list of identifiers of the children from this winik}
+\item{\code{children}}{An ordered list of of the children from this winik}
 
 \item{\code{gender}}{The gender of the winik}
 
-\item{\code{models}}{Unknown
+\item{\code{profession}}{The winik's profession}
 
-Gets a random number between 0 and 1; Treat
-0: female
-1: male}
+\item{\code{alive}}{Boolean whether the winik is alive or not}
+
+\item{\code{health}}{A percentage value of the winik's current health}
 }
 \if{html}{\out{</div>}}
 }
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_gender"></a>}}
-\if{latex}{\out{\hypertarget{method-get_gender}{}}}
-\subsection{Method \code{get_gender()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{winik$get_gender()}\if{html}{\out{</div>}}
-}
-
 \subsection{Returns}{
-A string representing the gender
-Gets a random number between 0 and 1; Treat that as
-0: farmer
-1: fisher
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_profession"></a>}}
-\if{latex}{\out{\hypertarget{method-get_profession}{}}}
-\subsection{Method \code{get_profession()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{winik$get_profession()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-A string representing a profession
-Advance one time step
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-propegate"></a>}}
-\if{latex}{\out{\hypertarget{method-propegate}{}}}
-\subsection{Method \code{propegate()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{winik$propegate()}\if{html}{\out{</div>}}
-}
-
-\subsection{Details}{
-We need to think about how to make this flexible for people to use
+A new winik object
 A function that returns true or false whether the villager dies
 This is run each day
 }
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-is_alive"></a>}}
@@ -167,72 +132,74 @@ This is run each day
 
 \subsection{Returns}{
 A boolean whether the winik is alive (true for yes)
-If certain conditions are met, create a new child and connect its properties to the mother and father
-Poorly named function
+Handles logic for the winik that's done each day
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-has_child"></a>}}
-\if{latex}{\out{\hypertarget{method-has_child}{}}}
-\subsection{Method \code{has_child()}}{
+\if{html}{\out{<a id="method-propagate"></a>}}
+\if{latex}{\out{\hypertarget{method-propagate}{}}}
+\subsection{Method \code{propagate()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{winik$has_child()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{winik$propagate()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-A new winik that's a child of this one
-Adds a partner to the villager
+None
+Gets the number of days from the last birth. This is also
+the age of the most recently born winik
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-add_partner"></a>}}
-\if{latex}{\out{\hypertarget{method-add_partner}{}}}
-\subsection{Method \code{add_partner()}}{
+\if{html}{\out{<a id="method-get_days_since_last_birth"></a>}}
+\if{latex}{\out{\hypertarget{method-get_days_since_last_birth}{}}}
+\subsection{Method \code{get_days_since_last_birth()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{winik$add_partner(new_partner, add_back = TRUE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{winik$get_days_since_last_birth()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+The number of days since last birth
+Adds a child to the winik. This mehtod ensures that the
+'children' vector is ordered.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-add_child"></a>}}
+\if{latex}{\out{\hypertarget{method-add_child}{}}}
+\subsection{Method \code{add_child()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{winik$add_child(child)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{new_partner}}{The identifier of the partner winik}
-
-\item{\code{add_back}}{Adds this winik's identifier to the other winik
-Because age is stored as days, convert it to years}
+\item{\code{child}}{The Winik object representing the child}
 }
 \if{html}{\out{</div>}}
 }
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_age"></a>}}
-\if{latex}{\out{\hypertarget{method-get_age}{}}}
-\subsection{Method \code{get_age()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{winik$get_age()}\if{html}{\out{</div>}}
-}
-
 \subsection{Returns}{
-The age of the winik in years
-Returns a tibble representation of the winik
+None
+Returns a data.frame representation of the winik
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-as_tibble"></a>}}
-\if{latex}{\out{\hypertarget{method-as_tibble}{}}}
-\subsection{Method \code{as_tibble()}}{
-I hope there's a more scaleable way to do this in R; Adding every new attribute to this
+\if{html}{\out{<a id="method-as_table"></a>}}
+\if{latex}{\out{\hypertarget{method-as_table}{}}}
+\subsection{Method \code{as_table()}}{
+I hope there's a more scalable way to do this in R; Adding every new attribute to this
 function isn't practical
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{winik$as_tibble()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{winik$as_table()}\if{html}{\out{</div>}}
 }
 
 \subsection{Details}{
 The village_state holds a copy of all of the villagers at each timestep; this method is used to turn
-the winik properties into the object insertedin the villag_state.
+the winik properties into the object inserted in the village_state.
 }
 
 \subsection{Returns}{
-A tibble representation of the winik
+A data.frame representation of the winik
 }
 }
 \if{html}{\out{<hr>}}

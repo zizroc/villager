@@ -4,33 +4,32 @@
 #' @description This is an object that represents the state of a village at a particular time.
 #' @details This class acts as a type of record that holds the values of the different village variables. This class can be subclassed
 #' to include more variables that aren't present.
-#' @field name An optional name for the village
-#' @field initial_condition A function that sets the initial state of the village
-#' @field StateRecords A list of state objects, one for each time step
-#' @field tradePartners A list of villages that this village can trade with
-#' @field models A list of functions or a single function that should be run at each timestep
-#' @field model_data Optional data that models may need
-#' @field winik_mgr The manager that handles all of the winiks
-#' @field resource_mgr The manager that handles all of the resources
 #' @section Methods:
 #' \describe{
 #'   \item{\code{initialize()}}{Creates a new village}
 #'   \item{\code{propagate()}}{Advances the village a single time step}
 #'   \item{\code{set_initial_state()}}{Initializes the initial state of the village}
 #'   \item{\code{add_trade_partner(newTradePartner, addBack)}}{Adds a trde partner}.
-#'   \item{\code{trade()}}{Executes a trade at a time step}.
 #'   \item{\code{as_tibble()}}{Adds a trde partner}.
 #'   \item{\code{plot()}}{Plots the time dependant variables}.
 #'   }
 village <- R6::R6Class("village",
                        public = list(
+                         #' @field name An optional name for the village
                          name = NA,
+                         #' @field initial_condition A function that sets the initial state of the village
                          initial_condition = NA,
+                         #' @field StateRecords A list of state objects, one for each time step
                          StateRecords = NA,
+                         #' @field tradePartners A list of villages that this village can trade with
                          tradePartners = NA,
+                         #' @field models A list of functions or a single function that should be run at each timestep
                          models = NULL,
+                         #' @field model_data Optional data that models may need
                          model_data = NULL,
+                         #' @field winik_mgr The manager that handles all of the winiks
                          winik_mgr = NULL,
+                         #' @field resource_mgr The manager that handles all of the resources
                          resource_mgr = NULL,
 
                          #' Initializes a village
@@ -116,14 +115,6 @@ village <- R6::R6Class("village",
                              # Check if the other village should be connected back to this one
                              newTradePartner$add_trade_partner(self, FALSE)
                            }
-                         },
-
-                         #' Runs the village's trade algorithms
-                         #' @name trade
-                         #' @description Executes a village's trade
-                         #'
-                         trade = function() {
-
                          },
 
                          #' Runs the user defined function that sets the initial state of the village
