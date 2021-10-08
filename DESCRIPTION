@@ -13,6 +13,12 @@ Authors@R: c(
     family = "Aldana",
     role = c("aut", "cre"),
     email = "gvaldana@ucsb.edu"
+  ),
+  person(
+    given = "Marcus",
+    family = "Thomson",
+    role = c("aut", "cre"),
+    email = "zizroc@nceas.ucsb.edu"
   ))
 Description: Villager is an agent based modeling framework designed to fit the needs of scientists modeling populations.
 License: MIT + file LICENSE
