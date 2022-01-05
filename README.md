@@ -37,7 +37,8 @@ of the village. The template for an initial condition is
 
 ```
 initial_condition <- function(current_state, model_data, population_mgr, resource_mgr) {
-
+  ...
+  ...
 }
 ```
 
@@ -85,6 +86,7 @@ The `winik_mgr` object that passed into the model is used to add winiks to the v
       new_winik<-winik$new()
       winik_mgr$add_winik(new_winik)
   }
+```
 =======
 ### Modeling
 
@@ -92,7 +94,7 @@ Like the initial condition, models are defined as functions. The template for a 
 
 ```
 model <- function(current_state, previous_state, model_data, winik_mgr, resource_mgr) {
-  # Model logic here
+  Model logic here
 }
 ```
 
