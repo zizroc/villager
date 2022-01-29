@@ -2,7 +2,7 @@
 
 test_that("the constructor works", {
   resource_mgr <- resource_manager$new()
-  testthat::expect_equal(length(resource_mgr$resources), 0)
+  testthat::expect_equal(length(resource_mgr$get_resources()), 0)
 })
 
 test_that("resources are correctly added to the manager", {
@@ -15,11 +15,24 @@ test_that("resources are correctly added to the manager", {
   test_resource_2 <- resource$new(name=resource_2_name, quantity=resource_2_quantity)
 
   resource_mgr$add_resource(test_resource_1)
-  testthat::expect_equal(length(resource_mgr$resources), 1)
-  testthat::expect_equal(resource_mgr$resources[[1]]$name, resource_1_name)
+  testthat::expect_equal(length(resource_mgr$get_resources()), 1)
+  testthat::expect_equal(resource_mgr$get_resources()[[1]]$name, resource_1_name)
   resource_mgr$add_resource(test_resource_2)
-  testthat::expect_equal(length(resource_mgr$resources), 2)
+  testthat::expect_equal(length(resource_mgr$get_resources()), 2)
 
+})
+
+test_that("the manager returns all rsources", {
+  resource_mgr <- resource_manager$new()
+
+  apples  <- resource$new("apple", 5)
+  oranges <- resource$new("orange", 10)
+  cabbage <- resource$new("cabbage", 20)
+
+  resource_mgr$add_resource(apples)
+  resource_mgr$add_resource(oranges)
+  resource_mgr$add_resource(cabbage)
+  testthat::expect_equal(length(resource_mgr$get_resources()), 3)
 })
 
 test_that("the manager gets the correct resource", {
@@ -83,7 +96,7 @@ test_that("the manager removes resources", {
   resource_mgr$add_resource(test_resource_3)
 
   resource_mgr$remove_resource(resource_1_name)
-  testthat::expect_length(resource_mgr$resources, 2)
+  testthat::expect_length(resource_mgr$get_resources(), 2)
 })
 
 test_that("the manager can load resources from disk", {

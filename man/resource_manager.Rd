@@ -11,6 +11,7 @@ This object manages all of the resources in a village.
 
 \describe{
 \item{\code{initialize()}}{Creates a new manager}
+\item{\code{get_resources()}}{Gets all of the resources that the manager has}
 \item{\code{get_resource()}}{Retrieves a resource from the manager}
 \item{\code{add_resource()}}{Adds a resource to the manager}
 \item{\code{remove_resource()}}{Removes a resource from the manager}
@@ -28,10 +29,18 @@ Creates a new , empty, resource manager for a village.
 }
 \if{html}{\out{</div>}}
 }
+\section{Active bindings}{
+\if{html}{\out{<div class="r6-active-bindings">}}
+\describe{
+\item{\code{resources}}{A list of resource objects}
+}
+\if{html}{\out{</div>}}
+}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{resource_manager$new()}}
+\item \href{#method-get_resources}{\code{resource_manager$get_resources()}}
 \item \href{#method-get_resource}{\code{resource_manager$get_resource()}}
 \item \href{#method-add_resource}{\code{resource_manager$add_resource()}}
 \item \href{#method-remove_resource}{\code{resource_manager$remove_resource()}}
@@ -46,11 +55,24 @@ Creates a new , empty, resource manager for a village.
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
 Get a new instance of a resource_manager
-Gets a resource given a resource name
+Gets all of the managed resources
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{resource_manager$new()}\if{html}{\out{</div>}}
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_resources"></a>}}
+\if{latex}{\out{\hypertarget{method-get_resources}{}}}
+\subsection{Method \code{get_resources()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{resource_manager$get_resources()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+A list of resources
+Gets a resource given a resource name
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_resource"></a>}}
