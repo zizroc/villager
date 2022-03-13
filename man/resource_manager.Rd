@@ -19,20 +19,13 @@ This object manages all of the resources in a village.
 \item{\code{get_states()}}{Returns a list of states}
 \item{\code{load()}}{Loads a csv file of resources and adds them to the manager.}
 }
-Creates a new , empty, resource manager for a village.
 }
 
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{resources}}{A list of resource objects}
-}
-\if{html}{\out{</div>}}
-}
-\section{Active bindings}{
-\if{html}{\out{<div class="r6-active-bindings">}}
-\describe{
-\item{\code{resources}}{A list of resource objects}
+\item{\code{resources}}{A list of resource objects
+Creates a new , empty, resource manager for a village.}
 }
 \if{html}{\out{</div>}}
 }

@@ -44,7 +44,6 @@ Creates a new winik manager instance.
 \item \href{#method-connect_winiks}{\code{winik_manager$connect_winiks()}}
 \item \href{#method-get_living_population}{\code{winik_manager$get_living_population()}}
 \item \href{#method-get_average_age}{\code{winik_manager$get_average_age()}}
-\item \href{#method-propagate}{\code{winik_manager$propagate()}}
 \item \href{#method-add_children}{\code{winik_manager$add_children()}}
 \item \href{#method-load}{\code{winik_manager$load()}}
 \item \href{#method-clone}{\code{winik_manager$clone()}}
@@ -220,19 +219,6 @@ work better
 
 \subsection{Returns}{
 The average age in years
-Propagates all of the winiks a single step in time.
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-propagate"></a>}}
-\if{latex}{\out{\hypertarget{method-propagate}{}}}
-\subsection{Method \code{propagate()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{winik_manager$propagate()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-None
 Takes all of the winiks in the manager and reconstructs the children
 }
 }

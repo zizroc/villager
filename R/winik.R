@@ -96,13 +96,6 @@ winik <- R6::R6Class("winik",
                                         return (self$alive)
                                       },
 
-                                      #' Handles logic for the winik that's done each day
-                                      #'
-                                      #' @return None
-                                      propagate = function() {
-                                        self$age <- self$age + 1
-                                      },
-
                                       #' Gets the number of days from the last birth. This is also
                                       #' the age of the most recently born winik
                                       #'
@@ -158,18 +151,19 @@ winik <- R6::R6Class("winik",
                                       #' @return A data.frame representation of the winik
                                       as_table = function() {
                                         winik_tibble <- data.frame(
-                                          identifier = self$identifier,
+                                          age = self$age,
+                                          alive = self$alive,
+                                          father_id = self$father_id,
                                           first_name = self$first_name,
+                                          gender = self$gender,
+                                          health = self$health,
+                                          identifier = self$identifier,
                                           last_name = self$last_name,
                                           mother_id = self$mother_id,
-                                          father_id = self$father_id,
-                                          profession = self$profession,
                                           partner = self$partner,
-                                          gender = self$gender,
-                                          alive = self$alive,
-                                          age = self$age,
-                                          health = self$health
+                                          profession = self$profession
                                         )
+
                                        return(winik_tibble)
                                       }
                         ))

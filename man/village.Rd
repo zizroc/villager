@@ -17,9 +17,6 @@ to include more variables that aren't present.
 \item{\code{initialize()}}{Creates a new village}
 \item{\code{propagate()}}{Advances the village a single time step}
 \item{\code{set_initial_state()}}{Initializes the initial state of the village}
-\item{\code{add_trade_partner(newTradePartner, addBack)}}{Adds a trde partner}.
-\item{\code{as_tibble()}}{Adds a trde partner}.
-\item{\code{plot()}}{Plots the time dependant variables}.
 }
 }
 
@@ -30,9 +27,9 @@ to include more variables that aren't present.
 
 \item{\code{initial_condition}}{A function that sets the initial state of the village}
 
-\item{\code{StateRecords}}{A list of state objects, one for each time step}
+\item{\code{current_state}}{The village's current state}
 
-\item{\code{tradePartners}}{A list of villages that this village can trade with}
+\item{\code{previous_state}}{The village's previous state}
 
 \item{\code{models}}{A list of functions or a single function that should be run at each timestep}
 
@@ -49,12 +46,8 @@ Initializes a village}
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{village$new()}}
-\item \href{#method-optimize}{\code{village$optimize()}}
 \item \href{#method-propagate}{\code{village$propagate()}}
-\item \href{#method-add_trade_partner}{\code{village$add_trade_partner()}}
 \item \href{#method-set_initial_state}{\code{village$set_initial_state()}}
-\item \href{#method-as_tibble}{\code{village$as_tibble()}}
-\item \href{#method-plot}{\code{village$plot()}}
 \item \href{#method-clone}{\code{village$clone()}}
 }
 }
@@ -73,34 +66,13 @@ time.
 \describe{
 \item{\code{name}}{An optional name for the village}
 
-\item{\code{initial_condition}}{A function that gets called on the first timestep}
+\item{\code{initial_condition}}{A function that gets called on the first time step}
 
-\item{\code{models}}{A list of functions or a single function that should be run at each timestep
-Utility method for optimizing particular aspects of the village class}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-optimize"></a>}}
-\if{latex}{\out{\hypertarget{method-optimize}{}}}
-\subsection{Method \code{optimize()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{village$optimize(simulation_days)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{simulation_days}}{The number of days that the simulation will run for
+\item{\code{models}}{A list of functions or a single function that should be run at each time step
 Propagates the village a single time step}
 }
 \if{html}{\out{</div>}}
 }
-\subsection{Details}{
-In particalr, it's used to set the size of large vectors
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-propagate"></a>}}
@@ -126,34 +98,8 @@ to set initial conditions. See the set_initial_state method.
 
 \subsection{Returns}{
 None
-Connects two villages so that they can trade with each other.
+Runs the user defined function that sets the initial state of the village
 }
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-add_trade_partner"></a>}}
-\if{latex}{\out{\hypertarget{method-add_trade_partner}{}}}
-\subsection{Method \code{add_trade_partner()}}{
-Connects two villages together for trade
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{village$add_trade_partner(newTradePartner, addBack = TRUE)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{newTradePartner}}{A derived village object representing a village that this village
-can trade with}
-
-\item{\code{addBack}}{An optional parameter that, when true will
-Runs the user defined function that sets the initial state of the village}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Details}{
-This method takes advantage of R6's reference semantics. Because classes that are derived
-from village are R6, they can be directly modified.
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-set_initial_state"></a>}}
@@ -170,42 +116,6 @@ Runs the initial condition model
 \item{\code{date}}{The date that the the initial condition represents}
 }
 \if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-as_tibble"></a>}}
-\if{latex}{\out{\hypertarget{method-as_tibble}{}}}
-\subsection{Method \code{as_tibble()}}{
-Gives a tibble representation of the state
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{village$as_tibble()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-Returns a tibble composing of rows which are
-properties from village_state
-Plots a dependent variable against time
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-plot"></a>}}
-\if{latex}{\out{\hypertarget{method-plot}{}}}
-\subsection{Method \code{plot()}}{
-This method can be used to quickly spot check various dependent
-variables.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{village$plot(dependent_variable = "population")}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{dependent_variable}}{The variable name that should be plotted}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-Returns a ggplot object representing the plot
 }
 }
 \if{html}{\out{<hr>}}

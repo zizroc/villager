@@ -109,6 +109,7 @@ test_that("get_states returns the appropriate winik states", {
   winik_mgr$add_winik(test_winik_4)
 
   states <- winik_mgr$get_states()
+
   testthat::expect_equal(states[1,]$identifier, winik_1_id)
   testthat::expect_equal(states[1,]$alive, FALSE)
 
@@ -160,18 +161,6 @@ test_that("the manager can load winiks from disk", {
   testthat::expect_equal(jim_morrison$gender, "male")
   testthat::expect_equal(jim_morrison$alive, FALSE)
   testthat::expect_equal(jim_morrison$age, 27)
-})
-
-test_that("propagate increases the age of the winik by one day", {
-  winik_mgr <- winik_manager$new()
-  winik_mgr$load("test-files/test-winiks.csv")
-  for (living_winik in winik_mgr$get_living_winiks()) {
-    testthat::expect_equal(living_winik$age, 35)
-  }
-  winik_mgr$propagate()
-  for (living_winik in winik_mgr$get_living_winiks()) {
-    testthat::expect_equal(living_winik$age, 36)
-  }
 })
 
 test_that("the winik manager can properly add children to parents", {
