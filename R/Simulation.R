@@ -51,7 +51,7 @@ simulation <- R6::R6Class("simulation",
                           # Iterate the villages a single time step
                             for(village in self$villages) {
                               village$propagate(current_date, total_days_passed)
-                              #self$writer$write(village$current_state)
+                              self$writer$write(village$current_state, village$name)
                               total_days_passed <- total_days_passed + 1
                             }
                             # Add '1' to the current day

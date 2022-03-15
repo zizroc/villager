@@ -151,6 +151,7 @@ We can combine the examples above into a full simulation that...
 
 
 ```
+library(villager)
 initial_condition <- function(current_state, model_data, winik_mgr, resource_mgr) {
   # Create the initial villagers
   mother <- winik$new(first_name="Kirsten", last_name="Taylor", age=9125)
@@ -184,8 +185,6 @@ print(current_state$date)
   }
 }
 
-
-
 small_village <- village$new("Test Model", initial_condition, test_model)
 simulator <- simulation$new("-100-01-01", "-87-01-01", list(small_village))
 simulator$run_model()
@@ -200,36 +199,37 @@ To demonstrate programatically creating villagers, consider the model below that
 - Every odd day, one villager dies
 
 ```
-  initial_condition <- function(current_state, model_data, winik_mgr, resource_mgr) {
-      for (i in 1:10) {
-        name <- runif(1, 0.0, 100)
-        new_winik <- winik$new(first_name <- name, last_name <- "Smith")
-        winik_mgr$add_winik(new_winik)
-      }
+library(villager)
+initial_condition <- function(current_state, model_data, winik_mgr, resource_mgr) {
+  for (i in 1:10) {
+    name <- runif(1, 0.0, 100)
+    new_winik <- winik$new(first_name <- name, last_name <- "Smith")
+    winik_mgr$add_winik(new_winik)
   }
+}
 
-  model <- function(current_state, previous_state, model_data, winik_mgr, resource_mgr) {
+model <- function(current_state, previous_state, model_data, winik_mgr, resource_mgr) {
   print(current_state$date)
-    current_day <- current_state$date$day
-    if((current_day%%2) == 0) {
-      # Then it's an even day
-      # Create two new winiks whose first names are random numbers
-      for (i in 1:2) {
-        name <- runif(1, 0.0, 100)
-        new_winik <- winik$new(first_name <- name, last_name <- "Smith")
-        winik_mgr$add_winik(new_winik)
-      }
-    } else {
-      # It's an odd day
-      living_winiks <- winik_mgr$get_living_winiks()
-      # Kill the first one
-      living_winiks[[1]]$alive <- FALSE
+  current_day <- current_state$date$day
+  if((current_day%%2) == 0) {
+    # Then it's an even day
+    # Create two new winiks whose first names are random numbers
+    for (i in 1:2) {
+      name <- runif(1, 0.0, 100)
+      new_winik <- winik$new(first_name <- name, last_name <- "Smith")
+      winik_mgr$add_winik(new_winik)
     }
+  } else {
+    # It's an odd day
+    living_winiks <- winik_mgr$get_living_winiks()
+    # Kill the first one
+    living_winiks[[1]]$alive <- FALSE
   }
-  coastal_village <- village$new("Test village", initial_condition, model)
-  simulator <- simulation$new("-100-01-01", "-99-01-04", villages = list(coastal_village))
-  simulator$run_model()
-  ```
+}
+coastal_village <- village$new("Test village", initial_condition, model)
+simulator <- simulation$new("-100-01-01", "-99-01-04", villages = list(coastal_village))
+simulator$run_model()
+```
 
 ## Extending villager
 
@@ -371,17 +371,6 @@ simulator$run_model()
 Like the `resource` class, the `winik` class can also be extended to accomidate for modeling needs. The new class must declare that it inherits from the winik class with `inherit = winik`. A base subclassed winik class is given below. This 
 
 ```
-
-
-
-
-
-
-
-
-
-
-
 #' @export
 #' @title Winik
 #' @docType class
@@ -504,10 +493,6 @@ model <- function(current_state, previous_state, model_data, winik_mgr, resource
 coastal_village <- village$new("Village with expiring resources", initial_condition, model)
 simulator <- simulation$new("100-01-01", "101-01-04", villages = list(coastal_village))
 simulator$run_model()
-
-
-
-
 ```
 
 

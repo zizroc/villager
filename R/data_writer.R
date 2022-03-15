@@ -19,7 +19,6 @@ data_writer <- R6::R6Class("data_writer",
                                    #' Create a new data writer.
                                    #'
                                    #' @description Creates a new data writer object that has optional paths for data files.
-                                   #' @export
                                    #' @param results_directory The directory where the results file is written to
                                    #' @param winik_filename The name of the file for the winik data
                                    #' @param resource_filename The name of the file for the resource data
@@ -42,24 +41,26 @@ data_writer <- R6::R6Class("data_writer",
                                    #' @description Takes a state an the name of a village and writes the winiks and resources to disk
                                    #' @param state The village's village_state that's being written
                                    #' @param village_name The name of the village. This is used to create the data directory
-                                   #' @export
                                    #' @return None
                                    write = function(state, village_name) {
-                                     # Check the the village_name folder where the csv files are written to exists
+                                     # Check that the village_name folder where the csv files are written to exists; create it if it doesn't
                                      res_folder <- file.path(self$results_directory, village_name)
-                                     if (file.exists(res_folder)) {
-                                       unlink(res_folder, recursive = TRUE)
+                                     if (!file.exists(res_folder)) {
+                                       dir.create(res_folder, recursive = TRUE)
                                      }
-                                     dir.create(res_folder, recursive = TRUE)
-
-                                     # Write the winiks
-                                     winik_filename <- file.path(res_folder, self$winik_filename)
-
-                                     readr::write_csv(state$winik_states, winik_filename, na="NA")
+                                     # Write the winiks to disk
+                                     winik_path <- file.path(res_folder, self$winik_filename)
+                                     if (!file.exists(winik_path)) {
+                                       file.create(winik_path, recursive = TRUE)
+                                     }
+                                     readr::write_csv(state$winik_states, winik_path, na="NA", append=TRUE)
 
                                      # Write the resources
-                                     resource_filename <- file.path(res_folder, self$resource_filename)
-                                     write.table(state$resource_states, resource_filename, sep = ",")
+                                     resources_path <- file.path(res_folder, self$resource_filename)
+                                     if (!file.exists(resources_path)) {
+                                       file.create(resources_path, recursive = TRUE)
+                                     }
+                                     readr::write_csv(state$resource_states, resources_path, na="NA", append=TRUE)
                                    }
                                    )
                      )
