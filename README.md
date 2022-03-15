@@ -241,47 +241,7 @@ The `village` constructor takes optional arguments for the `winik` and `village`
 
 The current fields that a resource has are `name` and `amount`. This can be extended to include features like expiration dates or trade histories. To extend the `resource` class, start by copy and pasting the source into a new file. Pick an approriate name for the new class. In the case below, the extened class below adds functionality to track when a resource was created. The new class should have `inherit = resource` in its R6::R6Class constructor.
 
-```
-#' @title resource_expiration
-#' @docType class
-#' @description This is an object that represents a resource that tracks when it was created
-
-#' @field creation The date that the resource was created
-#' @export
-#' @section Methods:
-#' \describe{
-#'   \item{\code{initialize()}}{Create a new resource}
-#'   \item{\code{as_tibble()}}{Represents the current state of the resource as a tibble}
-#'   }
-resource_expiration <- R6::R6Class("resource_expiration",
-                                   inherit = resource,
-                                   cloneable = TRUE,
-                                   public = list(
-                                     creation_date = NA,
-                                     #' Creates a new resource.
-                                     #'
-                                     #' @param name The name of the resource
-                                     #' @param quantity The quantity present
-                                     initialize = function(name=NA, quantity=0, creation_date=NA) {
-                                       super$initialize(name, quantity)
-                                       # Your init code here
-                                     },
-
-                                     #' Returns a data.frame representation of the resource
-                                     #'
-                                     #' @return A data.frame of resources
-                                     as_table = function() {
-                                       return(data.frame(
-                                         name = self$name,
-                                         quantity = self$quantity
-                                       ))
-                                     }
-                                   )
-)
-```
-
-
-The class above can be extended to include an extra field that tracks when a resource was created.
+The class, `resource` can be extended to include an extra fields, such as when a resource was created.
 ```
 #' @title resource_expiration
 #' @docType class
@@ -368,7 +328,7 @@ simulator$run_model()
 
 ### Extending winiks
 
-Like the `resource` class, the `winik` class can also be extended to accomidate for modeling needs. The new class must declare that it inherits from the winik class with `inherit = winik`. A base subclassed winik class is given below. This 
+Like the `resource` class, the `winik` class can also be extended to accomidate for modeling needs. The new class must declare that it inherits from the winik class with `inherit = winik`. An example of a subclassed winik class is given below.
 
 ```
 #' @export
