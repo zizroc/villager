@@ -38,8 +38,7 @@ test_that("models can add and change resource quantities", {
   plains_village  <- village$new("Test village", initial_condition,models=deterministic_crop_stock_model)
   new_siumulator <- simulation$new(start_date="100-01-01", end_date = "100-01-04", villages = list(plains_village))
   new_siumulator$run_model()
-  record_length <- length(new_siumulator$villages[[1]]$StateRecords)
-  last_record <- new_siumulator$villages[[1]]$StateRecords[[record_length]]
+  last_record <- new_siumulator$villages[[1]]$current_state
   corn <- dplyr::filter(last_record$resource_states, name=="corn")
   testthat::expect_equal(corn$quantity, 9)
 })
@@ -70,7 +69,7 @@ test_that("models can change resoources based on information from the winik_mana
 
   # Check to see if the correct number are left
   record_length <- length(new_siumulator$villages[[1]]$StateRecords)
-  last_record <- new_siumulator$villages[[1]]$StateRecords[[record_length]]
+  last_record <- new_siumulator$villages[[1]]$current_state
   crops <- dplyr::filter(last_record$resource_states, name=="crops")
   testthat::expect_equal(crops$quantity, 8)
 })
@@ -138,8 +137,7 @@ test_that("winiks and resources can have properties changed in models", {
   new_siumulator$run_model()
 
   # Check to see if the correct number are left
-  record_length <- length(new_siumulator$villages[[1]]$StateRecords)
-  last_record <- new_siumulator$villages[[1]]$StateRecords[[record_length]]
+  last_record <- new_siumulator$villages[[1]]$current_state
   testthat::expect_equal(plains_village$resource_mgr$get_resource("marine")$quantity, 50)
   testthat::expect_equal(plains_village$winik_mgr$get_living_population(), 2)
   testthat::expect_equal(plains_village$winik_mgr$get_living_population(), 2)
@@ -170,6 +168,8 @@ test_that("winiks profession can change based on age", {
         living_winik$profession <- "Farmer"
       } else if (living_winik$age >= 5113 && living_winik$age <= 5113 && living_winik$gender == "Female") {
         living_winik$profession <- "Fisher"
+      } else if (living_winik$age < 5000 && living_winik$age > 3288) {
+        living_winik$profession <- "Farmer"
       } else if (living_winik$age < 3287) {
         living_winik$profession <- "Child"
       }

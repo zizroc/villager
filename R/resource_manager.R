@@ -2,10 +2,10 @@
 #' @title Resource Manager
 #' @docType class
 #' @description This object manages all of the resources in a village.
-#' @field resources A list of resource objects
 #' @section Methods:
 #' \describe{
 #'   \item{\code{initialize()}}{Creates a new manager}
+#'   \item{\code{get_resources()}}{Gets all of the resources that the manager has}
 #'   \item{\code{get_resource()}}{Retrieves a resource from the manager}
 #'   \item{\code{add_resource()}}{Adds a resource to the manager}
 #'   \item{\code{remove_resource()}}{Removes a resource from the manager}
@@ -14,12 +14,20 @@
 #'   \item{\code{load()}}{Loads a csv file of resources and adds them to the manager.}
 #'   }
 resource_manager <- R6::R6Class("resource_manager",
-                                public = list(resources = NULL,
-
+                                public = list(
+                                              #' @field resources A list of resource objects
+                                              resources = NA,
                                               #' Creates a new , empty, resource manager for a village.
                                               #' @description Get a new instance of a resource_manager
                                               initialize = function() {
                                                 self$resources <- vector()
+                                              },
+
+                                              #' Gets all of the managed resources
+                                              #'
+                                              #' @return A list of resources
+                                              get_resources = function() {
+                                                return (self$resources)
                                               },
 
                                               #' Gets a resource given a resource name

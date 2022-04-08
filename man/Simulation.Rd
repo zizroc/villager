@@ -24,6 +24,8 @@ Creates a new Simulation instance
 \item{\code{end_date}}{The Gregorian date that the simulation ends on}
 
 \item{\code{villages}}{A list of villages that the simulator will run}
+
+\item{\code{writer}}{An instance of a data_writer class for writing village data to disk}
 }
 \if{html}{\out{</div>}}
 }
@@ -42,7 +44,7 @@ Creates a new Simulation instance
 \subsection{Method \code{new()}}{
 Creates a new simulation object to control the experiment
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{simulation$new(start_date, end_date, villages)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{simulation$new(start_date, end_date, villages, writer = data_writer$new())}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -52,7 +54,9 @@ Creates a new simulation object to control the experiment
 
 \item{\code{end_date}}{The date that the simulation should end}
 
-\item{\code{villages}}{A list of villages that will be simulated
+\item{\code{villages}}{A list of villages that will be simulated}
+
+\item{\code{writer}}{The data writer to be used with the villages
 Runs the simulation}
 }
 \if{html}{\out{</div>}}

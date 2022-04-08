@@ -17,6 +17,7 @@ village_state <- R6::R6Class("village_state", cloneable = TRUE,
                           date = NA,
                           winik_states = NA,
                           resource_states = NA,
+
                           #' Creates a new State
                           #'
                           #' @description Initializes all of the properties in the state to the ones passed in. This should
@@ -34,19 +35,6 @@ village_state <- R6::R6Class("village_state", cloneable = TRUE,
                             self$date <- date
                             self$winik_states <- winik_states
                             self$resource_states <- resource_states
-                          },
-
-                          #' Returns a tibble representation of the state
-                          #'
-                          #' @description Sometimes it's useful to visualize the states. Tibbles are
-                          #' the common data structure to hold the data. This method gives a tibble
-                          #' with each property.
-                          #' @export
-                          #' @return Returns a tibble representation of the state
-                          as_tibble = function() {
-                            return(tibble::tibble(
-                              date = self$date,
-                            ))
                           }
+                          )
                         )
-)

@@ -37,7 +37,6 @@ Creates a new State
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{village_state$new()}}
-\item \href{#method-as_tibble}{\code{village_state$as_tibble()}}
 \item \href{#method-clone}{\code{village_state$clone()}}
 }
 }
@@ -62,8 +61,7 @@ be called by subclasses during initialization.
 
 \item{\code{winik_states}}{A vector of tibbles representing the states of the winiks}
 
-\item{\code{resource_states}}{A vector of tibbles representing the states of the resources
-Returns a tibble representation of the state}
+\item{\code{resource_states}}{A vector of tibbles representing the states of the resources}
 }
 \if{html}{\out{</div>}}
 }
@@ -72,21 +70,6 @@ When adding a new property, make sure to add it to the tibble
 representation.
 }
 
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-as_tibble"></a>}}
-\if{latex}{\out{\hypertarget{method-as_tibble}{}}}
-\subsection{Method \code{as_tibble()}}{
-Sometimes it's useful to visualize the states. Tibbles are
-the common data structure to hold the data. This method gives a tibble
-with each property.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{village_state$as_tibble()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-Returns a tibble representation of the state
-}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}

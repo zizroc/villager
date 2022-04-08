@@ -13,7 +13,7 @@ test_that("the initial models can properly set village states", {
   simulator <- simulation$new(start_date="100-01-01", end_date = "100-01-02", villages = list(new_village))
   simulator$run_model()
 
-  last_record <- simulator$villages[[1]]$StateRecords[[1]]$resource_states
+  last_record <- simulator$villages[[1]]$current_state$resource_states
 
   # Check that the initial state of corn is 5
   corn_row <- match("corn", last_record$name)
@@ -40,8 +40,7 @@ test_that("the initial condition is properly set", {
   new_village <- village$new("Test village", initial_condition)
   simulator <- simulation$new(start_date="100-01-01", end_date = "100-01-02", villages = list(new_village))
   simulator$run_model()
-
-  last_record <- simulator$villages[[1]]$StateRecords[[1]]$resource_states
+  last_record <- simulator$villages[[1]]$current_state$resource_states
   # Check that the initial state of corn is 5
   corn_row <- match("corn", last_record$name)
   corn_row<- last_record[corn_row,]
@@ -70,7 +69,7 @@ test_that("propagate runs a custom model", {
   simulator <- simulation$new(start_date="100-01-01", end_date = "100-01-04", villages = list(new_village))
   simulator$run_model()
 
-  last_record <- simulator$villages[[1]]$StateRecords[[4]]$resource_states
+  last_record <- simulator$villages[[1]]$current_state$resource_states
 
   corn_row <- match("corn", last_record$name)
   corn_row<- last_record[corn_row,]
@@ -99,11 +98,43 @@ test_that("propagate runs multiple custom models", {
   simulator$run_model()
   testthat::expect_length(simulator$villages, 1)
 
-  last_record <- simulator$villages[[1]]$StateRecords[[2]]$resource_states
+  last_record <- simulator$villages[[1]]$current_state$resource_states
   corn_row <- match("corn", last_record$name)
   corn_row<- last_record[corn_row,]
   salmon_row <- match("salmon", last_record$name)
   salmon_row<- last_record[salmon_row,]
-  testthat::expect_equal(corn_row$quantity, 6)
-  testthat::expect_equal(salmon_row$quantity, 2)
+  testthat::expect_equal(corn_row$quantity, 7)
+  testthat::expect_equal(salmon_row$quantity, 3)
+})
+
+
+test_that("The previous state is recorded", {
+  initial_conditions <-function(currentState, modelData, winik_mgr, resource_mgr) {
+    resource_mgr$add_resource(resource$new(name="corn", quantity=5))
+    resource_mgr$add_resource(resource$new(name="salmon", quantity=1))
+  }
+
+  corn_model <- function(currentState, previousState, modelData, winik_mgr, resource_mgr) {
+    corn <- resource_mgr$get_resource("corn")
+    corn$quantity <-corn$quantity + 1
+  }
+
+  salmon_model <- function(currentState, previousState, modelData, winik_mgr, resource_mgr) {
+    salmon <- resource_mgr$get_resource("salmon")
+    salmon$quantity <-salmon$quantity + 1
+  }
+
+  new_village <- village$new("Test village", initial_conditions, models=list(corn_model, salmon_model))
+
+  simulator <- simulation$new(start_date="100-01-01", end_date = "100-01-03", villages = list(new_village))
+  simulator$run_model()
+  testthat::expect_length(simulator$villages, 1)
+
+  last_record <- simulator$villages[[1]]$current_state$resource_states
+  corn_row <- match("corn", last_record$name)
+  corn_row<- last_record[corn_row,]
+  salmon_row <- match("salmon", last_record$name)
+  salmon_row<- last_record[salmon_row,]
+  testthat::expect_equal(corn_row$quantity, 7)
+  testthat::expect_equal(salmon_row$quantity, 3)
 })

@@ -58,7 +58,6 @@ Create a new winik
 \itemize{
 \item \href{#method-new}{\code{winik$new()}}
 \item \href{#method-is_alive}{\code{winik$is_alive()}}
-\item \href{#method-propagate}{\code{winik$propagate()}}
 \item \href{#method-get_days_since_last_birth}{\code{winik$get_days_since_last_birth()}}
 \item \href{#method-add_child}{\code{winik$add_child()}}
 \item \href{#method-as_table}{\code{winik$as_table()}}
@@ -132,19 +131,6 @@ This is run each day
 
 \subsection{Returns}{
 A boolean whether the winik is alive (true for yes)
-Handles logic for the winik that's done each day
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-propagate"></a>}}
-\if{latex}{\out{\hypertarget{method-propagate}{}}}
-\subsection{Method \code{propagate()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{winik$propagate()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-None
 Gets the number of days from the last birth. This is also
 the age of the most recently born winik
 }

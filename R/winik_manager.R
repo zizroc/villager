@@ -81,16 +81,22 @@ winik_manager <- R6::R6Class("winik_manager",
                                    get_states = function() {
                                      # Allocate the appropriate sized table so that the row can be emplaced instead of appended
                                      winik_count <- length(self$winiks)
+                                     winik_fields <- names(villager::winik$public_fields)
+                                     column_names <-winik_fields[! winik_fields %in% c('children')]
                                      state_table <- data.frame(matrix(nrow=winik_count,
-                                                                      ncol=length(names(villager::winik$public_fields))))
+                                                                      ncol=length(column_names)))
+
                                      if(winik_count > 0) {
                                        # Since we know that a winik exists and we need to match the columns here with the
                                        # column names in winik::as_table, get the first winik and use its column names
                                        sample_winik <- self$winiks[[1]]$as_table()
-                                       colnames(state_table) <- names(sample_winik)
+                                       colnames(state_table) <- column_names
                                        for (i in 1:winik_count) {
+
                                          state_table[i, ] <-  self$winiks[[i]]$as_table()
+
                                        }
+
                                      }
                                      return(state_table)
                                    },
@@ -142,15 +148,6 @@ winik_manager <- R6::R6Class("winik_manager",
 
                                     average_age_days = total_age/length(self$winiks)
                                     return (average_age_days/364)
-                                   },
-
-                                   #' Propagates all of the winiks a single step in time.
-                                   #'
-                                   #' @return None
-                                   propagate = function() {
-                                     for (living_winik in self$get_living_winiks()) {
-                                       living_winik$propagate()
-                                     }
                                    },
 
                                    #' Takes all of the winiks in the manager and reconstructs the children
