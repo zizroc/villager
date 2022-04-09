@@ -1,5 +1,5 @@
 Package: villager
-Title: A framework for running Agent Based Models
+Title: A framework for designing and running Agent Based Models
 Version: 1.0.0.0
 Authors@R: c(
   person(
@@ -19,8 +19,14 @@ Authors@R: c(
     family = "Thomson",
     role = c("aut"),
     email = "zizroc@nceas.ucsb.edu"
+  ),
+  person(
+    given = "Toni",
+    family = "Gonzalez",
+    role = c("aut"),
+    email = "tonigonzalez@ucsb.edu"
   ))
-Description: Villager is an agent based modeling framework designed to fit the needs of scientists modeling populations.
+Description: This is a package for creating and running Agent Based Models (ABM). It provides a set of base classes with core functionality to allow bootstrapped models. For more intensive modeling, the supplied classes can be extended to fit researcher needs.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -43,4 +49,7 @@ Suggests:
     knitr,
     testthat,
     rmarkdown
+URL: https://github.com/zizroc/villager/
+BugReports: https://github.com/zizroc/villager/issues/
 VignetteBuilder: knitr
+
