@@ -11,8 +11,8 @@ test_that("resources are correctly added to the manager", {
   resource_1_quantity <- 11
   resource_2_name <- "beets"
   resource_2_quantity <- 13
-  test_resource_1 <- resource$new(name=resource_1_name, quantity=resource_1_quantity)
-  test_resource_2 <- resource$new(name=resource_2_name, quantity=resource_2_quantity)
+  test_resource_1 <- resource$new(name = resource_1_name, quantity = resource_1_quantity)
+  test_resource_2 <- resource$new(name = resource_2_name, quantity = resource_2_quantity)
 
   resource_mgr$add_resource(test_resource_1)
   testthat::expect_equal(length(resource_mgr$get_resources()), 1)
@@ -44,9 +44,9 @@ test_that("the manager gets the correct resource", {
   resource_3_name <- "beets"
   resource_3_quantity <- 5
 
-  test_resource_1 <- resource$new(name=resource_1_name, quantity=resource_1_quantity)
-  test_resource_2 <- resource$new(name=resource_2_name, quantity=resource_2_quantity)
-  test_resource_3 <- resource$new(name=resource_3_name, quantity=resource_3_quantity)
+  test_resource_1 <- resource$new(name = resource_1_name, quantity = resource_1_quantity)
+  test_resource_2 <- resource$new(name = resource_2_name, quantity = resource_2_quantity)
+  test_resource_3 <- resource$new(name = resource_3_name, quantity = resource_3_quantity)
 
   resource_mgr$add_resource(test_resource_1)
   resource_mgr$add_resource(test_resource_2)
@@ -66,9 +66,9 @@ test_that("the manager returns the correct resource index", {
   resource_3_name <- "beets"
   resource_3_quantity <- 5
 
-  test_resource_1 <- resource$new(name=resource_1_name, quantity=resource_1_quantity)
-  test_resource_2 <- resource$new(name=resource_2_name, quantity=resource_2_quantity)
-  test_resource_3 <- resource$new(name=resource_3_name, quantity=resource_3_quantity)
+  test_resource_1 <- resource$new(name = resource_1_name, quantity = resource_1_quantity)
+  test_resource_2 <- resource$new(name = resource_2_name, quantity = resource_2_quantity)
+  test_resource_3 <- resource$new(name = resource_3_name, quantity = resource_3_quantity)
 
   resource_mgr$add_resource(test_resource_1)
   resource_mgr$add_resource(test_resource_2)
@@ -87,9 +87,9 @@ test_that("the manager removes resources", {
   resource_3_name <- "beets"
   resource_3_quantity <- 5
 
-  test_resource_1 <- resource$new(name=resource_1_name, quantity=resource_1_quantity)
-  test_resource_2 <- resource$new(name=resource_2_name, quantity=resource_2_quantity)
-  test_resource_3 <- resource$new(name=resource_3_name, quantity=resource_3_quantity)
+  test_resource_1 <- resource$new(name = resource_1_name, quantity = resource_1_quantity)
+  test_resource_2 <- resource$new(name = resource_2_name, quantity = resource_2_quantity)
+  test_resource_3 <- resource$new(name = resource_3_name, quantity = resource_3_quantity)
 
   resource_mgr$add_resource(test_resource_1)
   resource_mgr$add_resource(test_resource_2)
@@ -101,7 +101,7 @@ test_that("the manager removes resources", {
 
 test_that("the manager can load resources from disk", {
   resource_mgr <- resource_manager$new()
-  file_path = "test-files/test-resources.csv"
+  file_path <- "test-files/test-resources.csv"
   resource_mgr$load(file_path)
 
   # Test that the resources exist with the expected quantities

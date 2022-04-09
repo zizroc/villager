@@ -31,16 +31,16 @@ Remotes:
     edgararuiz/gregorian,
     jimhester/lintr
 Imports:
-    covr,
-    dplyr,
-    knitr,
     uuid,
     R6,
-    testthat,
-    tibble,
     remotes,
     gregorian,
-    readr
+    readr,
+    dplyr
 Suggests:
-  lintr
+    lintr,
+    covr,
+    knitr,
+    testthat,
+    rmarkdown
 VignetteBuilder: knitr

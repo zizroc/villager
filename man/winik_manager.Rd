@@ -5,8 +5,8 @@
 \alias{winik_manager}
 \title{Winik Manager}
 \description{
-A class that abstracts the management of aggregations of Winik classes. Each village should have an instance
-of a winik_manager to interface the winiks inside.
+A class that abstracts the management of aggregations of Winik classes. Each village should have
+an instance of a winik_manager to interface the winiks inside.
 }
 \section{Methods}{
 
@@ -28,6 +28,8 @@ Creates a new winik manager instance.
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
 \item{\code{winiks}}{A list of winiks objects that the winik manager manages.}
+
+\item{\code{winik_class}}{A class describing winiks. This is usually the default villager supplied 'winik' class}
 }
 \if{html}{\out{</div>}}
 }
@@ -53,12 +55,19 @@ Creates a new winik manager instance.
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
-Given the identifier of a winik, sort through all of the managed winiks and return it
-if it exists.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{winik_manager$new()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{winik_manager$new(winik_class = villager::winik)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{winik_class}}{The class that's being used to represent agents being managed
+Given the identifier of a winik, sort through all of the managed winiks and return it
+if it exists.}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_winik"></a>}}

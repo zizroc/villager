@@ -11,7 +11,7 @@ This is an object that represents a single resource.
 
 \describe{
 \item{\code{initialize()}}{Create a new resource}
-\item{\code{as_tibble()}}{Represents the current state of the resource as a tibble}
+\item{\code{as_table()}}{Represents the current state of the resource as a tibble}
 }
 Creates a new resource.
 }

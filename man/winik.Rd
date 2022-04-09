@@ -8,13 +8,13 @@
 This is an object that represents a villager (winik).
 }
 \details{
-This class acts as an abstraction for handling villager-level logic. It can take a number of functions that run at each timestep. It
-also has an associated
+This class acts as an abstraction for handling villager-level logic. It can take a
+number of functions that run at each timestep. It also has an associated
 }
 \section{Methods}{
 
 \describe{
-\item{\code{as_tibble()}}{Represents the current state of the winik as a tibble}
+\item{\code{as_table()}}{Represents the current state of the winik as a tibble}
 \item{\code{get_age()}}{Returns age in terms of years}
 \item{\code{get_gender()}}{}
 \item{\code{get_days_sincelast_birth()}}{Get the number of days since the winik last gave birth}
@@ -145,7 +145,7 @@ the age of the most recently born winik
 
 \subsection{Returns}{
 The number of days since last birth
-Adds a child to the winik. This mehtod ensures that the
+Connects a child to the winik. This method ensures that the
 'children' vector is ordered.
 }
 }
