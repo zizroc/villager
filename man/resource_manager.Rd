@@ -24,7 +24,9 @@ This object manages all of the resources in a village.
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{resources}}{A list of resource objects
+\item{\code{resources}}{A list of resource objects}
+
+\item{\code{resource_class}}{The class used to represent resources
 Creates a new , empty, resource manager for a village.}
 }
 \if{html}{\out{</div>}}
@@ -48,11 +50,18 @@ Creates a new , empty, resource manager for a village.}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
 Get a new instance of a resource_manager
-Gets all of the managed resources
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{resource_manager$new()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{resource_manager$new(resource_class = villager::resource)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{resource_class}}{The class being used to describe the resources being managed
+Gets all of the managed resources}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_resources"></a>}}
@@ -144,7 +153,7 @@ Returns the index of a resource in the internal resource list
 }
 \subsection{Returns}{
 The index in the list, or R's default return value
-Returns a dataframe where each row is a resource
+Returns a data.frame where each row is a resource.
 }
 }
 \if{html}{\out{<hr>}}
@@ -155,8 +164,12 @@ Returns a dataframe where each row is a resource
 \if{html}{\out{<div class="r">}}\preformatted{resource_manager$get_states()}\if{html}{\out{</div>}}
 }
 
+\subsection{Details}{
+Subclasses should not have to override this method because it takes all member variables into account
+}
+
 \subsection{Returns}{
-A single dataframe
+A single data.frame
 Loads a csv file of resources into the manager
 }
 }

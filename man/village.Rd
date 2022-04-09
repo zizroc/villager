@@ -8,8 +8,8 @@
 This is an object that represents the state of a village at a particular time.
 }
 \details{
-This class acts as a type of record that holds the values of the different village variables. This class can be subclassed
-to include more variables that aren't present.
+This class acts as a type of record that holds the values of the
+different village variables. This class can be subclassed to include more variables that aren't present.
 }
 \section{Methods}{
 
@@ -58,7 +58,13 @@ Initializes a village}
 This method is meant to set the variables that are needed for a village to propagate through
 time.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{village$new(name, initial_condition, models = list())}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{village$new(
+  name,
+  initial_condition,
+  models = list(),
+  winik_class = villager::winik,
+  resource_class = villager::resource
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -68,7 +74,11 @@ time.
 
 \item{\code{initial_condition}}{A function that gets called on the first time step}
 
-\item{\code{models}}{A list of functions or a single function that should be run at each time step
+\item{\code{models}}{A list of functions or a single function that should be run at each time step}
+
+\item{\code{winik_class}}{The class that's being used to represent agents}
+
+\item{\code{resource_class}}{The class being used to describe the resources
 Propagates the village a single time step}
 }
 \if{html}{\out{</div>}}

@@ -9,8 +9,8 @@ test_that("winiks are correctly added to the manager", {
   winik_mgr <- winik_manager$new()
   winik_1_id <- "test_identifier_1"
   winik_2_id <- "test_identifier_2"
-  test_winik_1 = winik$new(identifier=winik_1_id)
-  test_winik_2 = winik$new(identifier=winik_2_id)
+  test_winik_1 <- winik$new(identifier = winik_1_id)
+  test_winik_2 <- winik$new(identifier = winik_2_id)
 
   winik_mgr$add_winik(test_winik_1)
   testthat::expect_equal(length(winik_mgr$winiks), 1)
@@ -24,9 +24,9 @@ test_that("the manager gets the correct winiks", {
   winik_1_id <- "test_identifier_1"
   winik_2_id <- "test_identifier_2"
   winik_3_id <- "test_identifier_3"
-  test_winik_1 = winik$new(identifier=winik_1_id)
-  test_winik_2 = winik$new(identifier=winik_2_id)
-  test_winik_3 = winik$new(identifier=winik_3_id)
+  test_winik_1 <- winik$new(identifier = winik_1_id)
+  test_winik_2 <- winik$new(identifier = winik_2_id)
+  test_winik_3 <- winik$new(identifier = winik_3_id)
 
   winik_mgr$add_winik(test_winik_1)
   winik_mgr$add_winik(test_winik_2)
@@ -41,9 +41,9 @@ test_that("the manager returns the correct winik index", {
   winik_1_id <- "test_identifier_1"
   winik_2_id <- "test_identifier_2"
   winik_3_id <- "test_identifier_3"
-  test_winik_1 = winik$new(identifier=winik_1_id)
-  test_winik_2 = winik$new(identifier=winik_2_id)
-  test_winik_3 = winik$new(identifier=winik_3_id)
+  test_winik_1 <- winik$new(identifier = winik_1_id)
+  test_winik_2 <- winik$new(identifier = winik_2_id)
+  test_winik_3 <- winik$new(identifier = winik_3_id)
 
   winik_mgr$add_winik(test_winik_1)
   winik_mgr$add_winik(test_winik_2)
@@ -58,9 +58,9 @@ test_that("the manager removes winiks", {
   winik_1_id <- "test_identifier_1"
   winik_2_id <- "test_identifier_2"
   winik_3_id <- "test_identifier_3"
-  test_winik_1 = winik$new(identifier=winik_1_id)
-  test_winik_2 = winik$new(identifier=winik_2_id)
-  test_winik_3 = winik$new(identifier=winik_3_id)
+  test_winik_1 <- winik$new(identifier = winik_1_id)
+  test_winik_2 <- winik$new(identifier = winik_2_id)
+  test_winik_3 <- winik$new(identifier = winik_3_id)
 
   winik_mgr$add_winik(test_winik_1)
   winik_mgr$add_winik(test_winik_2)
@@ -76,10 +76,10 @@ test_that("get_living_winiks only returns winiks that are living", {
   winik_2_id <- "test_identifier_2"
   winik_3_id <- "test_identifier_3"
   winik_4_id <- "test_identifier_4"
-  test_winik_1 = winik$new(identifier=winik_1_id, alive=FALSE)
-  test_winik_2 = winik$new(identifier=winik_2_id, alive=TRUE)
-  test_winik_3 = winik$new(identifier=winik_3_id, alive=FALSE)
-  test_winik_4 = winik$new(identifier=winik_4_id, alive=TRUE)
+  test_winik_1 <- winik$new(identifier = winik_1_id, alive = FALSE)
+  test_winik_2 <- winik$new(identifier = winik_2_id, alive = TRUE)
+  test_winik_3 <- winik$new(identifier = winik_3_id, alive = FALSE)
+  test_winik_4 <- winik$new(identifier = winik_4_id, alive = TRUE)
 
   winik_mgr$add_winik(test_winik_1)
   winik_mgr$add_winik(test_winik_2)
@@ -98,10 +98,10 @@ test_that("get_states returns the appropriate winik states", {
   winik_2_id <- "test_identifier_2"
   winik_3_id <- "test_identifier_3"
   winik_4_id <- "test_identifier_4"
-  test_winik_1 = winik$new(identifier=winik_1_id, alive=FALSE)
-  test_winik_2 = winik$new(identifier=winik_2_id, alive=TRUE)
-  test_winik_3 = winik$new(identifier=winik_3_id, alive=FALSE)
-  test_winik_4 = winik$new(identifier=winik_4_id, alive=TRUE)
+  test_winik_1 <- winik$new(identifier = winik_1_id, alive = FALSE)
+  test_winik_2 <- winik$new(identifier = winik_2_id, alive = TRUE)
+  test_winik_3 <- winik$new(identifier = winik_3_id, alive = FALSE)
+  test_winik_4 <- winik$new(identifier = winik_4_id, alive = TRUE)
 
   winik_mgr$add_winik(test_winik_1)
   winik_mgr$add_winik(test_winik_2)
@@ -110,22 +110,22 @@ test_that("get_states returns the appropriate winik states", {
 
   states <- winik_mgr$get_states()
 
-  testthat::expect_equal(states[1,]$identifier, winik_1_id)
-  testthat::expect_equal(states[1,]$alive, FALSE)
+  testthat::expect_equal(states[1, ]$identifier, winik_1_id)
+  testthat::expect_equal(states[1, ]$alive, FALSE)
 
-  testthat::expect_equal(states[2,]$identifier, winik_2_id)
-  testthat::expect_equal(states[2,]$alive, TRUE)
+  testthat::expect_equal(states[2, ]$identifier, winik_2_id)
+  testthat::expect_equal(states[2, ]$alive, TRUE)
 
-  testthat::expect_equal(states[3,]$identifier, winik_3_id)
-  testthat::expect_equal(states[3,]$alive, FALSE)
+  testthat::expect_equal(states[3, ]$identifier, winik_3_id)
+  testthat::expect_equal(states[3, ]$alive, FALSE)
 
-  testthat::expect_equal(states[4,]$identifier, winik_4_id)
-  testthat::expect_equal(states[4,]$alive, TRUE)
+  testthat::expect_equal(states[4, ]$identifier, winik_4_id)
+  testthat::expect_equal(states[4, ]$alive, TRUE)
 })
 
 test_that("the manager can load winiks from disk", {
   winik_mgr <- winik_manager$new()
-  file_path = "test-files/test-winiks.csv"
+  file_path <- "test-files/test-winiks.csv"
   winik_mgr$load(file_path)
 
   # Test that the resources exist with the expected quantities
@@ -167,10 +167,10 @@ test_that("the winik manager can properly add children to parents", {
   winik_mgr <- winik_manager$new()
 
   # Create two sets of parents
-  mother_1 = winik$new(identifier="mother1", alive=TRUE)
-  mother_2 = winik$new(identifier="mother2", alive=TRUE)
-  father_1 = winik$new(identifier="father1", alive=TRUE)
-  father_2 = winik$new(identifier="father2", alive=TRUE)
+  mother_1 <- winik$new(identifier = "mother1", alive = TRUE)
+  mother_2 <- winik$new(identifier = "mother2", alive = TRUE)
+  father_1 <- winik$new(identifier = "father1", alive = TRUE)
+  father_2 <- winik$new(identifier = "father2", alive = TRUE)
   winik_mgr$add_winik(mother_1)
   winik_mgr$add_winik(mother_2)
   winik_mgr$add_winik(father_1)
@@ -187,11 +187,15 @@ test_that("the winik manager can properly add children to parents", {
 
 
   # Create two children for the first set of parents
-  child1 = winik$new(identifier="child1", alive=TRUE, mother_id = mother_1$identifier, father_id = father_1$identifier)
-  child2 = winik$new(identifier="child2", alive=TRUE, mother_id = mother_1$identifier, father_id = father_1$identifier)
+  child1 <- winik$new(identifier = "child1", alive = TRUE, mother_id = mother_1$identifier,
+                     father_id = father_1$identifier)
+  child2 <- winik$new(identifier = "child2", alive = TRUE, mother_id = mother_1$identifier,
+                     father_id = father_1$identifier)
   # Create another two for the other parents
-  child3 = winik$new(identifier="child3", alive=TRUE, mother_id = mother_2$identifier, father_id = father_2$identifier)
-  child4 = winik$new(identifier="child4", alive=TRUE, mother_id = mother_2$identifier, father_id = father_2$identifier)
+  child3 <- winik$new(identifier = "child3", alive = TRUE, mother_id = mother_2$identifier,
+                     father_id = father_2$identifier)
+  child4 <- winik$new(identifier = "child4", alive = TRUE, mother_id = mother_2$identifier,
+                     father_id = father_2$identifier)
 
   winik_mgr$add_winik(child1)
   winik_mgr$add_winik(child2)
@@ -205,12 +209,3 @@ test_that("the winik manager can properly add children to parents", {
   testthat::expect_length(mother_2$children, 2)
   testthat::expect_length(father_2$children, 2)
 })
-
-#test_that("add_partner connects one winik to another", {
-#  female_winik <- winik$new()
-#  male_winik <- winik$new()
-#  winik_mgr <- winik_manager$new()
-#  winik_mgr$add_partner(male_winik, add_back=FALSE)
-#  expect_true(female_winik$partner == male_winik$identifier)
-#  expect_true(is.null(male_winik$partner))
-#})

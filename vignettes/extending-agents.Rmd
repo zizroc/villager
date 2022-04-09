@@ -1,0 +1,146 @@
+---
+title: "extending-winiks"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{extending-winiks}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(villager)
+```
+# Extending Agents
+To create agents (winiks) that have more properties than the ones provided by _villager_, subclass the `winik` class into a new R6 class. Once sub-classed, additional properties can be added to the winik which can be used in the subsequent model. The new winik class can be tied to individual villages. This gives flexibility to model populations differently when running under the same simulation.
+
+To add new members to the winik class,
+
+1. Copy the _winik_ class source code
+2. Create the new member variable
+3. Add it as a parameter to the `initialize` function
+4. Make an entry for it in the `as_table` function
+
+## Agent with a GPS coordinate
+
+To give a complete example of the sublclassing process, consider an extended agent. In this case the agent has an additional property, `gps_coordinates`, that's a named list of latitude and longitude coordinates: [lat=1234, long=1234]. Each coordinate gets updated by the model each day by a random number.
+
+To start the base class off, the original class was copied to save time with the member variable definitions.
+
+### Custom winik class
+
+```{r}
+gps_winik <- R6::R6Class("winik",
+  inherit = villager::winik,
+  public = list(
+    age = NULL,
+    alive = NULL,
+    children = NULL,
+    father_id = NULL,
+    first_name = NULL,
+    gender = NULL,
+    health = NULL,
+    identifier = NULL,
+    last_name = NULL,
+    mother_id = NULL,
+    partner = NULL,
+    profession = NULL,
+    latitude = NULL,
+    longitude = NULL,
+
+    initialize = function(identifier = NA,
+                          first_name = NA,
+                          last_name = NA,
+                          age = 0,
+                          mother_id = NA,
+                          father_id = NA,
+                          partner = NA,
+                          children = vector(mode = "character"),
+                          gender = NA,
+                          profession = NA,
+                          alive = TRUE,
+                          health = 100,
+                          latitude = 0,
+                          longitude = 0) {
+    super$initialize(identifier,
+                     first_name,
+                     last_name,
+                     age,
+                     mother_id,
+                     father_id,
+                     partner,
+                     children,
+                     gender,
+                     profession,
+                     alive,
+                     health)
+      self$latitude <- latitude
+      self$longitude <- longitude
+    },
+
+    as_table = function() {
+      winik_table <- data.frame(
+        age = self$age,
+        alive = self$alive,
+        father_id = self$father_id,
+        first_name = self$first_name,
+        gender = self$gender,
+        health = self$health,
+        identifier = self$identifier,
+        last_name = self$last_name,
+        mother_id = self$mother_id,
+        partner = self$partner,
+        profession = self$profession,
+        latitude = self$latitude,
+        longitude = self$longitude
+      )
+      return(winik_table)
+    }
+  )
+)
+
+```
+
+### Initial Condition
+
+We'll create the initial population of one Agent in the `initial_condition` function, which gets run before the model starts. The initial starting location is in Los Angeles, Ca. Note that the new `gps_winik` class is used to instantiate the agent rather than the library provided `winik` class.
+
+```{r}
+initial_condition <- function(current_state, model_data, winik_mgr, resource_mgr) {
+  # Create the initial villagers
+  test_agent <- gps_winik$new(first_name="Lewis", last_name="Taylor", age=9125, latitude=33.8785486, longitude=-118.0434921)
+  winik_mgr$add_winik(test_agent)
+}
+```
+
+### Model
+
+Each day, the model picks a number between 0.0000001 and 0.0000003 and increments `gps_coordinate` on the winik.
+
+```{r}
+test_model <- function(current_state, previous_state, model_data, winik_mgr, resource_mgr) {
+  # Loop over all the winiks (just one at the moment)
+  for (winik in winik_mgr$get_living_winiks()) {
+    # Generate new coordinates
+    latitude <- winik$latitude + runif(1, 0.01, 0.03)
+    longitude <- winik$longitude + runif(1, 0.01, 0.03)
+    winik$latitude <- latitude
+    winik$longitude <- longitude
+  }
+}
+```
+
+### Running
+
+Finally, we'll create and run a simulation with a duration of 10 days.
+```{r}
+los_angeles <- village$new("Test_Village", initial_condition, test_model, gps_winik)
+simulator <- simulation$new("100-01-01", "100-01-05", list(los_angeles))
+simulator$run_model()
+```

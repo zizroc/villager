@@ -7,12 +7,12 @@ test_that("initial conditions with winiks work", {
     }
   }
 
-  coastal_village <- village$new("Test village", initial_condition)
-  start_date = "100-01-01"
-  end_date = "100-01-04"
-  simulator <- simulation$new(start_date=start_date, end_date=end_date, villages = list(coastal_village))
+  coastal_village <- village$new("Test_Village", initial_condition)
+  start_date <- "100-01-01"
+  end_date <- "100-01-04"
+  simulator <- simulation$new(start_date = start_date, end_date = end_date, villages = list(coastal_village))
 
-  new_siumulator <- simulation$new(start_date=start_date, end_date = end_date,
+  new_siumulator <- simulation$new(start_date = start_date, end_date = end_date,
                                    villages = list(coastal_village))
   new_siumulator$run_model()
   testthat::expect_equal(coastal_village$winik_mgr$get_living_population(), 4)
@@ -22,17 +22,17 @@ test_that("initial conditions with resources work", {
 
   initial_condition <- function(current_state, model_data, winik_mgr, resource_mgr) {
     for (i in 0:3) {
-      new_resource <- resource$new(name="corn", quantity = 10)
+      new_resource <- resource$new(name = "corn", quantity = 10)
       resource_mgr$add_resource(new_resource)
     }
   }
 
-  coastal_village <- village$new("Test village", initial_condition)
-  start_date = "100-01-01"
-  end_date = "100-01-04"
-  simulator <- simulation$new(start_date=start_date, end_date=end_date, villages = list(coastal_village))
+  coastal_village <- village$new("Test_Village", initial_condition)
+  start_date <- "100-01-01"
+  end_date <- "100-01-04"
+  simulator <- simulation$new(start_date = start_date, end_date = end_date, villages = list(coastal_village))
 
-  new_siumulator <- simulation$new(start_date=start_date, end_date = end_date,
+  new_siumulator <- simulation$new(start_date = start_date, end_date = end_date,
                                    villages = list(coastal_village))
   new_siumulator$run_model()
 
@@ -54,7 +54,7 @@ test_that("the basic population model works", {
     winik_mgr$add_winik(new_winik)
   }
 
-  coastal_village <- village$new("Test village", initial_condition, model)
+  coastal_village <- village$new("Test_Village", initial_condition, model)
   simulator <- simulation$new("-100-01-01", "-100-01-04", villages = list(coastal_village))
   simulator$run_model()
 
@@ -71,7 +71,7 @@ test_that("winiks are added on even days, killed on odd", {
 
   model <- function(current_state, previous_state, model_data, winik_mgr, resource_mgr) {
     current_day <- current_state$date$day
-    if((current_day%%2) == 0) {
+    if ((current_day %% 2) == 0) {
       # Then it's an even day
       # Create two new winiks whose first names are random numbers
       for (i in 1:2) {
@@ -87,7 +87,7 @@ test_that("winiks are added on even days, killed on odd", {
     }
   }
 
-  coastal_village <- village$new("Test village", initial_condition, model)
+  coastal_village <- village$new("Test_Village", initial_condition, model)
   simulator <- simulation$new("-100-01-01", "-100-01-04", villages = list(coastal_village))
   simulator$run_model()
 
@@ -97,7 +97,7 @@ test_that("winiks are added on even days, killed on odd", {
 test_that("resources are properly added", {
 
   initial_condition <- function(current_state, model_data, winik_mgr, resource_mgr) {
-    corn <- resource$new(name="corn", quantity=10)
+    corn <- resource$new(name = "corn", quantity = 10)
     resource_mgr$add_resource(corn)
   }
 
@@ -107,7 +107,7 @@ test_that("resources are properly added", {
     corn$quantity <- corn$quantity + 1
   }
 
-  coastal_village <- village$new("Test village", initial_condition, model)
+  coastal_village <- village$new("Test_Village", initial_condition, model)
   simulator <- simulation$new("-100-01-01", "-100-01-04", villages = list(coastal_village))
   simulator$run_model()
   coastal_village$resource_mgr$get_resource("corn")$quantity

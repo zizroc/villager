@@ -8,16 +8,14 @@
 This is an object that represents the state of a village at a particular time.
 }
 \details{
-This class acts as a type of record that holds the values of the different village variables. This class can be subclassed
-to include more variables that aren't present.
+This class acts as a type of record that holds the values of the different village variables. This class
+can be subclassed to include more variables that aren't present.
 }
 \section{Methods}{
 
 
 
 \describe{
-\item{\code{propagate()}}{Advances the village a single time step}
-\item{\code{as_tibble()}}{Turns the object into a tibble}.
 }
 Creates a new State
 }
