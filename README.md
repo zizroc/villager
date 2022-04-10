@@ -1,5 +1,4 @@
-# villager
-# dplyr <img src='man/figures/logo.png' align="right" height="139" />
+# villager <img src='man/figures/logo.png' align="right" height="139" />
 
 [![R build status](https://github.com/zizroc/villager/workflows/R-CMD-check/badge.svg)](https://github.com/zizroc/villager/actions)
 [![Codecov test coverage](https://codecov.io/gh/zizroc/villager/branch/main/graph/badge.svg)](https://codecov.io/gh/zizroc/villager?branch=main)
