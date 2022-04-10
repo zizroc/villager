@@ -45,10 +45,13 @@ Imports:
 Suggests:
     covr,
     dplyr,
+    dygraph,
     knitr,
+    leaflet,
     lintr,
     rmarkdown,
-    testthat
+    testthat,
+    xts
 URL: https://github.com/zizroc/villager/
 BugReports: https://github.com/zizroc/villager/issues/
 VignetteBuilder: knitr

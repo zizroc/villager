@@ -15,7 +15,9 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
+library(dygraphs)
 library(villager)
+library(xts)
 ```
 
 # Extending Resources
@@ -126,5 +128,32 @@ simulator$run_model()
 A timeseries of each resource type is plotted below. The _rice_ resource has clearly not expired while the _corn_ resource has after 10 days.
 
 ```{r}
+# Load in data
+time_series_data <- readr::read_csv("results/Expiring_Resources/resources.csv")
 
+# Get unique dates
+unique_dates<- sort(unique(time_series_data$date))
+
+# Get corn & rice quantities and dates
+corn_date_quantities <- dplyr::filter(time_series_data, name=="Corn")
+rice_date_quantities <- dplyr::filter(time_series_data, name=="Rice")
+
+# create data frame for sorted data
+reordered_time_series <- data.frame(Date = unique_dates, Corn = 0, Rice = 0)
+for (i in 1:nrow(reordered_time_series)){
+  reordered_time_series[i,2] = corn_date_quantities[which(corn_date_quantities$date == reordered_time_series$Date[i]),2]
+  reordered_time_series[i,3] = rice_date_quantities[which(rice_date_quantities$date == reordered_time_series$Date[i]),2]
+}
+
+# Convert the date field to an actual date
+reordered_time_series$Date <- strptime(reordered_time_series$Date, "%Y-%m-%d")
+
+# Create a xts time series object from the new data frame (an xts object is needed
+# for the dygraph plotting library)
+final_time_series <- xts::xts(x = reordered_time_series[,-1], order.by = reordered_time_series$Date)
+
+# Plot the graph
+dygraphs::dygraph(final_time_series, main = "Crop Quantities", xlab = "Date") %>% 
+  dygraphs::dyAxis("y", label = "Quantity", valueRange = c(0, 25)) %>%
+  dygraphs::dyOptions(drawGrid = FALSE)
 ```
