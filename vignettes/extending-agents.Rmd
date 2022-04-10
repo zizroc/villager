@@ -15,7 +15,9 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
+
 library(villager)
+library(leaflet)
 ```
 # Extending Agents
 To create agents (winiks) that have more properties than the ones provided by _villager_, subclass the `winik` class into a new R6 class. Once sub-classed, additional properties can be added to the winik which can be used in the subsequent model. The new winik class can be tied to individual villages. This gives flexibility to model populations differently when running under the same simulation.
@@ -143,4 +145,18 @@ Finally, we'll create and run a simulation with a duration of 10 days.
 los_angeles <- village$new("Test_Village", initial_condition, test_model, gps_winik)
 simulator <- simulation$new("100-01-01", "100-01-05", list(los_angeles))
 simulator$run_model()
+```
+
+### Results
+```{r}
+# Load in data
+agent_data <- readr::read_csv("results/Test_Village/winiks.csv")
+
+# Grab just the location data
+agent_location <- data.frame(latitude = agent_data$latitude, longitude = agent_data$longitude)
+
+# create a map 
+leaflet::leaflet() %>% 
+  leaflet::addTiles() %>%  # Add default OpenStreetMap map tiles
+  leaflet::addMarkers (data = agent_location) # Add agent locations
 ```

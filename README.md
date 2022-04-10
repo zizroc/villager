@@ -1,5 +1,8 @@
 # villager
-[![Codecov test coverage](https://codecov.io/gh/zizroc/villager/branch/master/graph/badge.svg)](https://codecov.io/gh/zizroc/villager?branch=main)
+# dplyr <img src='man/figures/logo.png' align="right" height="139" />
+
+[![R build status](https://github.com/zizroc/villager/workflows/R-CMD-check/badge.svg)](https://github.com/zizroc/villager/actions)
+[![Codecov test coverage](https://codecov.io/gh/zizroc/villager/branch/main/graph/badge.svg)](https://codecov.io/gh/zizroc/villager?branch=main)
 
 villager is a framework for creating and running agent based models in R. It's purpose is to provide an extensible framework where modeling can be done in native R.
 
@@ -227,3 +230,7 @@ simulator$run_model()
 ## Advanced Usage
 
 In the examples above, the default properties of agents and resources were used. It's possible that these won't cover all the needs for more diverse models. There are vignettes on extending the agent and resource classes to handle these situations.
+
+## Contributing
+
+Code contributions are welcome as pull requests to the `develop` branch. Bugs, comments, and questions can be submitted as Github Issues.

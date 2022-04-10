@@ -41,14 +41,17 @@ Imports:
     R6,
     remotes,
     gregorian,
-    readr,
-    dplyr
+    readr
 Suggests:
-    lintr,
     covr,
+    dplyr,
+    dygraphs,
     knitr,
+    leaflet,
+    lintr,
+    rmarkdown,
     testthat,
-    rmarkdown
+    xts
 URL: https://github.com/zizroc/villager/
 BugReports: https://github.com/zizroc/villager/issues/
 VignetteBuilder: knitr
