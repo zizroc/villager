@@ -45,7 +45,7 @@ Imports:
 Suggests:
     covr,
     dplyr,
-    dygraph,
+    dygraphs,
     knitr,
     leaflet,
     lintr,
