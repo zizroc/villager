@@ -1,5 +1,5 @@
 # villager
-[![Build Status](https://travis-ci.com/zizroc/villager.svg?branch=master)](https://travis-ci.com/zizroc/villager) [![Codecov test coverage](https://codecov.io/gh/zizroc/villager/branch/master/graph/badge.svg)](https://codecov.io/gh/zizroc/villager?branch=master)
+[![Codecov test coverage](https://codecov.io/gh/zizroc/villager/branch/master/graph/badge.svg)](https://codecov.io/gh/zizroc/villager?branch=main)
 
 villager is a framework for creating and running agent based models in R. It's purpose is to provide an extensible framework where modeling can be done in native R.
 

@@ -1,9 +1,0 @@
-language: r
-cache: packages
-r:
-  - devel
-  - release
-after_success:
-  - Rscript -e 'library(covr);codecov()'
-  - R CMD INSTALL $PKG_TARBALL
-  - Rscript -e 'lintr::lint_package()'
