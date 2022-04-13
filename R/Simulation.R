@@ -1,8 +1,7 @@
 #' @title simulation
 #' @docType class
 #' @description Advances one or more villages through time
-#' @field start_date The Gregorian date that the simulation starts on
-#' @field end_date The Gregorian date that the simulation ends on
+#' @field length The total number of time steps that the simulation runs for
 #' @field villages A list of villages that the simulator will run
 #' @field writer An instance of a data_writer class for writing village data to disk
 #' @export
@@ -12,25 +11,21 @@
 #'   }
 simulation <- R6::R6Class("simulation",
   public = list(
-    start_date = NA,
-    end_date = NA,
+    length = NA,
     villages = NA,
     writer = NA,
 
     #' Creates a new Simulation instance
     #'
     #' @description Creates a new simulation object to control the experiment
-    #' @param start_date The date to start the simulation
-    #' @param end_date The date that the simulation should end
+    #' @param length The number of steps the simulation takes
     #' @param villages A list of villages that will be simulated
     #' @param writer The data writer to be used with the villages
-    initialize = function(start_date,
-                          end_date,
+    initialize = function(length,
                           villages,
                           writer = villager::data_writer$new()) {
       self$villages <- villages
-      self$start_date <- gregorian::as_gregorian(start_date)
-      self$end_date <- gregorian::as_gregorian(end_date)
+      self$length <- length
       self$writer <- writer
     },
 
@@ -38,24 +33,19 @@ simulation <- R6::R6Class("simulation",
     #'
     #' @return None
     run_model = function() {
-      total_days <- gregorian::diff_days(self$start_date, self$end_date)
       for (village in self$villages) {
-        village$set_initial_state(self$start_date)
+        village$set_initial_state()
       }
-      # Loop over each village and run the user defined initial condition function
-      current_date <- gregorian::add_days(self$start_date, 1)
-      date_diff <- gregorian::diff_days(current_date, self$end_date)
-      total_days_passed <- 1
-      while (date_diff >= 0) {
+      # Loop over each village and run the user defined initial condition function. Index off of 1 because the
+      # initial condition is set at 0
+      current_step <- 1
+      while (current_step <= self$length) {
         # Iterate the villages a single time step
         for (village in self$villages) {
-          village$propagate(current_date, total_days_passed)
+          village$propagate(current_step)
           self$writer$write(village$current_state, village$name)
-          total_days_passed <- total_days_passed + 1
         }
-        # Add '1' to the current day
-        current_date <-  gregorian::add_days(current_date, 1)
-        date_diff <- gregorian::diff_days(current_date, self$end_date)
+        current_step <- current_step + 1
       }
     }
   )

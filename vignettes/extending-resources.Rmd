@@ -15,9 +15,8 @@ knitr::opts_chunk$set(
 ```
 
 ```{r setup}
-library(dygraphs)
+library(plotly)
 library(villager)
-library(xts)
 ```
 
 # Extending Resources
@@ -79,8 +78,8 @@ initial_condition <- function(current_state, model_data, winik_mgr, resource_mgr
     winik_mgr$add_winik(new_winik)
   }
   # Create two new resources at the current date (The first day)
-  corn <- resource_expiration$new("Corn", 10, current_state$date)
-  rice <- resource_expiration$new("Rice", 20, current_state$date)
+  corn <- resource_expiration$new("Corn", 10, current_state$step)
+  rice <- resource_expiration$new("Rice", 20, current_state$step)
   resource_mgr$add_resource(corn)
   resource_mgr$add_resource(rice)
 }
@@ -94,11 +93,10 @@ are reached, the quantity is set to zero.
 ```{r}
 # Create the model that, each day, checks to see whether or not any resource expire
 model <- function(current_state, previous_state, model_data, winik_mgr, resource_mgr) {
-  print(current_state$date)
   # Loop over all of the resources and check if any expire
   for (resource in resource_mgr$get_resources()) {
     # Figure out how many days have passed
-    days_passed <- gregorian::diff_days(resource$creation_date, current_state$date)
+    days_passed <- current_state$step - resource$creation_date
     if (resource$name == "Corn") {
       if (days_passed > 10 && resource$quantity > 0) {
         print("Setting Corn quantity to 0")
@@ -120,7 +118,7 @@ With the required model components complete, we can create a simulation that run
 ```{r}
 # Create the village and simulation
 coastal_village <- village$new("Expiring_Resources", initial_condition, model, resource_class=)
-simulator <- simulation$new("100-01-01", "100-01-16", villages = list(coastal_village))
+simulator <- simulation$new(16, villages = list(coastal_village))
 simulator$run_model()
 ```
 
@@ -132,28 +130,23 @@ A timeseries of each resource type is plotted below. The _rice_ resource has cle
 time_series_data <- readr::read_csv("results/Expiring_Resources/resources.csv")
 
 # Get unique dates
-unique_dates<- sort(unique(time_series_data$date))
+unique_step<- sort(unique(time_series_data$step))
 
 # Get corn & rice quantities and dates
 corn_date_quantities <- dplyr::filter(time_series_data, name=="Corn")
 rice_date_quantities <- dplyr::filter(time_series_data, name=="Rice")
 
 # create data frame for sorted data
-reordered_time_series <- data.frame(Date = unique_dates, Corn = 0, Rice = 0)
+reordered_time_series <- data.frame(step = unique_step, Corn = 0, Rice = 0)
 for (i in 1:nrow(reordered_time_series)){
-  reordered_time_series[i,2] = corn_date_quantities[which(corn_date_quantities$date == reordered_time_series$Date[i]),2]
-  reordered_time_series[i,3] = rice_date_quantities[which(rice_date_quantities$date == reordered_time_series$Date[i]),2]
+  reordered_time_series[i,2] = corn_date_quantities[which(corn_date_quantities$step == reordered_time_series$step[i]),2]
+  reordered_time_series[i,3] = rice_date_quantities[which(rice_date_quantities$step == reordered_time_series$step[i]),2]
 }
 
-# Convert the date field to an actual date
-reordered_time_series$Date <- strptime(reordered_time_series$Date, "%Y-%m-%d")
-
-# Create a xts time series object from the new data frame (an xts object is needed
-# for the dygraph plotting library)
-final_time_series <- xts::xts(x = reordered_time_series[,-1], order.by = reordered_time_series$Date)
-
-# Plot the graph
-dygraphs::dygraph(final_time_series, main = "Crop Quantities", xlab = "Date") %>% 
-  dygraphs::dyAxis("y", label = "Quantity", valueRange = c(0, 25)) %>%
-  dygraphs::dyOptions(drawGrid = FALSE)
+# Plot graph
+plotly::plot_ly(reordered_time_series, x = ~step) %>% 
+  plotly::add_trace(y = ~Corn, name = 'Corn', type = 'scatter', mode = 'lines') %>% 
+  plotly::add_trace(y = ~Rice, name = 'Rice', type = 'scatter', mode = 'lines') %>%
+  plotly::layout(title = 'Resource Counts', xaxis = list(title = 'Time Step'),
+       yaxis = list(title = 'Quantity'), legend = list(title=list(text='Crop Type')))
 ```

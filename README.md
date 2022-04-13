@@ -8,7 +8,7 @@ villager is a framework for creating and running agent based models in R. It's p
 ## Features
 - Extensible data output system (csv, excel sheets, sqlite)
 - Built in support for agents and resources
-- Easy to use date management
+- Easy to use time management
 
 ## Installing
 villager should be installed with [`devtools`](https://github.com/r-lib/devtools).
@@ -20,7 +20,6 @@ devtools::install_github("zizroc/villager")
 ## Takeaways
 When reading though the Readme and vignettes, it's important to take note of a few concepts
 
-- Date times should use the [gregorian](edgararuiz/gregorian) package
 - Villages are the highest aggregate; they contain villages which in turn contain agents (winiks)
 - Agents and resources can be subclassed to support additional properties 
 - The data_writer class can be subclassed when writing to data sources other than csv
@@ -119,7 +118,6 @@ initial_condition <- function(current_state, model_data, winik_mgr, resource_mgr
 }
 ```
 
-
 ## Creating Villages and Running Models
 
 Models are tied to particular village instances. This binding is done when villages are created, shown below. Models can have names and must always be paired with an initial condition function and a model function.
@@ -128,10 +126,10 @@ Models are tied to particular village instances. This binding is done when villa
 small_village <- village$new("Test Model 1", initial_condition, test_model)
 ```
 
-The `simulator` class is responsible for running simulations. It encapsulates _all_ of the villages and controls the duration of the simulation. The simulator below runs for 13 years. The simulator can be paired with any number of villages, in the case of the simulator below, there's only a single village.
+The `simulator` class is responsible for running simulations. It encapsulates _all_ of the villages and controls the duration of the simulation. The simulator below runs for 100 time steps: roughly 13 years. The simulator can be paired with any number of villages, in the case of the simulator below, there's only a single village.
 
 ```
-simulator <- simulation$new("-100-01-01", "-87-01-01", list(small_village))
+simulator <- simulation$new(100, list(small_village))
 simulator$run_model()
 ```
 
@@ -141,9 +139,8 @@ We can combine the examples above into a full simulation that...
 
 - Starts with an initial population of three villagers
 - Increases the age of each villager at the start of each day
-- Runs for 13 years
+- Runs for 4745 days
 - Sets the villager profession after age 12
-
 
 ```{r}
 library(villager)
@@ -171,7 +168,7 @@ initial_condition <- function(current_state, model_data, winik_mgr, resource_mgr
 }
 
 test_model <- function(current_state, previous_state, model_data, winik_mgr, resource_mgr) {
-print(current_state$date)
+print(paste("Step:", current_state$step))
   for (winik in winik_mgr$get_living_winiks()) {
     winik$age <- winik$age+1
     if (winik$age >= 4383) {
@@ -181,7 +178,7 @@ print(current_state$date)
 }
 
 small_village <- village$new("Test Model", initial_condition, test_model)
-simulator <- simulation$new("-100-01-01", "-87-01-01", list(small_village))
+simulator <- simulation$new(4745, list(small_village))
 simulator$run_model()
 ```
 
@@ -195,35 +192,27 @@ To demonstrate programatically creating villagers, consider the model below that
 
 ```
 library(villager)
-initial_condition <- function(current_state, model_data, winik_mgr, resource_mgr) {
-  for (i in 1:10) {
-    name <- runif(1, 0.0, 100)
-    new_winik <- winik$new(first_name <- name, last_name <- "Smith")
-    winik_mgr$add_winik(new_winik)
-  }
-}
-
-model <- function(current_state, previous_state, model_data, winik_mgr, resource_mgr) {
-  print(current_state$date)
-  current_day <- current_state$date$day
-  if((current_day%%2) == 0) {
-    # Then it's an even day
-    # Create two new winiks whose first names are random numbers
-    for (i in 1:2) {
-      name <- runif(1, 0.0, 100)
-      new_winik <- winik$new(first_name <- name, last_name <- "Smith")
-      winik_mgr$add_winik(new_winik)
+    current_day <- current_state$step
+    print(current_day)
+    if((current_day%%2) == 0) {
+      # Then it's an even day
+      # Create two new winiks whose first names are random numbers
+      for (i in 1:2) {
+        name <- runif(1, 0.0, 100)
+        new_winik <- winik$new(first_name <- name, last_name <- "Smith")
+        winik_mgr$add_winik(new_winik)
+      }
+    } else {
+      # It's an odd day
+      living_winiks <- winik_mgr$get_living_winiks()
+      # Kill the first one
+      living_winiks[[1]]$alive <- FALSE
     }
-  } else {
-    # It's an odd day
-    living_winiks <- winik_mgr$get_living_winiks()
-    # Kill the first one
-    living_winiks[[1]]$alive <- FALSE
   }
-}
-coastal_village <- village$new("Test village", initial_condition, model)
-simulator <- simulation$new("-100-01-01", "-99-01-04", villages = list(coastal_village))
-simulator$run_model()
+  coastal_village <- village$new("Test village", initial_condition, model)
+  simulator <- simulation$new(4, villages = list(coastal_village))
+  simulator$run_model()
+  mgr <- simulator$villages[[1]]$winik_mgr
 ```
 
 ## Advanced Usage

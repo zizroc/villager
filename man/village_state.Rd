@@ -23,7 +23,7 @@ Creates a new State
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{date}}{The date that the state is relevant to}
+\item{\code{step}}{The time step that the state is relevant to}
 
 \item{\code{winik_states}}{A list of winik states}
 
@@ -46,7 +46,7 @@ Initializes all of the properties in the state to the ones passed in. This shoul
 be called by subclasses during initialization.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{village_state$new(
-  date = NA,
+  step = 0,
   winik_states = vector(),
   resource_states = vector()
 )}\if{html}{\out{</div>}}
@@ -55,7 +55,7 @@ be called by subclasses during initialization.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{date}}{The date that the state is relevant to. This should be a date from the gregorian package}
+\item{\code{step}}{The time step that the state is relevant to}
 
 \item{\code{winik_states}}{A vector of tibbles representing the states of the winiks}
 

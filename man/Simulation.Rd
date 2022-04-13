@@ -18,9 +18,7 @@ Creates a new Simulation instance
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{start_date}}{The Gregorian date that the simulation starts on}
-
-\item{\code{end_date}}{The Gregorian date that the simulation ends on}
+\item{\code{length}}{The total number of time steps that the simulation runs for}
 
 \item{\code{villages}}{A list of villages that the simulator will run}
 
@@ -42,20 +40,13 @@ Creates a new Simulation instance
 \subsection{Method \code{new()}}{
 Creates a new simulation object to control the experiment
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{simulation$new(
-  start_date,
-  end_date,
-  villages,
-  writer = villager::data_writer$new()
-)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{simulation$new(length, villages, writer = villager::data_writer$new())}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{start_date}}{The date to start the simulation}
-
-\item{\code{end_date}}{The date that the simulation should end}
+\item{\code{length}}{The number of steps the simulation takes}
 
 \item{\code{villages}}{A list of villages that will be simulated}
 

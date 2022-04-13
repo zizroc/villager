@@ -89,20 +89,18 @@ Propagates the village a single time step}
 \if{latex}{\out{\hypertarget{method-propagate}{}}}
 \subsection{Method \code{propagate()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{village$propagate(date, total_days_passed)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{village$propagate(current_step)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{date}}{The date that the village is computing the new state for}
-
-\item{\code{total_days_passed}}{Number of days that have passed since the village's creation}
+\item{\code{current_step}}{The current time step}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Details}{
-This method is used to advance the village a single timestep. It should NOT be used
+This method is used to advance the village a single time step. It should NOT be used
 to set initial conditions. See the set_initial_state method.
 }
 
@@ -117,16 +115,9 @@ Runs the user defined function that sets the initial state of the village
 \subsection{Method \code{set_initial_state()}}{
 Runs the initial condition model
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{village$set_initial_state(date)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{village$set_initial_state()}\if{html}{\out{</div>}}
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{date}}{The date that the the initial condition represents}
-}
-\if{html}{\out{</div>}}
-}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-clone"></a>}}

@@ -64,17 +64,16 @@ village <- R6::R6Class("village",
 
     #' Propagates the village a single time step
     #'
-    #' @details This method is used to advance the village a single timestep. It should NOT be used
+    #' @details This method is used to advance the village a single time step. It should NOT be used
     #' to set initial conditions. See the set_initial_state method.
-    #' @param date The date that the village is computing the new state for
-    #' @param total_days_passed Number of days that have passed since the village's creation
+    #' @param current_step The current time step
     #' @return None
-    propagate = function(date, total_days_passed) {
+    propagate = function(current_step) {
       # Create a new state representing this slice in time. Since many of the
       # values will be the same as the previous state, clone the previous state
       self$current_state <- self$previous_state$clone(deep = TRUE)
-      # Update the date in the state record to reflect the current date
-      self$current_state$date <- date
+      # Update the current_step in the state record to reflect the new step
+      self$current_state$step <- current_step
       # Run each of the models
       for (model in self$models) {
         # Create a read only copy of the last state so that users can make decisions off of it
@@ -84,22 +83,22 @@ village <- R6::R6Class("village",
       }
       self$current_state$winik_states <- self$winik_mgr$get_states()
 
+      # Add the time step to the data
       if (nrow(self$current_state$winik_states) > 0) {
-        self$current_state$winik_states$date <- self$current_state$date$astronomical
+        self$current_state$winik_states$step <- self$current_state$step
       }
       self$current_state$resource_states <- self$resource_mgr$get_states()
       if (nrow(self$current_state$resource_states) > 0) {
-        self$current_state$resource_states$date <- self$current_state$date$astronomical
+        self$current_state$resource_states$step <- self$current_state$step
       }
     },
 
     #' Runs the user defined function that sets the initial state of the village
     #'
     #' @description Runs the initial condition model
-    #' @param date The date that the the initial condition represents
-    set_initial_state = function(date) {
+    set_initial_state = function() {
       self$current_state <- village_state$new()
-      self$current_state$date <- date
+      self$current_state$step <- 0
       self$initial_condition(self$current_state,
                              self$model_data,
                              self$winik_mgr,

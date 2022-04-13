@@ -10,7 +10,7 @@ test_that("the initial models can properly set village states", {
   }
 
   new_village <- village$new("Test_Village", initial_condition = initial_condition, models = list())
-  simulator <- simulation$new(start_date = "100-01-01", end_date = "100-01-02", villages = list(new_village))
+  simulator <- simulation$new(1, villages = list(new_village))
   simulator$run_model()
 
   last_record <- simulator$villages[[1]]$current_state$resource_states
@@ -30,15 +30,13 @@ test_that("the initial models can properly set village states", {
 test_that("the initial condition is properly set", {
   # Check that the initial state is passed into the user's model on the first year
   # This makes sure that models can set initial states inside their code
-
-
   initial_condition <- function(curent_state, model_data, population_manager, resource_mgr) {
     resource_mgr$add_resource(resource$new(name = "corn", quantity = 5))
     resource_mgr$add_resource(resource$new(name = "salmon", quantity = 6))
   }
 
   new_village <- village$new("Test_Village", initial_condition)
-  simulator <- simulation$new(start_date = "100-01-01", end_date = "100-01-02", villages = list(new_village))
+  simulator <- simulation$new(1, villages = list(new_village))
   simulator$run_model()
   last_record <- simulator$villages[[1]]$current_state$resource_states
   # Check that the initial state of corn is 5
@@ -58,7 +56,7 @@ test_that("propagate runs a custom model", {
   }
 
   corn_model <- function(curent_state, previous_state, model_data, winik_mgr, resource_mgr) {
-      if (gregorian::diff_days(curent_state$date, gregorian::as_gregorian("100-01-04")) == 0) {
+      if (curent_state$step == 3) {
         # On the third day add 5 corn
         corn_resource <- resource_mgr$get_resource("corn")
         corn_resource$quantity <- corn_resource$quantity + 5
@@ -66,7 +64,7 @@ test_that("propagate runs a custom model", {
   }
 
   new_village <- village$new("Test_Village", initial_condition, models = corn_model)
-  simulator <- simulation$new(start_date = "100-01-01", end_date = "100-01-04", villages = list(new_village))
+  simulator <- simulation$new(3, villages = list(new_village))
   simulator$run_model()
 
   last_record <- simulator$villages[[1]]$current_state$resource_states
@@ -94,7 +92,7 @@ test_that("propagate runs multiple custom models", {
 
   new_village <- village$new("Test_Village", initial_conditions, models = list(corn_model, salmon_model))
 
-  simulator <- simulation$new(start_date = "100-01-01", end_date = "100-01-03", villages = list(new_village))
+  simulator <- simulation$new(2, villages = list(new_village))
   simulator$run_model()
   testthat::expect_length(simulator$villages, 1)
 
@@ -126,7 +124,7 @@ test_that("The previous state is recorded", {
 
   new_village <- village$new("Test_Village", initial_conditions, models = list(corn_model, salmon_model))
 
-  simulator <- simulation$new(start_date = "100-01-01", end_date = "100-01-03", villages = list(new_village))
+  simulator <- simulation$new(2, villages = list(new_village))
   simulator$run_model()
   testthat::expect_length(simulator$villages, 1)
 

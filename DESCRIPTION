@@ -1,5 +1,5 @@
 Package: villager
-Title: A framework for designing and running Agent Based Models
+Title: A Framework for Designing and Running Agent Based Models
 Version: 1.0.0.0
 Authors@R: c(
   person(
@@ -34,24 +34,21 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Depends: R (>= 3.5.0)
 Remotes:
-    edgararuiz/gregorian,
     jimhester/lintr
 Imports:
-    uuid,
+    readr,
     R6,
-    remotes,
-    gregorian,
-    readr
+    uuid
 Suggests:
     covr,
     dplyr,
-    dygraphs,
     knitr,
     leaflet,
     lintr,
+    plotly,
+    remotes,
     rmarkdown,
     testthat,
-    xts
 URL: https://github.com/zizroc/villager/
 BugReports: https://github.com/zizroc/villager/issues/
 VignetteBuilder: knitr

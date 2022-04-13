@@ -114,7 +114,7 @@ winik <- R6::R6Class("winik",
     #' @param child The Winik object representing the child
     #' @return None
     add_child = function(child) {
-      bubble_sort <- function() {
+      sort_children <- function() {
         children_length <- length(self$children)
         if (children_length <= 1) {
           return()
@@ -135,7 +135,7 @@ winik <- R6::R6Class("winik",
         self$children <- c(self$children, child)
       } else {
         self$children <- append(self$children, child, after = 0)
-        bubble_sort()
+        sort_children()
       }
     },
 

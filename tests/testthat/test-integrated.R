@@ -13,11 +13,11 @@ test_that("models can add winiks each day", {
   # Create a default village
   plains_village  <- village$new("Test_Village", initial_condition, models = population_model)
   # Run for 5 days
-  new_siumulator <- simulation$new(start_date = "100-01-01", end_date = "100-01-05", villages = list(plains_village))
+  new_siumulator <- simulation$new(6, villages = list(plains_village))
   new_siumulator$run_model()
-  testthat::expect_length(new_siumulator$villages[[1]]$winik_mgr$winiks, 4)
+  testthat::expect_length(new_siumulator$villages[[1]]$winik_mgr$winiks, 6)
   ending_population <- new_siumulator$villages[[1]]$winik_mgr$get_living_population()
-  testthat::expect_equal(ending_population, 4)
+  testthat::expect_equal(ending_population, 6)
 })
 
 test_that("models can add and change resource quantities", {
@@ -35,7 +35,7 @@ test_that("models can add and change resource quantities", {
 
   # Create a default village
   plains_village  <- village$new("Test_Village", initial_condition, models = deterministic_crop_stock_model)
-  new_siumulator <- simulation$new(start_date = "100-01-01", end_date = "100-01-04", villages = list(plains_village))
+  new_siumulator <- simulation$new(3, villages = list(plains_village))
   new_siumulator$run_model()
   last_record <- new_siumulator$villages[[1]]$current_state
   corn <- last_record$resource_states %>% dplyr::filter(name == "corn")
@@ -63,7 +63,7 @@ test_that("models can change resoources based on information from the winik_mana
 
   # Create a default village
   plains_village  <- village$new("Test_Village", initial_condition, models = crop_stock_model)
-  new_siumulator <- simulation$new(start_date = "-100-01-01", end_date = "-100-01-04", villages = list(plains_village))
+  new_siumulator <- simulation$new(3, villages = list(plains_village))
   new_siumulator$run_model()
 
   # Check to see if the correct number are left
@@ -94,7 +94,7 @@ test_that("models can have dynamics based on winik behavior", {
 
   # Create a default village
   plains_village  <- village$new("Test_Village", initial_condition, models = crop_stock_model)
-  new_siumulator <- simulation$new(start_date = "-100-01-01", end_date = "-100-01-04", villages = list(plains_village))
+  new_siumulator <- simulation$new(3, villages = list(plains_village))
   new_siumulator$run_model()
 
   # Check to see if the correct number are left
@@ -129,7 +129,7 @@ test_that("winiks and resources can have properties changed in models", {
 
   # Create a default village
   plains_village  <- village$new("Test_Village", initial_condition, models = crop_stock_model)
-  new_siumulator <- simulation$new(start_date = "-100-01-01", end_date = "-100-01-05", villages = list(plains_village))
+  new_siumulator <- simulation$new(4, villages = list(plains_village))
   new_siumulator$run_model()
 
   # Check to see if the correct number are left
@@ -175,7 +175,7 @@ test_that("winiks profession can change based on age", {
   # Create a default village
   plains_village  <- village$new("Test_Village", initial_condition, models = winik_model)
   # Run the simulationn for a year so that the winiks get assigned new professions
-  new_siumulator <- simulation$new(start_date = "100-01-01", end_date = "101-01-01", villages = list(plains_village))
+  new_siumulator <- simulation$new(364, villages = list(plains_village))
   new_siumulator$run_model()
 
   # Check to see that the professions are correct

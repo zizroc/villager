@@ -143,7 +143,7 @@ test_model <- function(current_state, previous_state, model_data, winik_mgr, res
 Finally, we'll create and run a simulation with a duration of 10 days.
 ```{r}
 los_angeles <- village$new("Test_Village", initial_condition, test_model, gps_winik)
-simulator <- simulation$new("100-01-01", "100-01-05", list(los_angeles))
+simulator <- simulation$new(10, list(los_angeles))
 simulator$run_model()
 ```
 

@@ -4,7 +4,7 @@
 #' @details This class acts as a type of record that holds the values of the different village variables. This class
 #'  can be subclassed to include more variables that aren't present.
 #' @section Methods:
-#' @field date The date that the state is relevant to
+#' @field step The time step that the state is relevant to
 #' @field winik_states A list of winik states
 #' @field resource_states A list of resource states
 #' @section Methods:
@@ -13,7 +13,7 @@
 village_state <- R6::R6Class("village_state",
   cloneable = TRUE,
   public = list(
-    date = NA,
+    step = NA,
     winik_states = NA,
     resource_states = NA,
 
@@ -24,13 +24,13 @@ village_state <- R6::R6Class("village_state",
     #' @details When adding a new property, make sure to add it to the tibble
     #' representation.
     #' @export
-    #' @param date The date that the state is relevant to. This should be a date from the gregorian package
+    #' @param step The time step that the state is relevant to
     #' @param winik_states A vector of tibbles representing the states of the winiks
     #' @param resource_states A vector of tibbles representing the states of the resources
-    initialize = function(date = NA,
+    initialize = function(step = 0,
                           winik_states = vector(),
                           resource_states = vector()) {
-      self$date <- date
+      self$step <- step
       self$winik_states <- winik_states
       self$resource_states <- resource_states
     }
