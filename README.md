@@ -87,7 +87,7 @@ test_model <- function(current_state, previous_state, model_data, winik_mgr, res
 
 ### State
 
-Objects of type `village`, `winik`, and `resource`have particular states at a particular time. As the simulation progresses, the state of these change based on model logic. At the end of each time step, the state of each object is saved, giving a compelte record of the system's evolution. The essance of any agent based model is changing the state at each time step. villager provides a mechanim for defining the initial state and for changing the state throughout the simulation.
+Objects of type `village`, `winik`, and `resource`have particular states at a particular time. As the simulation progresses, the state of these change based on model logic. At the end of each time step, the state of each object is saved, giving a complete record of the system's evolution. The essence of any agent based model is changing the state at each time step. villager provides a mechanim for defining the initial state and for changing the state throughout the simulation.
 
 ### Managing the Initial State
 
