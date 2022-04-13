@@ -33,8 +33,6 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Depends: R (>= 3.5.0)
-Remotes:
-    jimhester/lintr
 Imports:
     readr,
     R6,
@@ -44,7 +42,6 @@ Suggests:
     dplyr,
     knitr,
     leaflet,
-    lintr,
     plotly,
     remotes,
     rmarkdown,
