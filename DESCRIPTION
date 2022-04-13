@@ -29,7 +29,7 @@ Authors@R: c(
 Description: This is a package for creating and running Agent Based Models (ABM). It provides a set of base classes with core functionality to allow bootstrapped models. For more intensive modeling, the supplied classes can be extended to fit researcher needs.
 License: MIT + file LICENSE
 Encoding: UTF-8
-LazyData: true
+LazyData: false
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1
 Depends: R (>= 3.5.0)
