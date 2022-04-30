@@ -1,7 +1,10 @@
 # villager <img src='man/figures/logo.png' align="right" height="139" />
 
+[![](https://www.r-pkg.org/badges/version/villager?color=green)](https://cran.r-project.org/package=villager)
+[![DOI](https://zenodo.org/badge/293921124.svg)](https://zenodo.org/badge/latestdoi/293921124)
 [![R build status](https://github.com/zizroc/villager/workflows/R-CMD-check/badge.svg)](https://github.com/zizroc/villager/actions)
-[![Codecov test coverage](https://codecov.io/gh/zizroc/villager/branch/main/graph/badge.svg)](https://codecov.io/gh/zizroc/villager?branch=main)
+[![Codecov test coverage](https://codecov.io/gh/zizroc/villager/branch/main/graph/badge.svg)](https://app.codecov.io/gh/zizroc/villager?branch=main)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 villager is a framework for creating and running agent based models in R. It's purpose is to provide an extensible framework where modeling can be done in native R.
 
@@ -11,10 +14,10 @@ villager is a framework for creating and running agent based models in R. It's p
 - Easy to use time management
 
 ## Installing
-villager should be installed with [`devtools`](https://github.com/r-lib/devtools).
+_villager_ can be installed from CRAN by running the following,
 
 ```
-devtools::install_github("zizroc/villager")
+install.packages("villager")
 ```
 
 ## Takeaways
@@ -182,7 +185,7 @@ simulator <- simulation$new(4745, list(small_village))
 simulator$run_model()
 ```
 
-### Full Example 2
+### Example: Creating new villagers
 
 To demonstrate programatically creating villagers, consider the model below that has the following logic.
 
