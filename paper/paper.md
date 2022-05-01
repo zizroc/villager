@@ -5,21 +5,25 @@ tags:
   - agent based modeling
   - simulation framework
 authors:
-  - name: Gerardo Aldana^[Co-first author]
-    orcid: 0000-0000-0000-0000
-    affiliation: 1
-  - name: Toni Gonzalez^[Co-first author]
-    affiliation: 1
   - name: Thomas Thelen^[Co-first author]
     orcid: 0000-0002-1756-2128
     affiliation: 1
   - name: Marcus Thomson^[Co-first author]
     orcid: 0000-0002-5693-0245
     affiliation: 1
+  - name: Gerardo Aldana^[Co-first author]
+    affiliation: 2
+  - name: Toni Gonzalez^[Co-first author]
+    affiliation: 3
  
 affiliations:
- - name: University of California Santa Barbara
+ - name: National Center for Ecological Analysis and Synthesis
    index: 1
+ - name: College of Creative Studies, University of California, Santa Barbara
+   index: 2
+ - name: Department of Anthropology, University of California, Santa Barbara
+   index: 3
+
 date: 30 April 2022
 bibliography: paper.bib
 ---
