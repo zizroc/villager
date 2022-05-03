@@ -6,7 +6,7 @@
 [![Codecov test coverage](https://codecov.io/gh/zizroc/villager/branch/main/graph/badge.svg)](https://app.codecov.io/gh/zizroc/villager?branch=main)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-villager is a framework for creating and running agent based models in R. It's purpose is to provide an extensible framework where modeling can be done in native R.
+villager is a framework for creating and running agent based models in R. Its purpose is to provide an extensible framework where modeling can be done in native R.
 
 ## Features
 - Extensible data output system (csv, excel sheets, sqlite)
