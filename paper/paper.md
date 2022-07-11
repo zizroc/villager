@@ -50,35 +50,35 @@ Villager is made up from a few core classes, shown in Table 1 below. Base classe
 
 | Class | Role | When to Subclass |
 |---|---|---|
-| winik | Represents a single agent; it contains typical properties for human agents such as name, age, and sex. | When agents need to have additional properties defined for more context, such as dietary preferences, weight, and food production restrictions. |
+| winik | A single agent with typical properties for human agents such as name, age, and sex. | When agents need to have additional properties defined for more context, such as dietary preferences, weight, and food production restrictions. |
 | resource | An abstract thing that a winik can possess. It has a name and quantity. | When resources need to have more complex attributes such as expiration dates or possession histories. |
 | data_writer | Responsible for managing the serialization of simulation data. | To connect with additional data sources or file formats. |
 
 Table 1: A summary of the classes that users can extend.
 
-The `winik` class provides all of the main properties for individual agents. Because it’s unlikely that the included properties will fit every researchers' needs, this class can be subclassed to include any number of properties which can range from simple constructs like personal wealth to more advanced ideas such as memory and emotional state.
+The `winik` class provides all of the main properties for individual agents. Because it’s unlikely that the included properties will fit every researchers' needs, this class can be subclassed to include any number of properties ranging from simple constructs, like personal wealth, to more advanced ideas, like memory and emotional state.
 
 The `resource` class is an abstract _thing_ that a winik possesses. The base model only includes information about the name of the resource and the associated quantity. Modelers can extend this class with additional properties such as expiration date, date acquired, or previous owners.
 
 By subclassing the `data_writer` class, users have the ability to control how and where their model data is stored. Storage locations and formats can range from remote databases and local files such as CSV, SQLite, or Microsoft Excel spreadsheets.
 
-# Using
-There are three parts to a successful simulation. An initial condition is needed to define the initial state, models need to be created to run at each timestep, and an interface to the simulation is needed to define the experiment duration .
+# Usage
+A simulation consists of three parts: an initial condition that defines the initial state, models that are run at each timestep, and an interface to the simulation that define sthe experiment duration.
 
 ## Initial Conditions
-Initial conditions are defined by creating a function, defining the state inside of it, and attaching it to a village. Because the function is executed _before_ any time steps, it sets the state at t=0. The initial condition function _must_ take the following parameters.
+Initial conditions are defined by creating a function, defining the state inside of it, and attaching it to a village. Because the function is executed _before_ any time steps, it sets the state at t=0. The initial condition function _requires_ the following parameters.
 
 1. `current_state`: A mutable copy of the state representing the current time step.
 1. `model_data`: User supplied data that persists through the simulation.
-1. `winik_mgr`: An object that manages the agent which has convenience functions for retrieval and creation.
-1. `resource_mgr`: An object that manages the resources which has convenience functions for retrieval and creation.
+1. `winik_mgr`: An object that manages the agent with convenience functions for retrieval and creation.
+1. `resource_mgr`: An object that manages the resources with convenience functions for retrieval and creation.
 
 For example, an initial condition of a population with three agents
 
 1. A mother
 2. A father
 3. A daughter
-```
+```R
 initial_condition <- function(current_state, model_data, winik_mgr, resource_mgr) {
   mother <- winik$new(first_name="Kirsten", last_name="Taylor", age=9125, profession="Fisher")
   father <- winik$new(first_name="Joshua", last_name="Thompson", age=7300, profession="Laborer")
@@ -96,7 +96,7 @@ initial_condition <- function(current_state, model_data, winik_mgr, resource_mgr
 ```
 
 ## Models
-Models are functions that contain code that's executed at each time step. Similar to initial conditions, models _must_ take all of the following parameters.
+Models are functions that contain code that's executed at each time step. Similar to initial conditions, models _require_ the following parameters.
 
 1. `current_state`: A mutable copy of the state representing the current time step.
 2. `previous_sate`: An immutable copy of the previous state.
@@ -105,7 +105,7 @@ Models are functions that contain code that's executed at each time step. Simila
 5. `resource_mgr`: An object that manages the resources which has convenience functions for retrieval and creation.
 
 Consider a model that prints the current step and increases the age of each winik by `1` at each time step and sets their profession to _Farmer_ when they reach the age of 4383.
-```
+```R
 inc_age <- function(current_state, previous_state, model_data, winik_mgr, resource_mgr) {
   print(paste("Time step :", current_state$step))
   for (winik in winik_mgr$get_living_winiks()) {
@@ -118,23 +118,15 @@ inc_age <- function(current_state, previous_state, model_data, winik_mgr, resour
 }
 ```
 
-## Running
+## Simulation
 Initial conditions and models make up the heart of the simulation. Villager aggregates these into _village_ objects. The _simulation_ object contains any number of villages inside. The example below uses the initial condition and model provided above to create a simulation that runs for 100 time steps. Because the agent behavior is scoped to a village, multiple villages may be defined-each having different agent dynamics.
 
-```
+```R
 small_population <- villager::village$new("Family Group", initial_condition, inc_age)
 simulator <- villager::simulation$new(100, list(small_population))
 simulator$run_model()
 ```
-
-# Dependencies
-Villager only depends on a few dependencies for core functionality.
-
-| Package | Use | Citation |
-|---|---|---|
-| readr | Writing simulation states to disk. | [@wickam_2020] |
-| uuid | Generating unique agent identifiers. | [@urbanek_2020]|
-| R6 | All villager classes are R6, allowing users to use reference semantics with models. | [@chang_2020] |
-
+# Acknowledgements
+TODO
 
 # References
