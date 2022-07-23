@@ -9,12 +9,12 @@ A class responsible for the simulation data to disk.
 }
 \details{
 This class can be subclasses to provide advanced data writing to other data sources. This should also
-be subclassed if the winik and resource classes are subclasses, to write any addional fields to the data source.
+be subclassed if the agent and resource classes are subclasses, to write any addional fields to the data source.
 }
 \section{Methods}{
 
 \describe{
-\item{\code{write()}}{Writes the winik and resources to disk.}
+\item{\code{write()}}{Writes the agent and resources to disk.}
 }
 Create a new data writer.
 }
@@ -24,7 +24,7 @@ Create a new data writer.
 \describe{
 \item{\code{results_directory}}{The folder where the simulation resulst are written to}
 
-\item{\code{winik_filename}}{The location where the winiks are written to}
+\item{\code{agent_filename}}{The location where the agents are written to}
 
 \item{\code{resource_filename}}{The location where the resources are written to}
 }
@@ -46,7 +46,7 @@ Creates a new data writer object that has optional paths for data files.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{data_writer$new(
   results_directory = "results",
-  winik_filename = "winiks.csv",
+  agent_filename = "agents.csv",
   resource_filename = "resources.csv"
 )}\if{html}{\out{</div>}}
 }
@@ -56,14 +56,14 @@ Creates a new data writer object that has optional paths for data files.
 \describe{
 \item{\code{results_directory}}{The directory where the results file is written to}
 
-\item{\code{winik_filename}}{The name of the file for the winik data}
+\item{\code{agent_filename}}{The name of the file for the agent data}
 
 \item{\code{resource_filename}}{The name of the file for the resource data}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-A new winik object
+A new agent object
 Writes a village's state to disk.
 }
 }
@@ -71,7 +71,7 @@ Writes a village's state to disk.
 \if{html}{\out{<a id="method-write"></a>}}
 \if{latex}{\out{\hypertarget{method-write}{}}}
 \subsection{Method \code{write()}}{
-Takes a state an the name of a village and writes the winiks and resources to disk
+Takes a state an the name of a village and writes the agents and resources to disk
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{data_writer$write(state, village_name)}\if{html}{\out{</div>}}
 }

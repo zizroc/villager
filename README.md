@@ -23,19 +23,19 @@ install.packages("villager")
 ## Takeaways
 When reading though the Readme and vignettes, it's important to take note of a few concepts
 
-- Villages are the highest aggregate; they contain villages which in turn contain agents (winiks)
+- Villages are the highest aggregate; they contain villages which in turn contain agents (agents)
 - Agents and resources can be subclassed to support additional properties 
 - The data_writer class can be subclassed when writing to data sources other than csv
 - Models are functions that are added to villages; each village can exhibit different behavior
 
 ## Using villager
 
-`villager` is about modeling populations with (optional) associated resources. It supports a community level aggregation of agents, referred to as _villages_ or an individual _village_. Agents, which are referred to as gender-neutral _winiks_, are members of community level aggregations. 
+`villager` is about modeling populations with (optional) associated resources. It supports a community level aggregation of agents, referred to as _villages_ or an individual _village_. Agents, which are referred to as gender-neutral _agents_, are members of community level aggregations. 
 
-villager compliant models _must_ conform to the function template below. The `winik_mgr` and `resource_mgr` are responsible for interacting with the individual agents and resources. 
+villager compliant models _must_ conform to the function template below. The `agent_mgr` and `resource_mgr` are responsible for interacting with the individual agents and resources. 
 
 ```{r}
-test_model <- function(current_state, previous_state, model_data, winik_mgr, resource_mgr) {
+test_model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr) {
   ...
   ...
 }
@@ -43,40 +43,40 @@ test_model <- function(current_state, previous_state, model_data, winik_mgr, res
 
 ### Creating & Managing Agents
 
-Agents are created by instantiating the `winik` class. There are a number of winik properties that can be passed to the constructor.
+Agents are created by instantiating the `agent` class. There are a number of agent properties that can be passed to the constructor.
 
 ```{r}
-test_model <- function(current_state, previous_state, model_data, winik_mgr, resource_mgr) {
-  mother <- winik$new(first_name="Kirsten", last_name="Taylor", age=9125)
-  father <- winik$new(first_name="Joshua", last_name="Thompson", age=7300)
-  daughter <- winik$new(first_name="Mariylyyn", last_name="Thompson", age=10220)
+test_model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr) {
+  mother <- agent$new(first_name="Kirsten", last_name="Taylor", age=9125)
+  father <- agent$new(first_name="Joshua", last_name="Thompson", age=7300)
+  daughter <- agent$new(first_name="Mariylyyn", last_name="Thompson", age=10220)
 }
 ```
 
-To add winiks to the simulation, use the provided `winik_mgr` object to call `add_winik`. Because the classes are R6, the object can be modified after being added to the manager and the changes will be persisted without needing to re-add the villager. For example, setting a daughter's mother and her father below. Note that the standard way is to modify the properties _beforehand_, although not strictly necessary.
+To add agents to the simulation, use the provided `agent_mgr` object to call `add_agent`. Because the classes are R6, the object can be modified after being added to the manager and the changes will be persisted without needing to re-add the villager. For example, setting a daughter's mother and her father below. Note that the standard way is to modify the properties _beforehand_, although not strictly necessary.
 
 ```{r}
-test_model <- function(current_state, previous_state, model_data, winik_mgr, resource_mgr) {
-  winik_mgr <- winik_manager$new()
-  winik_mgr$add_winik(mother)
-  winik_mgr$add_winik(father)
-  winik_mgr$add_winik(daughter)
+test_model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr) {
+  agent_mgr <- agent_manager$new()
+  agent_mgr$add_agent(mother)
+  agent_mgr$add_agent(father)
+  agent_mgr$add_agent(daughter)
   daughter$mother_id <- mother$identifier
   daughter$father_id <- father$identifier
 }
 ```
 
-The winik manager can also be used to pair winiks, representitive of a relationship or social bond.
+The agent manager can also be used to pair agents, representitive of a relationship or social bond.
 ```
-winik_mgr$winik_mgr$connect_winiks(mother, father)
+agent_mgr$agent_mgr$connect_agents(mother, father)
 ```
 
 ### Creating & Managing Resources
 
-Resources are similar to winiks in that they're both R6 classes, are instantiated similarly, and are also managed by an object passed into the model. An example of creating resources and adding them to the simualtion is given below.
+Resources are similar to agents in that they're both R6 classes, are instantiated similarly, and are also managed by an object passed into the model. An example of creating resources and adding them to the simualtion is given below.
 
 ```
-test_model <- function(current_state, previous_state, model_data, winik_mgr, resource_mgr) {
+test_model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr) {
   corn_resource <- resource$new(name="corn", quantity = 10)
   fish_resource <- resource$new(name="fish", quantity = 15)
   corn_resource$quantity=5
@@ -90,26 +90,26 @@ test_model <- function(current_state, previous_state, model_data, winik_mgr, res
 
 ### State
 
-Objects of type `village`, `winik`, and `resource`have particular states at a particular time. As the simulation progresses, the state of these change based on model logic. At the end of each time step, the state of each object is saved, giving a complete record of the system's evolution. The essence of any agent based model is changing the state at each time step. villager provides a mechanim for defining the initial state and for changing the state throughout the simulation.
+Objects of type `village`, `agent`, and `resource`have particular states at a particular time. As the simulation progresses, the state of these change based on model logic. At the end of each time step, the state of each object is saved, giving a complete record of the system's evolution. The essence of any agent based model is changing the state at each time step. villager provides a mechanim for defining the initial state and for changing the state throughout the simulation.
 
 ### Managing the Initial State
 
 Creating the initial state is done by creating a function that resembles model functions from above. The manager classes are used to populate the village with an initial population of agents and resources.
 
 ```
-initial_condition <- function(current_state, model_data, winik_mgr, resource_mgr) {
+initial_condition <- function(current_state, model_data, agent_mgr, resource_mgr) {
   # Create the initial villagers
-  mother <- winik$new(first_name="Kirsten", last_name="Taylor", age=9125)
-  father <- winik$new(first_name="Joshua", last_name="Thompson", age=7300)
-  daughter <- winik$new(first_name="Mariylyyn", last_name="Thompson", age=10220)
+  mother <- agent$new(first_name="Kirsten", last_name="Taylor", age=9125)
+  father <- agent$new(first_name="Joshua", last_name="Thompson", age=7300)
+  daughter <- agent$new(first_name="Mariylyyn", last_name="Thompson", age=10220)
   daughter$mother_id <- mother$identifier
   daughter$father_id <- father$identifier
   
-  # Add the winiks to the manager
-  winik_mgr$connect_winiks(mother, father)
-  winik_mgr$add_winik(mother)
-  winik_mgr$add_winik(father)
-  winik_mgr$add_winik(daughter)
+  # Add the agents to the manager
+  agent_mgr$connect_agents(mother, father)
+  agent_mgr$add_agent(mother)
+  agent_mgr$add_agent(father)
+  agent_mgr$add_agent(daughter)
   
   # Create the resources
   corn_resource <- resource$new(name="corn", quantity = 10)
@@ -147,19 +147,19 @@ We can combine the examples above into a full simulation that...
 
 ```{r}
 library(villager)
-initial_condition <- function(current_state, model_data, winik_mgr, resource_mgr) {
+initial_condition <- function(current_state, model_data, agent_mgr, resource_mgr) {
   # Create the initial villagers
-  mother <- winik$new(first_name="Kirsten", last_name="Taylor", age=9125)
-  father <- winik$new(first_name="Joshua", last_name="Thompson", age=7300)
-  daughter <- winik$new(first_name="Mariylyyn", last_name="Thompson", age=10220)
+  mother <- agent$new(first_name="Kirsten", last_name="Taylor", age=9125)
+  father <- agent$new(first_name="Joshua", last_name="Thompson", age=7300)
+  daughter <- agent$new(first_name="Mariylyyn", last_name="Thompson", age=10220)
   daughter$mother_id <- mother$identifier
   daughter$father_id <- father$identifier
   
-  # Add the winiks to the manager
-  winik_mgr$connect_winiks(mother, father)
-  winik_mgr$add_winik(mother)
-  winik_mgr$add_winik(father)
-  winik_mgr$add_winik(daughter)
+  # Add the agents to the manager
+  agent_mgr$connect_agents(mother, father)
+  agent_mgr$add_agent(mother)
+  agent_mgr$add_agent(father)
+  agent_mgr$add_agent(daughter)
   
   # Create the resources
   corn_resource <- resource$new(name="corn", quantity = 10)
@@ -170,12 +170,12 @@ initial_condition <- function(current_state, model_data, winik_mgr, resource_mgr
   resource_mgr$add_resource(fish_resource)
 }
 
-test_model <- function(current_state, previous_state, model_data, winik_mgr, resource_mgr) {
+test_model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr) {
 print(paste("Step:", current_state$step))
-  for (winik in winik_mgr$get_living_winiks()) {
-    winik$age <- winik$age+1
-    if (winik$age >= 4383) {
-      winik$profession <- "Farmer"
+  for (agent in agent_mgr$get_living_agents()) {
+    agent$age <- agent$age+1
+    if (agent$age >= 4383) {
+      agent$profession <- "Farmer"
     }
   }
 }
@@ -199,23 +199,23 @@ library(villager)
     print(current_day)
     if((current_day%%2) == 0) {
       # Then it's an even day
-      # Create two new winiks whose first names are random numbers
+      # Create two new agents whose first names are random numbers
       for (i in 1:2) {
         name <- runif(1, 0.0, 100)
-        new_winik <- winik$new(first_name <- name, last_name <- "Smith")
-        winik_mgr$add_winik(new_winik)
+        new_agent <- agent$new(first_name <- name, last_name <- "Smith")
+        agent_mgr$add_agent(new_agent)
       }
     } else {
       # It's an odd day
-      living_winiks <- winik_mgr$get_living_winiks()
+      living_agents <- agent_mgr$get_living_agents()
       # Kill the first one
-      living_winiks[[1]]$alive <- FALSE
+      living_agents[[1]]$alive <- FALSE
     }
   }
   coastal_village <- village$new("Test village", initial_condition, model)
   simulator <- simulation$new(4, villages = list(coastal_village))
   simulator$run_model()
-  mgr <- simulator$villages[[1]]$winik_mgr
+  mgr <- simulator$villages[[1]]$agent_mgr
 ```
 
 ## Advanced Usage

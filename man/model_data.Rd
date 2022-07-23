@@ -2,11 +2,11 @@
 % Please edit documentation in R/model_data.R
 \name{model_data}
 \alias{model_data}
-\title{R6 Class representing data that's external from resources and winiks}
+\title{R6 Class representing data that's external from resources and agents}
 \description{
-R6 Class representing data that's external from resources and winiks
+R6 Class representing data that's external from resources and agents
 
-R6 Class representing data that's external from resources and winiks
+R6 Class representing data that's external from resources and agents
 }
 \details{
 It contains a single variable, 'events' for when the data holds a list of events

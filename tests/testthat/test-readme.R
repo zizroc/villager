@@ -1,17 +1,17 @@
-test_that("the first example properly sets the profession of the winiks", {
-  initial_condition <- function(current_state, model_data, winik_mgr, resource_mgr) {
+test_that("the first example properly sets the profession of the agents", {
+  initial_condition <- function(current_state, model_data, agent_mgr, resource_mgr) {
     # Create the initial villagers
-    mother <- winik$new(first_name="Kirsten", last_name="Taylor", age=9125)
-    father <- winik$new(first_name="Joshua", last_name="Thompson", age=7300)
-    daughter <- winik$new(first_name="Mariylyyn", last_name="Thompson", age=10220)
+    mother <- agent$new(first_name="Kirsten", last_name="Taylor", age=9125)
+    father <- agent$new(first_name="Joshua", last_name="Thompson", age=7300)
+    daughter <- agent$new(first_name="Mariylyyn", last_name="Thompson", age=10220)
     daughter$mother_id <- mother$identifier
     daughter$father_id <- father$identifier
 
-    # Add the winiks to the manager
-    winik_mgr$connect_winiks(mother, father)
-    winik_mgr$add_winik(mother)
-    winik_mgr$add_winik(father)
-    winik_mgr$add_winik(daughter)
+    # Add the agents to the manager
+    agent_mgr$connect_agents(mother, father)
+    agent_mgr$add_agent(mother)
+    agent_mgr$add_agent(father)
+    agent_mgr$add_agent(daughter)
 
     # Create the resources
     corn_resource <- resource$new(name="corn", quantity = 10)
@@ -22,11 +22,11 @@ test_that("the first example properly sets the profession of the winiks", {
     resource_mgr$add_resource(fish_resource)
   }
 
-  test_model <- function(current_state, previous_state, model_data, winik_mgr, resource_mgr) {
-    for (winik in winik_mgr$get_living_winiks()) {
-      winik$age <- winik$age+1
-      if (winik$age >= 4383) {
-        winik$profession <- "Farmer"
+  test_model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr) {
+    for (agent in agent_mgr$get_living_agents()) {
+      agent$age <- agent$age+1
+      if (agent$age >= 4383) {
+        agent$profession <- "Farmer"
       }
     }
   }
@@ -35,44 +35,44 @@ test_that("the first example properly sets the profession of the winiks", {
   simulator <- simulation$new(4745, list(small_village))
   simulator$run_model()
 
-  for (winik in simulator$villages[[1]]$winik_mgr$get_living_winiks()) {
-    testthat::expect_equal(winik$profession, "Farmer")
+  for (agent in simulator$villages[[1]]$agent_mgr$get_living_agents()) {
+    testthat::expect_equal(agent$profession, "Farmer")
   }
 })
 
 test_that("the second example", {
-  initial_condition <- function(current_state, model_data, winik_mgr, resource_mgr) {
+  initial_condition <- function(current_state, model_data, agent_mgr, resource_mgr) {
     for (i in 1:10) {
       name <- runif(1, 0.0, 100)
-      new_winik <- winik$new(first_name <- name, last_name <- "Smith")
-      winik_mgr$add_winik(new_winik)
+      new_agent <- agent$new(first_name <- name, last_name <- "Smith")
+      agent_mgr$add_agent(new_agent)
     }
   }
 
-  model <- function(current_state, previous_state, model_data, winik_mgr, resource_mgr) {
+  model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr) {
     current_day <- current_state$step
     print(current_day)
     if((current_day%%2) == 0) {
       # Then it's an even day
-      # Create two new winiks whose first names are random numbers
+      # Create two new agents whose first names are random numbers
       for (i in 1:2) {
         name <- runif(1, 0.0, 100)
-        new_winik <- winik$new(first_name <- name, last_name <- "Smith")
-        winik_mgr$add_winik(new_winik)
+        new_agent <- agent$new(first_name <- name, last_name <- "Smith")
+        agent_mgr$add_agent(new_agent)
       }
     } else {
       # It's an odd day
-      living_winiks <- winik_mgr$get_living_winiks()
+      living_agents <- agent_mgr$get_living_agents()
       # Kill the first one
-      living_winiks[[1]]$alive <- FALSE
+      living_agents[[1]]$alive <- FALSE
     }
   }
   coastal_village <- village$new("Test village", initial_condition, model)
   simulator <- simulation$new(4, villages = list(coastal_village))
   simulator$run_model()
-  mgr <- simulator$villages[[1]]$winik_mgr
-  # Test that there are 14 winiks
-  testthat::expect_equal(14, length(mgr$winiks))
+  mgr <- simulator$villages[[1]]$agent_mgr
+  # Test that there are 14 agents
+  testthat::expect_equal(14, length(mgr$agents))
   # Test that 8 are alive
-  testthat::expect_equal(12, length(mgr$get_living_winiks()))
+  testthat::expect_equal(12, length(mgr$get_living_agents()))
 })

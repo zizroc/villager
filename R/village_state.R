@@ -5,7 +5,7 @@
 #'  can be subclassed to include more variables that aren't present.
 #' @section Methods:
 #' @field step The time step that the state is relevant to
-#' @field winik_states A list of winik states
+#' @field agent_states A list of agent states
 #' @field resource_states A list of resource states
 #' @section Methods:
 #' \describe{
@@ -14,7 +14,7 @@ village_state <- R6::R6Class("village_state",
   cloneable = TRUE,
   public = list(
     step = NA,
-    winik_states = NA,
+    agent_states = NA,
     resource_states = NA,
 
     #' Creates a new State
@@ -25,13 +25,13 @@ village_state <- R6::R6Class("village_state",
     #' representation.
     #' @export
     #' @param step The time step that the state is relevant to
-    #' @param winik_states A vector of tibbles representing the states of the winiks
+    #' @param agent_states A vector of tibbles representing the states of the agents
     #' @param resource_states A vector of tibbles representing the states of the resources
     initialize = function(step = 0,
-                          winik_states = vector(),
+                          agent_states = vector(),
                           resource_states = vector()) {
       self$step <- step
-      self$winik_states <- winik_states
+      self$agent_states <- agent_states
       self$resource_states <- resource_states
     }
   )
