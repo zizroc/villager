@@ -25,7 +25,7 @@ Creates a new State
 \describe{
 \item{\code{step}}{The time step that the state is relevant to}
 
-\item{\code{winik_states}}{A list of winik states}
+\item{\code{agent_states}}{A list of agent states}
 
 \item{\code{resource_states}}{A list of resource states}
 }
@@ -47,7 +47,7 @@ be called by subclasses during initialization.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{village_state$new(
   step = 0,
-  winik_states = vector(),
+  agent_states = vector(),
   resource_states = vector()
 )}\if{html}{\out{</div>}}
 }
@@ -57,7 +57,7 @@ be called by subclasses during initialization.
 \describe{
 \item{\code{step}}{The time step that the state is relevant to}
 
-\item{\code{winik_states}}{A vector of tibbles representing the states of the winiks}
+\item{\code{agent_states}}{A vector of tibbles representing the states of the agents}
 
 \item{\code{resource_states}}{A vector of tibbles representing the states of the resources}
 }

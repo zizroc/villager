@@ -35,7 +35,7 @@ different village variables. This class can be subclassed to include more variab
 
 \item{\code{model_data}}{Optional data that models may need}
 
-\item{\code{winik_mgr}}{The manager that handles all of the winiks}
+\item{\code{agent_mgr}}{The manager that handles all of the agents}
 
 \item{\code{resource_mgr}}{The manager that handles all of the resources
 Initializes a village}
@@ -62,7 +62,7 @@ time.
   name,
   initial_condition,
   models = list(),
-  winik_class = villager::winik,
+  agent_class = villager::agent,
   resource_class = villager::resource
 )}\if{html}{\out{</div>}}
 }
@@ -76,7 +76,7 @@ time.
 
 \item{\code{models}}{A list of functions or a single function that should be run at each time step}
 
-\item{\code{winik_class}}{The class that's being used to represent agents}
+\item{\code{agent_class}}{The class that's being used to represent agents}
 
 \item{\code{resource_class}}{The class being used to describe the resources
 Propagates the village a single time step}

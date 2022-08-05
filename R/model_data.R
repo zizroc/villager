@@ -1,4 +1,4 @@
-#' R6 Class representing data that's external from resources and winiks
+#' R6 Class representing data that's external from resources and agents
 #'
 #' It contains a single variable, 'events' for when the data holds a list of events
 model_data <- R6::R6Class("model_data",

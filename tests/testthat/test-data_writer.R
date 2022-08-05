@@ -8,7 +8,7 @@ test_that("the constructor properly saves the parameters", {
   writer <- data_writer$new(results_dir, villagers_file, resources_file)
 
   testthat::expect_equal(writer$results_directory, results_dir)
-  testthat::expect_equal(writer$winik_filename, villagers_file)
+  testthat::expect_equal(writer$agent_filename, villagers_file)
   testthat::expect_equal(writer$resource_filename, resources_file)
 })
 
@@ -20,7 +20,7 @@ test_that("the default village states are properly saved to disk for an individu
   writer$write(state_to_write, "test_village")
 
   # Read the data back
-  winiks <- read.csv("./test_results/test_village/my_villagers.csv")
+  agents <- read.csv("./test_results/test_village/my_villagers.csv")
   resources <- read.csv("./test_results/test_village/my_resources.csv")
-  testthat::expect_equal(winiks, state_to_write$winik_states)
+  testthat::expect_equal(agents, state_to_write$agent_states)
 })
