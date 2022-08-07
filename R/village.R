@@ -24,8 +24,8 @@ village <- R6::R6Class("village",
     models = NULL,
     #' @field model_data Optional data that models may need
     model_data = NULL,
-    #' @field winik_mgr The manager that handles all of the winiks
-    winik_mgr = NULL,
+    #' @field agent_mgr The manager that handles all of the agents
+    agent_mgr = NULL,
     #' @field resource_mgr The manager that handles all of the resources
     resource_mgr = NULL,
 
@@ -36,15 +36,15 @@ village <- R6::R6Class("village",
     #' @param name An optional name for the village
     #' @param initial_condition A function that gets called on the first time step
     #' @param models A list of functions or a single function that should be run at each time step
-    #' @param winik_class The class that's being used to represent agents
+    #' @param agent_class The class that's being used to represent agents
     #' @param resource_class The class being used to describe the resources
     initialize = function(name,
                           initial_condition,
                           models = list(),
-                          winik_class = villager::winik,
+                          agent_class = villager::agent,
                           resource_class = villager::resource) {
       self$initial_condition <- initial_condition
-      self$winik_mgr <- winik_manager$new(winik_class)
+      self$agent_mgr <- agent_manager$new(agent_class)
       self$resource_mgr <- resource_manager$new(resource_class)
 
       # Check to see if the user supplied a single model, outside of a list
@@ -78,14 +78,14 @@ village <- R6::R6Class("village",
       for (model in self$models) {
         # Create a read only copy of the last state so that users can make decisions off of it
         self$previous_state <- self$current_state$clone(deep = TRUE)
-        model(self$current_state, self$previous_state, self$model_data, self$winik_mgr, self$resource_mgr
+        model(self$current_state, self$previous_state, self$model_data, self$agent_mgr, self$resource_mgr
         )
       }
-      self$current_state$winik_states <- self$winik_mgr$get_states()
+      self$current_state$agent_states <- self$agent_mgr$get_states()
 
       # Add the time step to the data
-      if (nrow(self$current_state$winik_states) > 0) {
-        self$current_state$winik_states$step <- self$current_state$step
+      if (nrow(self$current_state$agent_states) > 0) {
+        self$current_state$agent_states$step <- self$current_state$step
       }
       self$current_state$resource_states <- self$resource_mgr$get_states()
       if (nrow(self$current_state$resource_states) > 0) {
@@ -101,9 +101,9 @@ village <- R6::R6Class("village",
       self$current_state$step <- 0
       self$initial_condition(self$current_state,
                              self$model_data,
-                             self$winik_mgr,
+                             self$agent_mgr,
                              self$resource_mgr)
-      self$current_state$winik_states <- self$winik_mgr$get_states()
+      self$current_state$agent_states <- self$agent_mgr$get_states()
       self$current_state$resource_states <- self$resource_mgr$get_states()
 
     }

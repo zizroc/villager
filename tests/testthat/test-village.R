@@ -51,11 +51,11 @@ test_that("the initial condition is properly set", {
 })
 
 test_that("propagate runs a custom model", {
-  initial_condition <- function(curent_state, model_data, winik_mgr, resource_mgr) {
+  initial_condition <- function(curent_state, model_data, agent_mgr, resource_mgr) {
     resource_mgr$add_resource(resource$new(name = "corn", quantity = 5))
   }
 
-  corn_model <- function(curent_state, previous_state, model_data, winik_mgr, resource_mgr) {
+  corn_model <- function(curent_state, previous_state, model_data, agent_mgr, resource_mgr) {
       if (curent_state$step == 3) {
         # On the third day add 5 corn
         corn_resource <- resource_mgr$get_resource("corn")
@@ -75,17 +75,17 @@ test_that("propagate runs a custom model", {
 })
 
 test_that("propagate runs multiple custom models", {
-  initial_conditions <- function(curent_state, model_data, winik_mgr, resource_mgr) {
+  initial_conditions <- function(curent_state, model_data, agent_mgr, resource_mgr) {
     resource_mgr$add_resource(resource$new(name = "corn", quantity = 5))
     resource_mgr$add_resource(resource$new(name = "salmon", quantity = 1))
   }
 
-  corn_model <- function(curent_state, previous_state, model_data, winik_mgr, resource_mgr) {
+  corn_model <- function(curent_state, previous_state, model_data, agent_mgr, resource_mgr) {
     corn <- resource_mgr$get_resource("corn")
     corn$quantity <- corn$quantity + 1
   }
 
-  salmon_model <- function(curent_state, previous_state, model_data, winik_mgr, resource_mgr) {
+  salmon_model <- function(curent_state, previous_state, model_data, agent_mgr, resource_mgr) {
     salmon <- resource_mgr$get_resource("salmon")
     salmon$quantity <- salmon$quantity + 1
   }
@@ -107,17 +107,17 @@ test_that("propagate runs multiple custom models", {
 
 
 test_that("The previous state is recorded", {
-  initial_conditions <- function(curent_state, model_data, winik_mgr, resource_mgr) {
+  initial_conditions <- function(curent_state, model_data, agent_mgr, resource_mgr) {
     resource_mgr$add_resource(resource$new(name = "corn", quantity = 5))
     resource_mgr$add_resource(resource$new(name = "salmon", quantity = 1))
   }
 
-  corn_model <- function(curent_state, previous_state, model_data, winik_mgr, resource_mgr) {
+  corn_model <- function(curent_state, previous_state, model_data, agent_mgr, resource_mgr) {
     corn <- resource_mgr$get_resource("corn")
     corn$quantity <- corn$quantity + 1
   }
 
-  salmon_model <- function(curent_state, previous_state, model_data, winik_mgr, resource_mgr) {
+  salmon_model <- function(curent_state, previous_state, model_data, agent_mgr, resource_mgr) {
     salmon <- resource_mgr$get_resource("salmon")
     salmon$quantity <- salmon$quantity + 1
   }

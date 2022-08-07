@@ -1,31 +1,31 @@
 #' @export
-#' @title Winik
+#' @title agent
 #' @docType class
-#' @description This is an object that represents a villager (winik).
+#' @description This is an object that represents a villager (agent).
 #' @details This class acts as an abstraction for handling villager-level logic. It can take a
 #'  number of functions that run at each timestep. It also has an associated
-#' @field identifier A unique identifier that can be used to identify and find the winik
-#' @field first_name The winik's first name
-#' @field last_name The winik's last name
-#' @field age The winik's age
-#' @field mother_id The identifier of the winik's mother
-#' @field father_id The identifier of the winik's father
-#' @field profession The winik's profession
-#' @field partner The identifier of the winik's partner
-#' @field gender The winik's gender
+#' @field identifier A unique identifier that can be used to identify and find the agent
+#' @field first_name The agent's first name
+#' @field last_name The agent's last name
+#' @field age The agent's age
+#' @field mother_id The identifier of the agent's mother
+#' @field father_id The identifier of the agent's father
+#' @field profession The agent's profession
+#' @field partner The identifier of the agent's partner
+#' @field gender The agent's gender
 #' @field alive A boolean flag that represents whether the villager is alive or dead
 #' @field children A list of children identifiers
-#' @field health A percentage value of the winik's current health
+#' @field health A percentage value of the agent's current health
 #' @section Methods:
 #' \describe{
-#'   \item{\code{as_table()}}{Represents the current state of the winik as a tibble}
+#'   \item{\code{as_table()}}{Represents the current state of the agent as a tibble}
 #'   \item{\code{get_age()}}{Returns age in terms of years}
 #'   \item{\code{get_gender()}}{}
-#'   \item{\code{get_days_sincelast_birth()}}{Get the number of days since the winik last gave birth}
-#'   \item{\code{initialize()}}{Create a new winik}
+#'   \item{\code{get_days_sincelast_birth()}}{Get the number of days since the agent last gave birth}
+#'   \item{\code{initialize()}}{Create a new agent}
 #'   \item{\code{propagate()}}{Runs every day}
 #'   }
-winik <- R6::R6Class("winik",
+agent <- R6::R6Class("agent",
   public = list(
     age = NULL,
     alive = NULL,
@@ -40,24 +40,24 @@ winik <- R6::R6Class("winik",
     partner = NULL,
     profession = NULL,
 
-    #' Create a new winik
+    #' Create a new agent
     #'
-    #' @description Used to created new winik objects.
+    #' @description Used to created new agent objects.
     #'
     #' @export
-    #' @param age The age of the winik
-    #' @param alive Boolean whether the winik is alive or not
-    #' @param children An ordered list of of the children from this winik
-    #' @param gender The gender of the winik
-    #' @param identifier The winik's identifier
-    #' @param first_name The winik's first name
-    #' @param last_name The winik's last naem
-    #' @param mother_id The identifier of the winik's monther
-    #' @param father_id The identifier of the winik' father
-    #' @param partner The identifier of the winik's partner
-    #' @param profession The winik's profession
-    #' @param health A percentage value of the winik's current health
-    #' @return A new winik object
+    #' @param age The age of the agent
+    #' @param alive Boolean whether the agent is alive or not
+    #' @param children An ordered list of of the children from this agent
+    #' @param gender The gender of the agent
+    #' @param identifier The agent's identifier
+    #' @param first_name The agent's first name
+    #' @param last_name The agent's last naem
+    #' @param mother_id The identifier of the agent's monther
+    #' @param father_id The identifier of the agent' father
+    #' @param partner The identifier of the agent's partner
+    #' @param profession The agent's profession
+    #' @param health A percentage value of the agent's current health
+    #' @return A new agent object
     initialize = function(identifier = NA,
                           first_name = NA,
                           last_name = NA,
@@ -90,14 +90,14 @@ winik <- R6::R6Class("winik",
     #' A function that returns true or false whether the villager dies
     #' This is run each day
     #'
-    #' @return A boolean whether the winik is alive (true for yes)
+    #' @return A boolean whether the agent is alive (true for yes)
     is_alive = function() {
       # The villager survived the day
       return(self$alive)
     },
 
     #' Gets the number of days from the last birth. This is also
-    #' the age of the most recently born winik
+    #' the age of the most recently born agent
     #'
     #' @return The number of days since last birth
     get_days_since_last_birth = function() {
@@ -108,10 +108,10 @@ winik <- R6::R6Class("winik",
       return(0)
     },
 
-    #' Connects a child to the winik. This method ensures that the
+    #' Connects a child to the agent. This method ensures that the
     #' 'children' vector is ordered.
     #'
-    #' @param child The Winik object representing the child
+    #' @param child The agent object representing the child
     #' @return None
     add_child = function(child) {
       sort_children <- function() {
@@ -139,16 +139,16 @@ winik <- R6::R6Class("winik",
       }
     },
 
-    #' Returns a data.frame representation of the winik
+    #' Returns a data.frame representation of the agent
     #'
     #' @description I hope there's a more scalable way to do this in R; Adding every new attribute to this
     #' function isn't practical
     #' @details The village_state holds a copy of all of the villagers at each timestep; this method is used to turn
-    #' the winik properties into the object inserted in the village_state.
+    #' the agent properties into the object inserted in the village_state.
     #' @export
-    #' @return A data.frame representation of the winik
+    #' @return A data.frame representation of the agent
     as_table = function() {
-      winik_table <- data.frame(
+      agent_table <- data.frame(
         age = self$age,
         alive = self$alive,
         father_id = self$father_id,
@@ -161,7 +161,7 @@ winik <- R6::R6Class("winik",
         partner = self$partner,
         profession = self$profession
       )
-      return(winik_table)
+      return(agent_table)
     }
   )
 )
