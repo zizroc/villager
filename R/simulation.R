@@ -1,10 +1,10 @@
+#' @export
 #' @title simulation
 #' @docType class
 #' @description Advances one or more villages through time
 #' @field length The total number of time steps that the simulation runs for
 #' @field villages A list of villages that the simulator will run
 #' @field writer An instance of a data_writer class for writing village data to disk
-#' @export
 #' @section Methods:
 #' \describe{
 #'   \item{\code{run_model()}}{Runs the simulation}

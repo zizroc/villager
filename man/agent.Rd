@@ -93,11 +93,11 @@ Used to created new agent objects.
 
 \item{\code{first_name}}{The agent's first name}
 
-\item{\code{last_name}}{The agent's last naem}
+\item{\code{last_name}}{The agent's last name}
 
 \item{\code{age}}{The age of the agent}
 
-\item{\code{mother_id}}{The identifier of the agent's monther}
+\item{\code{mother_id}}{The identifier of the agent's mother}
 
 \item{\code{father_id}}{The identifier of the agent' father}
 

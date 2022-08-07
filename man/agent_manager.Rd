@@ -73,7 +73,7 @@ if it exists.}
 \if{html}{\out{<a id="method-get_agent"></a>}}
 \if{latex}{\out{\hypertarget{method-get_agent}{}}}
 \subsection{Method \code{get_agent()}}{
-Return the R6 instance of a agent with identiifier 'agent_identifier'.
+Return the R6 instance of a agent with identifier 'agent_identifier'.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{agent_manager$get_agent(agent_identifier)}\if{html}{\out{</div>}}
 }
@@ -208,8 +208,8 @@ Returns the total number of agents that are alive}
 }
 
 \subsection{Returns}{
-The numnber of living agents
-Returns the averag age, in years, of all of the agents
+The number of living agents
+Returns the average age, in years, of all of the agents
 }
 }
 \if{html}{\out{<hr>}}
