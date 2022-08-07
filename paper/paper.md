@@ -50,15 +50,15 @@ Villager is made up from a few core classes, shown in Table 1 below. Base classe
 
 | Class | Role | When to Subclass |
 |---|---|---|
-| winik | A single agent with typical properties for human agents such as name, age, and sex. | When agents need to have additional properties defined for more context, such as dietary preferences, weight, and food production restrictions. |
-| resource | An abstract thing that a winik can possess. It has a name and quantity. | When resources need to have more complex attributes such as expiration dates or possession histories. |
+| agent | A single agent with typical properties for human agents such as name, age, and sex. | When agents need to have additional properties defined for more context, such as dietary preferences, weight, and food production restrictions. |
+| resource | An abstract thing that an agent can possess. It has a name and quantity. | When resources need to have more complex attributes such as expiration dates or possession histories. |
 | data_writer | Responsible for managing the serialization of simulation data. | To connect with additional data sources or file formats. |
 
 Table 1: A summary of the classes that users can extend.
 
-The `winik` class provides all of the main properties for individual agents. Because it’s unlikely that the included properties will fit every researchers' needs, this class can be subclassed to include any number of properties ranging from simple constructs like personal wealth to more advanced ideas such as memory and emotional state.
+The `agent` class provides all of the main properties for individual agents. Because it’s unlikely that the included properties will fit every researchers' needs, this class can be subclassed to include any number of properties ranging from simple constructs like personal wealth to more advanced ideas such as memory and emotional state.
 
-The `resource` class is an abstract _thing_ that a winik possesses. The base model only includes information about the name of the resource and the associated quantity. Modelers can extend this class with additional properties such as expiration date, date acquired, or previous owners.
+The `resource` class is an abstract _thing_ that a agent possesses. The base model only includes information about the name of the resource and the associated quantity. Modelers can extend this class with additional properties such as expiration date, date acquired, or previous owners.
 
 By subclassing the `data_writer` class, users have the ability to control how and where their model data is stored. Storage locations and formats can range from remote databases and local files such as CSV, SQLite, or Microsoft Excel spreadsheets.
 
@@ -70,7 +70,7 @@ Initial conditions are defined by creating a function, defining the state inside
 
 1. `current_state`: A mutable copy of the state representing the current time step.
 1. `model_data`: User supplied data that persists through the simulation.
-1. `winik_mgr`: An object that manages the agent with convenience functions for retrieval and creation.
+1. `agent_mgr`: An object that manages the agent with convenience functions for retrieval and creation.
 1. `resource_mgr`: An object that manages the resources with convenience functions for retrieval and creation.
 
 For example, an initial condition of a population with three agents
@@ -79,19 +79,19 @@ For example, an initial condition of a population with three agents
 2. A father
 3. A daughter
 ```R
-initial_condition <- function(current_state, model_data, winik_mgr, resource_mgr) {
-  mother <- winik$new(first_name="Kirsten", last_name="Taylor", age=9125, profession="Fisher")
-  father <- winik$new(first_name="Joshua", last_name="Thompson", age=7300, profession="Laborer")
-  daughter <- winik$new(first_name="Mariylyyn", last_name="Thompson", age=1022, profession="None")
+initial_condition <- function(current_state, model_data, agent_mgr, resource_mgr) {
+  mother <- villager::agent$new(first_name="Kirsten", last_name="Taylor", age=9125, profession="Fisher")
+  father <- villager::agent$new(first_name="Joshua", last_name="Thompson", age=7300, profession="Laborer")
+  daughter <- villager::agent$new(first_name="Mariylyyn", last_name="Thompson", age=1022, profession="None")
   daughter$mother_id <- mother$identifier
   daughter$father_id <- father$identifier
   
   # Connect the mother and father
-  winik_mgr$connect_winiks(mother, father)
+  agent_mgr$connect_agents(mother, father)
   # Add them to the manager
-  winik_mgr$add_winik(mother)
-  winik_mgr$add_winik(father)
-  winik_mgr$add_winik(daughter)
+  agent_mgr$add_agent(mother)
+  agent_mgr$add_agent(father)
+  agent_mgr$add_agent(daughter)
 }
 ```
 
@@ -101,18 +101,18 @@ Models are functions that contain code that's executed at each time step. Simila
 1. `current_state`: A mutable copy of the state representing the current time step.
 2. `previous_sate`: An immutable copy of the previous state.
 3. `model_data`: User supplied data that persists through the simulation.
-4. `winik_mgr`: An object that manages the agent which has convenience functions for retrieval and creation.
+4. `agent_mgr`: An object that manages the agent which has convenience functions for retrieval and creation.
 5. `resource_mgr`: An object that manages the resources which has convenience functions for retrieval and creation.
 
-Consider a model that prints the current step and increases the age of each winik by `1` at each time step and sets their profession to _Farmer_ when they reach the age of 4383.
+Consider a model that prints the current step and increases the age of each agent by `1` at each time step and sets their profession to _Farmer_ when they reach the age of 4383.
 ```
-inc_age <- function(current_state, previous_state, model_data, winik_mgr, resource_mgr) {
+inc_age <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr) {
   print(paste("Time step :", current_state$step))
-  for (winik in winik_mgr$get_living_winiks()) {
-    winik$age <- winik$age+1
-    if (winik$age >= 4383 && winik$profession != "Farmer") {
+  for (agent in agent_mgr$get_living_agents()) {
+    agent$age <- agent$age+1
+    if (agent$age >= 4383 && agent$profession != "Farmer") {
       print("Setting the profession to Farmer")
-      winik$profession <- "Farmer"
+      agent$profession <- "Farmer"
     }
   }
 }
