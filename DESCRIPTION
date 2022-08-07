@@ -1,6 +1,6 @@
 Package: villager
 Title: A Framework for Designing and Running Agent Based Models
-Version: 1.2.0
+Version: 1.2.2
 Authors@R: c(
   person(
     given = "Thomas",

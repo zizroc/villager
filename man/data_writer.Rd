@@ -22,7 +22,7 @@ Create a new data writer.
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
 \describe{
-\item{\code{results_directory}}{The folder where the simulation resulst are written to}
+\item{\code{results_directory}}{The folder where the simulation results are written to}
 
 \item{\code{agent_filename}}{The location where the agents are written to}
 

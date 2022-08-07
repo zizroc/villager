@@ -117,7 +117,7 @@ gps_agent <- R6::R6Class("agent",
 )
 ```
 
-## Initital Condition
+## Initial Condition
 
 The simulation initial conditions are:
   - There are 10 agents

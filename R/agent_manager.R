@@ -33,7 +33,7 @@ agent_manager <- R6::R6Class("agent_manager",
     #' Given the identifier of a agent, sort through all of the managed agents and return it
     #' if it exists.
     #'
-    #' @description Return the R6 instance of a agent with identiifier 'agent_identifier'.
+    #' @description Return the R6 instance of a agent with identifier 'agent_identifier'.
     #' @param agent_identifier The identifier of the requested agent.
     #' @return An R6 agent object
     get_agent = function(agent_identifier) {
@@ -123,7 +123,7 @@ agent_manager <- R6::R6Class("agent_manager",
     },
 
     #' Returns the total number of agents that are alive
-    #' @return The numnber of living agents
+    #' @return The number of living agents
     get_living_population = function() {
       total_living_population <- 0
       for (agent in self$agents)
@@ -133,7 +133,7 @@ agent_manager <- R6::R6Class("agent_manager",
       return(total_living_population)
     },
 
-    #' Returns the averag age, in years, of all of the agents
+    #' Returns the average age, in years, of all of the agents
     #'
     #' @details This is an *example* of the kind of logic that the manager might handle. In this case,
     #' the manager is performing calculations about its aggregation (agents). Note that the 364 days needs to

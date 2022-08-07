@@ -51,8 +51,8 @@ agent <- R6::R6Class("agent",
     #' @param gender The gender of the agent
     #' @param identifier The agent's identifier
     #' @param first_name The agent's first name
-    #' @param last_name The agent's last naem
-    #' @param mother_id The identifier of the agent's monther
+    #' @param last_name The agent's last name
+    #' @param mother_id The identifier of the agent's mother
     #' @param father_id The identifier of the agent' father
     #' @param partner The identifier of the agent's partner
     #' @param profession The agent's profession

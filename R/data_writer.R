@@ -3,8 +3,8 @@
 #' @docType class
 #' @description A class responsible for the simulation data to disk.
 #' @details This class can be subclasses to provide advanced data writing to other data sources. This should also
-#' be subclassed if the agent and resource classes are subclasses, to write any addional fields to the data source.
-#' @field results_directory The folder where the simulation resulst are written to
+#' be subclassed if the agent and resource classes are subclasses, to write any additional fields to the data source.
+#' @field results_directory The folder where the simulation results are written to
 #' @field agent_filename The location where the agents are written to
 #' @field resource_filename The location where the resources are written to
 #' @section Methods:
