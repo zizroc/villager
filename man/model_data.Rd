@@ -5,6 +5,8 @@
 \title{Model Data}
 \description{
 R6 Class representing data that's external from resources and agents
+
+It contains a single variable, 'events' for when the data holds a list of events
 }
 \section{Public fields}{
 \if{html}{\out{<div class="r6-fields">}}
