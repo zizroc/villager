@@ -1,9 +1,9 @@
-#' @title resource
+#' @export
+#' @title Resource
 #' @docType class
 #' @description This is an object that represents a single resource.
 #' @field name The name of the resource
 #' @field quantity The quantity of the resource that exists
-#' @export
 #' @section Methods:
 #' \describe{
 #'   \item{\code{initialize()}}{Create a new resource}

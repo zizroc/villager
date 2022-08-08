@@ -7,6 +7,7 @@
 #' @field results_directory The folder where the simulation results are written to
 #' @field agent_filename The location where the agents are written to
 #' @field resource_filename The location where the resources are written to
+#' @importFrom  readr write_csv
 #' @section Methods:
 #' \describe{
 #'   \item{\code{write()}}{Writes the agent and resources to disk.}

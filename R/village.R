@@ -4,6 +4,7 @@
 #' @description This is an object that represents the state of a village at a particular time.
 #' @details This class acts as a type of record that holds the values of the
 #'  different village variables. This class can be subclassed to include more variables that aren't present.
+#' @importFrom  R6 R6Class
 #' @section Methods:
 #' \describe{
 #'   \item{\code{initialize()}}{Creates a new village}

@@ -5,6 +5,8 @@
 #' an instance of a agent_manager to interface the agents inside.
 #' @field agents A list of agents objects that the agent manager manages.
 #' @field agent_class A class describing agents. This is usually the default villager supplied 'agent' class
+#' @importFrom R6 R6Class
+#' @importFrom  uuid UUIDgenerate
 #' @section Methods:
 #' \describe{
 #'   \item{\code{add_agent()}}{Adds a single agent to the manager.}

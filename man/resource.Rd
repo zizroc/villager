@@ -3,7 +3,7 @@
 \docType{class}
 \name{resource}
 \alias{resource}
-\title{resource}
+\title{Resource}
 \description{
 This is an object that represents a single resource.
 }

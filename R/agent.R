@@ -16,6 +16,7 @@
 #' @field alive A boolean flag that represents whether the villager is alive or dead
 #' @field children A list of children identifiers
 #' @field health A percentage value of the agent's current health
+#' @importFrom  uuid UUIDgenerate
 #' @section Methods:
 #' \describe{
 #'   \item{\code{as_table()}}{Represents the current state of the agent as a tibble}
