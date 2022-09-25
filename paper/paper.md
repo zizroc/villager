@@ -80,9 +80,12 @@ For example, an initial condition of a population with three agents
 3. A daughter
 ```R
 initial_condition <- function(current_state, model_data, agent_mgr, resource_mgr) {
-  mother <- villager::agent$new(first_name="Kirsten", last_name="Taylor", age=9125, profession="Fisher")
-  father <- villager::agent$new(first_name="Joshua", last_name="Thompson", age=7300, profession="Laborer")
-  daughter <- villager::agent$new(first_name="Mariylyyn", last_name="Thompson", age=1022, profession="None")
+  mother <- villager::agent$new(first_name="Kirsten", last_name="Taylor",
+     age=9125, profession="Fisher")
+  father <- villager::agent$new(first_name="Joshua", last_name="Thompson",
+     age=7300, profession="Laborer")
+  daughter <- villager::agent$new(first_name="Mariylyyn", last_name="Thompson",
+     age=1022, profession="None")
   daughter$mother_id <- mother$identifier
   daughter$father_id <- father$identifier
   
