@@ -38,7 +38,7 @@ Together, these two features allow researchers to design ABMs with flexible requ
 
 # Statement of need
 
-Agent based modeling has found use in an increasing number of applications ranging from market dynamics, animal behavior, and population studies [@10.3389/fevo.2018.00237]. There are only a few agent-based modeling systems available for researchers using R, a popular language among social scientists. In some cases researchers must bootstrap their own ABM systems due to lack of available packaging that provides flexible modeling. The most popular R ABM frameworks include RNetLogo and SpaDES. Although RNetLogo is powerful, it acts as an interface to theNetLogo software. This requires Java and pipes NetLogo syntax to the Java process rather than using native R to describe system dynamics [@THIELE2010972]. SpaDES supports agent-based modeling however, its primary use is for Discrete Event Simulations [@eliot_mcintire_2022_6116101. Villager differentiates itself from these two by being R native and specifically designed for flexible ABM simulations.
+Agent based modeling has found use in an increasing number of applications ranging from market dynamics, animal behavior, and population studies [@10.3389/fevo.2018.00237]. There are only a few agent-based modeling systems available for researchers using R, a popular language among social scientists. In some cases researchers must bootstrap their own ABM systems due to lack of available packaging that provides flexible modeling. The most popular R ABM frameworks include RNetLogo and SpaDES. Although RNetLogo is powerful, it acts as an interface to the NetLogo software. This requires Java and pipes NetLogo syntax to the Java process rather than using native R to describe system dynamics [@THIELE2010972]. SpaDES supports agent-based modeling however, its primary use is for Discrete Event Simulations [@eliot_mcintire_2022_6116101]. Villager differentiates itself from these two by being R native and specifically designed for flexible ABM simulations.
 
 # Functionality and design
 
@@ -133,11 +133,11 @@ simulator$run_model()
 # Dependencies
 Villager only depends on a few dependencies for core functionality.
 
-| Package | Use | Citation |
+| Package | Use |
 |---|---|---|
-| readr | Writing simulation states to disk. | [@wickam_2020] |
-| uuid | Generating unique agent identifiers. | [@urbanek_2020]|
-| R6 | All villager classes are R6, allowing users to use reference semantics with models. | [@chang_2020] |
+| readr [@wickam_2020] | Writing simulation states to disk. |
+| uuid [@urbanek_2020] | Generating unique agent identifiers. |
+| R6 [@chang_2020] | All villager classes are R6, allowing users to use reference semantics with models. |
 
 
 # References
