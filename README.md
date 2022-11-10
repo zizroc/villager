@@ -1,7 +1,7 @@
 # villager <img src='man/figures/logo.png' align="right" height="139" />
 
 [![](https://www.r-pkg.org/badges/version/villager?color=green)](https://cran.r-project.org/package=villager)
-[![DOI](https://zenodo.org/badge/293921124.svg)](https://zenodo.org/badge/latestdoi/293921124)
+[![DOI](https://joss.theoj.org/papers/10.21105/joss.04562/status.svg)](https://doi.org/10.21105/joss.04562)
 [![R build status](https://github.com/zizroc/villager/workflows/R-CMD-check/badge.svg)](https://github.com/zizroc/villager/actions)
 [![Codecov test coverage](https://codecov.io/gh/zizroc/villager/branch/main/graph/badge.svg)](https://app.codecov.io/gh/zizroc/villager?branch=main)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
