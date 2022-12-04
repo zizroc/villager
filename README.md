@@ -58,9 +58,7 @@ To add agents to the simulation, use the provided `agent_mgr` object to call `ad
 ```{r}
 test_model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr) {
   agent_mgr <- agent_manager$new()
-  agent_mgr$add_agent(mother)
-  agent_mgr$add_agent(father)
-  agent_mgr$add_agent(daughter)
+  agent_mgr$add_agent(mother. father, daughter)
   daughter$mother_id <- mother$identifier
   daughter$father_id <- father$identifier
 }
@@ -82,8 +80,7 @@ test_model <- function(current_state, previous_state, model_data, agent_mgr, res
   corn_resource$quantity=5
   
   resource_mgr <- resource_manager$new()
-  resource_mgr$add_resource(corn_resource)
-  resource_mgr$add_resource(fish_resource)
+  resource_mgr$add_resource(corn_resource, fish_resource)
   fish_resource$quantity=5
 }
 ```
@@ -107,17 +104,14 @@ initial_condition <- function(current_state, model_data, agent_mgr, resource_mgr
   
   # Add the agents to the manager
   agent_mgr$connect_agents(mother, father)
-  agent_mgr$add_agent(mother)
-  agent_mgr$add_agent(father)
-  agent_mgr$add_agent(daughter)
+  agent_mgr$add_agent(mother, father, daughter)
   
   # Create the resources
   corn_resource <- resource$new(name="corn", quantity = 10)
   fish_resource <- resource$new(name="fish", quantity = 15)
   
   # Add the resources to the manager
-  resource_mgr$add_resource(corn_resource)
-  resource_mgr$add_resource(fish_resource)
+  resource_mgr$add_resource(corn_resource, fish_resource)
 }
 ```
 
@@ -157,17 +151,14 @@ initial_condition <- function(current_state, model_data, agent_mgr, resource_mgr
   
   # Add the agents to the manager
   agent_mgr$connect_agents(mother, father)
-  agent_mgr$add_agent(mother)
-  agent_mgr$add_agent(father)
-  agent_mgr$add_agent(daughter)
+  agent_mgr$add_agent(mother, father, daughter)
   
   # Create the resources
   corn_resource <- resource$new(name="corn", quantity = 10)
   fish_resource <- resource$new(name="fish", quantity = 15)
   
   # Add the resources to the manager
-  resource_mgr$add_resource(corn_resource)
-  resource_mgr$add_resource(fish_resource)
+  resource_mgr$add_resource(corn_resource, fish_resource)
 }
 
 test_model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr) {

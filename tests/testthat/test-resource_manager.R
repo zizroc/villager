@@ -29,9 +29,7 @@ test_that("the manager returns all rsources", {
   oranges <- resource$new("orange", 10)
   cabbage <- resource$new("cabbage", 20)
 
-  resource_mgr$add_resource(apples)
-  resource_mgr$add_resource(oranges)
-  resource_mgr$add_resource(cabbage)
+  resource_mgr$add_resource(apples, oranges, cabbage)
   testthat::expect_equal(length(resource_mgr$get_resources()), 3)
 })
 
@@ -48,9 +46,7 @@ test_that("the manager gets the correct resource", {
   test_resource_2 <- resource$new(name = resource_2_name, quantity = resource_2_quantity)
   test_resource_3 <- resource$new(name = resource_3_name, quantity = resource_3_quantity)
 
-  resource_mgr$add_resource(test_resource_1)
-  resource_mgr$add_resource(test_resource_2)
-  resource_mgr$add_resource(test_resource_3)
+  resource_mgr$add_resource(test_resource_1, test_resource_2, test_resource_3)
 
   should_be_resource_1 <- resource_mgr$get_resource(test_resource_1$name)
   testthat::expect_equal(should_be_resource_1$name, resource_1_name)
@@ -70,9 +66,7 @@ test_that("the manager returns the correct resource index", {
   test_resource_2 <- resource$new(name = resource_2_name, quantity = resource_2_quantity)
   test_resource_3 <- resource$new(name = resource_3_name, quantity = resource_3_quantity)
 
-  resource_mgr$add_resource(test_resource_1)
-  resource_mgr$add_resource(test_resource_2)
-  resource_mgr$add_resource(test_resource_3)
+  resource_mgr$add_resource(test_resource_1, test_resource_2, test_resource_3)
 
   index <- resource_mgr$get_resource_index(resource_2_name)
   expect_true(index == 2)
@@ -91,10 +85,7 @@ test_that("the manager removes resources", {
   test_resource_2 <- resource$new(name = resource_2_name, quantity = resource_2_quantity)
   test_resource_3 <- resource$new(name = resource_3_name, quantity = resource_3_quantity)
 
-  resource_mgr$add_resource(test_resource_1)
-  resource_mgr$add_resource(test_resource_2)
-  resource_mgr$add_resource(test_resource_3)
-
+  resource_mgr$add_resource(test_resource_1, test_resource_2, test_resource_3)
   resource_mgr$remove_resource(resource_1_name)
   testthat::expect_length(resource_mgr$get_resources(), 2)
 })

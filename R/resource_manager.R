@@ -1,108 +1,193 @@
-#' @export
-#' @title Resource Manager
-#' @docType class
-#' @description This object manages all of the resources in a village.
-#' @section Methods:
-#' \describe{
-#'   \item{\code{initialize()}}{Creates a new manager}
-#'   \item{\code{get_resources()}}{Gets all of the resources that the manager has}
-#'   \item{\code{get_resource()}}{Retrieves a resource from the manager}
-#'   \item{\code{add_resource()}}{Adds a resource to the manager}
-#'   \item{\code{remove_resource()}}{Removes a resource from the manager}
-#'   \item{\code{get_resource_index()}}{Retrieves the index of the resource}
-#'   \item{\code{get_states()}}{Returns a list of states}
-#'   \item{\code{load()}}{Loads a csv file of resources and adds them to the manager.}
-#'   }
-resource_manager <- R6::R6Class("resource_manager",
-  public = list(
-    #' @field resources A list of resource objects
-    #' @field resource_class The class used to represent resources
-    resources = NA,
-    resource_class = NULL,
-    #' Creates a new , empty, resource manager for a village.
-    #' @description Get a new instance of a resource_manager
-    #' @param resource_class The class being used to describe the resources being managed
-    initialize = function(resource_class=villager::resource) {
-      self$resources <- vector()
-      self$resource_class <- resource_class
-    },
+# Unit tests for the agent manager
 
-    #' Gets all of the managed resources
-    #'
-    #' @return A list of resources
-    get_resources = function() {
-      return(self$resources)
-    },
+test_that("the constructor works", {
+  agent_mgr <- agent_manager$new()
+  testthat::expect_equal(length(agent_manager$agents), 0)
+})
 
-    #' Gets a resource given a resource name
-    #'
-    #' @param name The name of the requested resource
-    #' @return A resource object
-    get_resource = function(name) {
-      for (res in self$resources) {
-        if (res$name == name) {
-          return(res)
-        }
-      }
-    },
+test_that("agents are correctly added to the manager", {
+  agent_mgr <- agent_manager$new()
+  agent_1_id <- "test_identifier_1"
+  agent_2_id <- "test_identifier_2"
+  test_agent_1 <- agent$new(identifier = agent_1_id)
+  test_agent_2 <- agent$new(identifier = agent_2_id)
 
-    #' Adds a resource to the manager.
-    #'
-    #' @param new_resource The resource to add
-    #' @return None
-    add_resource = function(new_resource) {
-      self$resources <- append(self$resources, new_resource)
-    },
+  agent_mgr$add_agent(test_agent_1)
+  testthat::expect_equal(length(agent_mgr$agents), 1)
+  testthat::expect_equal(agent_mgr$agents[[1]]$identifier, agent_1_id)
+  agent_mgr$add_agent(test_agent_2)
+  testthat::expect_equal(length(agent_mgr$agents), 2)
+})
 
-    #' Removes a resource from the manager
-    #'
-    #' @param name The name of the resource being removed
-    #' @return None
-    remove_resource = function(name) {
-      resource_index <- self$get_resource_index(name)
-      self$resources <- self$resources[-resource_index]
-    },
+test_that("the manager gets the correct agents", {
+  agent_mgr <- agent_manager$new()
+  agent_1_id <- "test_identifier_1"
+  agent_2_id <- "test_identifier_2"
+  agent_3_id <- "test_identifier_3"
+  test_agent_1 <- agent$new(identifier = agent_1_id)
+  test_agent_2 <- agent$new(identifier = agent_2_id)
+  test_agent_3 <- agent$new(identifier = agent_3_id)
 
-    #' Returns the index of a resource in the internal resource list
-    #'
-    #' @param name The name of the resource being located
-    #' @return The index in the list, or R's default return value
-    get_resource_index = function(name) {
-      for (i in seq_len(length(self$resources))) {
-        if (self$resources[[i]]$name == name) {
-          return(i)
-        }
-      }
-    },
+  agent_mgr$add_agent(test_agent_1, test_agent_2, test_agent_3)
 
-    #' Returns a data.frame where each row is a resource.
-    #'
-    #' @details Subclasses should not have to override this method because it takes all member variables into account
-    #' @return A single data.frame
-    get_states = function() {
-      # Allocate the appropriate sized table so that the row can be emplaced instead of appended
-      resource_count <- length(self$resources)
-      resource_fields <- names(self$resource_class$public_fields)
-      state_table <-data.frame(matrix(nrow = resource_count, ncol = length(resource_fields)))
-      if (resource_count > 0) {
-        colnames(state_table) <- resource_fields
-        for (i in 1:resource_count) {
-          state_table[i, ] <-  self$resources[[i]]$as_table()
-        }
-      }
-      return(state_table)
-    },
+  should_be_agent_1 <- agent_mgr$get_agent(test_agent_1$identifier)
+  testthat::expect_equal(should_be_agent_1$identifier, test_agent_1$identifier)
+})
 
-    #' Loads a csv file of resources into the manager
-    #'
-    #' @param file_name The path to the csv file
-    #' @return None
-    load = function(file_name) {
-      resources <- read.csv(file_name)
-      for (i in seq_len(nrow(resources))) {
-        resource_row <- resources[i, ]
-        self$add_resource(resource$new(name = resource_row$name, quantity = resource_row$quantity))
-      }
-    }
-  )
-)
+test_that("the manager returns the correct agent index", {
+  agent_mgr <- agent_manager$new()
+  agent_1_id <- "test_identifier_1"
+  agent_2_id <- "test_identifier_2"
+  agent_3_id <- "test_identifier_3"
+  test_agent_1 <- agent$new(identifier = agent_1_id)
+  test_agent_2 <- agent$new(identifier = agent_2_id)
+  test_agent_3 <- agent$new(identifier = agent_3_id)
+
+  agent_mgr$add_agent(test_agent_1, test_agent_2, test_agent_3)
+
+  index <- agent_mgr$get_agent_index(test_agent_2$identifier)
+  expect_true(index == 2)
+})
+
+test_that("the manager removes agents", {
+  agent_mgr <- agent_manager$new()
+  agent_1_id <- "test_identifier_1"
+  agent_2_id <- "test_identifier_2"
+  agent_3_id <- "test_identifier_3"
+  test_agent_1 <- agent$new(identifier = agent_1_id)
+  test_agent_2 <- agent$new(identifier = agent_2_id)
+  test_agent_3 <- agent$new(identifier = agent_3_id)
+
+  agent_mgr$add_agent(test_agent_1, test_agent_2, test_agent_3)
+
+  agent_mgr$remove_agent(test_agent_1$identifier)
+  testthat::expect_length(agent_mgr$agents, 2)
+})
+
+test_that("get_living_agents only returns agents that are living", {
+  agent_mgr <- agent_manager$new()
+  agent_1_id <- "test_identifier_1"
+  agent_2_id <- "test_identifier_2"
+  agent_3_id <- "test_identifier_3"
+  agent_4_id <- "test_identifier_4"
+  test_agent_1 <- agent$new(identifier = agent_1_id, alive = FALSE)
+  test_agent_2 <- agent$new(identifier = agent_2_id, alive = TRUE)
+  test_agent_3 <- agent$new(identifier = agent_3_id, alive = FALSE)
+  test_agent_4 <- agent$new(identifier = agent_4_id, alive = TRUE)
+
+  agent_mgr$add_agent(test_agent_1, test_agent_2, test_agent_3, test_agent_4)
+
+  living_agents <- agent_mgr$get_living_agents()
+  testthat::expect_length(living_agents, 2)
+  testthat::expect_length(agent_mgr$agents, 4)
+
+})
+
+test_that("get_states returns the appropriate agent states", {
+  agent_mgr <- agent_manager$new()
+  agent_1_id <- "test_identifier_1"
+  agent_2_id <- "test_identifier_2"
+  agent_3_id <- "test_identifier_3"
+  agent_4_id <- "test_identifier_4"
+  test_agent_1 <- agent$new(identifier = agent_1_id, alive = FALSE)
+  test_agent_2 <- agent$new(identifier = agent_2_id, alive = TRUE)
+  test_agent_3 <- agent$new(identifier = agent_3_id, alive = FALSE)
+  test_agent_4 <- agent$new(identifier = agent_4_id, alive = TRUE)
+
+  agent_mgr$add_agent(test_agent_1, test_agent_2, test_agent_3, test_agent_4)
+
+  states <- agent_mgr$get_states()
+
+  testthat::expect_equal(states[1, ]$identifier, agent_1_id)
+  testthat::expect_equal(states[1, ]$alive, FALSE)
+
+  testthat::expect_equal(states[2, ]$identifier, agent_2_id)
+  testthat::expect_equal(states[2, ]$alive, TRUE)
+
+  testthat::expect_equal(states[3, ]$identifier, agent_3_id)
+  testthat::expect_equal(states[3, ]$alive, FALSE)
+
+  testthat::expect_equal(states[4, ]$identifier, agent_4_id)
+  testthat::expect_equal(states[4, ]$alive, TRUE)
+})
+
+test_that("the manager can load agents from disk", {
+  agent_mgr <- agent_manager$new()
+  file_path <- "test-files/test-agents.csv"
+  agent_mgr$load(file_path)
+
+  # Test that the resources exist with the expected quantities
+  jimi_hendrix <- agent_mgr$get_agent(1)
+  testthat::expect_equal(jimi_hendrix$first_name, "Jimi")
+  testthat::expect_equal(jimi_hendrix$last_name, "Hendrix")
+  testthat::expect_equal(jimi_hendrix$mother_id, NA)
+  testthat::expect_equal(jimi_hendrix$father_id, NA)
+  testthat::expect_equal(jimi_hendrix$profession, "musician")
+  testthat::expect_equal(jimi_hendrix$partner, 2)
+  testthat::expect_equal(jimi_hendrix$gender, "male")
+  testthat::expect_equal(jimi_hendrix$alive, FALSE)
+  testthat::expect_equal(jimi_hendrix$age, 27)
+
+  janis_joplin <- agent_mgr$get_agent(2)
+  testthat::expect_equal(janis_joplin$first_name, "Janis")
+  testthat::expect_equal(janis_joplin$last_name, "Joplin")
+  testthat::expect_equal(janis_joplin$mother_id, NA)
+  testthat::expect_equal(janis_joplin$father_id, NA)
+  testthat::expect_equal(janis_joplin$profession, "musician")
+  testthat::expect_equal(janis_joplin$partner, 1)
+  testthat::expect_equal(janis_joplin$gender, "female")
+  testthat::expect_equal(janis_joplin$alive, FALSE)
+  testthat::expect_equal(janis_joplin$age, 27)
+
+  jim_morrison <- agent_mgr$get_agent(3)
+  testthat::expect_equal(jim_morrison$first_name, "Jim")
+  testthat::expect_equal(jim_morrison$last_name, "Morrison")
+  testthat::expect_equal(jim_morrison$mother_id, NA)
+  testthat::expect_equal(jim_morrison$father_id, NA)
+  testthat::expect_equal(jim_morrison$profession, "musician")
+  testthat::expect_true(is.na(jim_morrison$partner))
+  testthat::expect_equal(jim_morrison$gender, "male")
+  testthat::expect_equal(jim_morrison$alive, FALSE)
+  testthat::expect_equal(jim_morrison$age, 27)
+})
+
+test_that("the agent manager can properly add children to parents", {
+  agent_mgr <- agent_manager$new()
+
+  # Create two sets of parents
+  mother_1 <- agent$new(identifier = "mother1", alive = TRUE)
+  mother_2 <- agent$new(identifier = "mother2", alive = TRUE)
+  father_1 <- agent$new(identifier = "father1", alive = TRUE)
+  father_2 <- agent$new(identifier = "father2", alive = TRUE)
+  agent_mgr$add_agent(mother_1, mother_2, father_1, father_2)
+  # Connect the mom and dads
+  agent_mgr$connect_agents(mother_1, father_1)
+  agent_mgr$connect_agents(mother_2, father_2)
+
+  # Make sure that they're really connected
+  testthat::expect_equal(mother_1$partner, father_1$identifier)
+  testthat::expect_equal(father_1$partner, mother_1$identifier)
+  testthat::expect_equal(mother_2$partner, father_2$identifier)
+  testthat::expect_equal(father_2$partner, mother_2$identifier)
+
+
+  # Create two children for the first set of parents
+  child1 <- agent$new(identifier = "child1", alive = TRUE, mother_id = mother_1$identifier,
+                      father_id = father_1$identifier)
+  child2 <- agent$new(identifier = "child2", alive = TRUE, mother_id = mother_1$identifier,
+                      father_id = father_1$identifier)
+  # Create another two for the other parents
+  child3 <- agent$new(identifier = "child3", alive = TRUE, mother_id = mother_2$identifier,
+                      father_id = father_2$identifier)
+  child4 <- agent$new(identifier = "child4", alive = TRUE, mother_id = mother_2$identifier,
+                      father_id = father_2$identifier)
+
+  agent_mgr$add_agent(child1,child2, child3, child4)
+
+  # Use the agent manager to add the children to the parents
+  agent_mgr$add_children()
+  testthat::expect_length(mother_1$children, 2)
+  testthat::expect_length(father_1$children, 2)
+  testthat::expect_length(mother_2$children, 2)
+  testthat::expect_length(father_2$children, 2)
+})
