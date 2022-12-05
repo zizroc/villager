@@ -98,17 +98,17 @@ test_that("get_states returns the appropriate agent states", {
 
   states <- agent_mgr$get_states()
 
-  testthat::expect_equal(states[1,]$identifier, agent_1_id)
-  testthat::expect_equal(states[1,]$alive, FALSE)
+  testthat::expect_equal(states[1, ]$identifier, agent_1_id)
+  testthat::expect_equal(states[1, ]$alive, FALSE)
 
-  testthat::expect_equal(states[2,]$identifier, agent_2_id)
-  testthat::expect_equal(states[2,]$alive, TRUE)
+  testthat::expect_equal(states[2, ]$identifier, agent_2_id)
+  testthat::expect_equal(states[2, ]$alive, TRUE)
 
-  testthat::expect_equal(states[3,]$identifier, agent_3_id)
-  testthat::expect_equal(states[3,]$alive, FALSE)
+  testthat::expect_equal(states[3, ]$identifier, agent_3_id)
+  testthat::expect_equal(states[3, ]$alive, FALSE)
 
-  testthat::expect_equal(states[4,]$identifier, agent_4_id)
-  testthat::expect_equal(states[4,]$alive, TRUE)
+  testthat::expect_equal(states[4, ]$identifier, agent_4_id)
+  testthat::expect_equal(states[4, ]$alive, TRUE)
 })
 
 test_that("the manager can load agents from disk", {
@@ -172,37 +172,17 @@ test_that("the agent manager can properly add children to parents", {
 
 
   # Create two children for the first set of parents
-  child1 <-
-    agent$new(
-      identifier = "child1",
-      alive = TRUE,
-      mother_id = mother_1$identifier,
-      father_id = father_1$identifier
-    )
-  child2 <-
-    agent$new(
-      identifier = "child2",
-      alive = TRUE,
-      mother_id = mother_1$identifier,
-      father_id = father_1$identifier
-    )
+  child1 <- agent$new(identifier = "child1", alive = TRUE, mother_id = mother_1$identifier,
+                      father_id = father_1$identifier)
+  child2 <- agent$new(identifier = "child2", alive = TRUE, mother_id = mother_1$identifier,
+                      father_id = father_1$identifier)
   # Create another two for the other parents
-  child3 <-
-    agent$new(
-      identifier = "child3",
-      alive = TRUE,
-      mother_id = mother_2$identifier,
-      father_id = father_2$identifier
-    )
-  child4 <-
-    agent$new(
-      identifier = "child4",
-      alive = TRUE,
-      mother_id = mother_2$identifier,
-      father_id = father_2$identifier
-    )
+  child3 <- agent$new(identifier = "child3", alive = TRUE, mother_id = mother_2$identifier,
+                      father_id = father_2$identifier)
+  child4 <- agent$new(identifier = "child4", alive = TRUE, mother_id = mother_2$identifier,
+                      father_id = father_2$identifier)
 
-  agent_mgr$add_agent(child1, child2, child3, child4)
+  agent_mgr$add_agent(child1,child2, child3, child4)
 
   # Use the agent manager to add the children to the parents
   agent_mgr$add_children()

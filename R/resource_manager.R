@@ -13,7 +13,8 @@
 #'   \item{\code{get_states()}}{Returns a list of states}
 #'   \item{\code{load()}}{Loads a csv file of resources and adds them to the manager.}
 #'   }
-resource_manager <- R6::R6Class("resource_manager",
+resource_manager <- R6::R6Class(
+  "resource_manager",
   public = list(
     #' @field resources A list of resource objects
     #' @field resource_class The class used to represent resources
@@ -22,9 +23,11 @@ resource_manager <- R6::R6Class("resource_manager",
     #' Creates a new , empty, resource manager for a village.
     #' @description Get a new instance of a resource_manager
     #' @param resource_class The class being used to describe the resources being managed
-    initialize = function(resource_class=villager::resource) {
+    initialize = function(resource_class =
+                            villager::resource) {
       self$resources <- vector()
-      self$resource_class <- resource_class
+      self$resource_class <-
+        resource_class
     },
 
     #' Gets all of the managed resources
@@ -48,9 +51,10 @@ resource_manager <- R6::R6Class("resource_manager",
 
     #' Adds a resource to the manager.
     #'
-    #' @param new_resource The resource to add
+    #' @param ... The resources to add
     #' @return None
-    add_resource = function(new_resource) {
+    add_resource = function(...) {
+      for (new_resource in list(...))
       self$resources <- append(self$resources, new_resource)
     },
 
@@ -60,7 +64,8 @@ resource_manager <- R6::R6Class("resource_manager",
     #' @return None
     remove_resource = function(name) {
       resource_index <- self$get_resource_index(name)
-      self$resources <- self$resources[-resource_index]
+      self$resources <-
+        self$resources[-resource_index]
     },
 
     #' Returns the index of a resource in the internal resource list
@@ -81,13 +86,16 @@ resource_manager <- R6::R6Class("resource_manager",
     #' @return A single data.frame
     get_states = function() {
       # Allocate the appropriate sized table so that the row can be emplaced instead of appended
-      resource_count <- length(self$resources)
-      resource_fields <- names(self$resource_class$public_fields)
-      state_table <-data.frame(matrix(nrow = resource_count, ncol = length(resource_fields)))
+      resource_count <-
+        length(self$resources)
+      resource_fields <-
+        names(self$resource_class$public_fields)
+      state_table <-
+        data.frame(matrix(nrow = resource_count, ncol = length(resource_fields)))
       if (resource_count > 0) {
         colnames(state_table) <- resource_fields
         for (i in 1:resource_count) {
-          state_table[i, ] <-  self$resources[[i]]$as_table()
+          state_table[i,] <-  self$resources[[i]]$as_table()
         }
       }
       return(state_table)
@@ -100,7 +108,7 @@ resource_manager <- R6::R6Class("resource_manager",
     load = function(file_name) {
       resources <- read.csv(file_name)
       for (i in seq_len(nrow(resources))) {
-        resource_row <- resources[i, ]
+        resource_row <- resources[i,]
         self$add_resource(resource$new(name = resource_row$name, quantity = resource_row$quantity))
       }
     }

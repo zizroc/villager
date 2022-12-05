@@ -9,17 +9,14 @@ test_that("the first example properly sets the profession of the agents", {
 
     # Add the agents to the manager
     agent_mgr$connect_agents(mother, father)
-    agent_mgr$add_agent(mother)
-    agent_mgr$add_agent(father)
-    agent_mgr$add_agent(daughter)
+    agent_mgr$add_agent(mother, father, daughter)
 
     # Create the resources
     corn_resource <- resource$new(name="corn", quantity = 10)
     fish_resource <- resource$new(name="fish", quantity = 15)
 
     # Add the resources to the manager
-    resource_mgr$add_resource(corn_resource)
-    resource_mgr$add_resource(fish_resource)
+    resource_mgr$add_resource(corn_resource, fish_resource)
   }
 
   test_model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr) {
@@ -51,7 +48,6 @@ test_that("the second example", {
 
   model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr) {
     current_day <- current_state$step
-    print(current_day)
     if((current_day%%2) == 0) {
       # Then it's an even day
       # Create two new agents whose first names are random numbers

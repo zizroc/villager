@@ -19,7 +19,8 @@
 #'   \item{\code{load()}}{Loads a csv file defining a population of agents and places them in the manager.}
 #'   \item{\code{remove_agent()}}{Removes a agent from the manager}
 #'   }
-agent_manager <- R6::R6Class("agent_manager",
+agent_manager <- R6::R6Class(
+  "agent_manager",
   public = list(
     agents = NULL,
     agent_class = NULL,
@@ -27,7 +28,7 @@ agent_manager <- R6::R6Class("agent_manager",
     #' Creates a new agent manager instance.
     #'
     #' @param agent_class The class that's being used to represent agents being managed
-    initialize = function(agent_class=villager::agent) {
+    initialize = function(agent_class = villager::agent) {
       self$agents <- vector()
       self$agent_class <- agent_class
     },
@@ -61,14 +62,17 @@ agent_manager <- R6::R6Class("agent_manager",
 
     #' Adds a agent to the manager.
     #'
-    #' @param new_agent The agent to add to the manager
+    #' @param ... One or more agents
     #' @return None
-    add_agent = function(new_agent) {
+    add_agent = function(...) {
       # Create an identifier if it's null
-      if (is.null(new_agent$identifier)) {
-        new_agent$identifier <- uuid::UUIDgenerate()
+      for (new_agent in list(...)) {
+        if (is.null(new_agent$identifier)) {
+          new_agent$identifier <- uuid::UUIDgenerate()
+        }
+        self$agents <-
+          append(self$agents, new_agent)
       }
-      self$agents <- append(self$agents, new_agent)
     },
 
     #' Removes a agent from the manager
@@ -77,7 +81,8 @@ agent_manager <- R6::R6Class("agent_manager",
     #' @return None
     remove_agent = function(agent_identifier) {
       agent_index <- self$get_agent_index(agent_identifier)
-      self$agents <- self$agents[-agent_index]
+      self$agents <-
+        self$agents[-agent_index]
     },
 
     #' Returns a data.frame of agents
@@ -87,16 +92,20 @@ agent_manager <- R6::R6Class("agent_manager",
     get_states = function() {
       # Allocate the appropriate sized table so that the row can be emplaced instead of appended
       agent_count <- length(self$agents)
-      agent_fields <- names(self$agent_class$public_fields)
-      column_names <- agent_fields[!agent_fields %in% c("children")]
-      state_table <- data.frame(matrix(nrow = agent_count, ncol = length(column_names)))
+      agent_fields <-
+        names(self$agent_class$public_fields)
+      column_names <-
+        agent_fields[!agent_fields %in% c("children")]
+      state_table <-
+        data.frame(matrix(nrow = agent_count, ncol = length(column_names)))
 
       if (agent_count > 0) {
         # Since we know that a agent exists and we need to match the columns here with the
         # column names in agent::as_table, get the first agent and use its column names
-        colnames(state_table) <- column_names
+        colnames(state_table) <-
+          column_names
         for (i in 1:agent_count) {
-          state_table[i, ] <-  self$agents[[i]]$as_table()
+          state_table[i,] <-  self$agents[[i]]$as_table()
         }
       }
       return(state_table)
@@ -121,7 +130,8 @@ agent_manager <- R6::R6Class("agent_manager",
     #' @param agent_b A agent that will be connected to agent_a
     connect_agents = function(agent_a, agent_b) {
       agent_a$partner <- agent_b$identifier
-      agent_b$partner <- agent_a$identifier
+      agent_b$partner <-
+        agent_a$identifier
     },
 
     #' Returns the total number of agents that are alive
@@ -145,8 +155,10 @@ agent_manager <- R6::R6Class("agent_manager",
     get_average_age = function() {
       total_age <- 0
       for (agent in self$agents)
-        total_age <- total_age + agent$age
-      average_age_days <- total_age / length(self$agents)
+        total_age <-
+          total_age + agent$age
+      average_age_days <-
+        total_age / length(self$agents)
       return(average_age_days / 364)
     },
 
@@ -181,20 +193,20 @@ agent_manager <- R6::R6Class("agent_manager",
     load = function(file_name) {
       agents <- read.csv(file_name, row.names = NULL)
       for (i in seq_len(nrow(agents))) {
-        agents_row <- agents[i, ]
+        agents_row <- agents[i,]
         new_agent <- agent$new(
-            identifier = agents_row$identifier,
-            first_name = agents_row$first_name,
-            last_name = agents_row$last_name,
-            age = agents_row$age,
-            mother_id = agents_row$mother_id,
-            father_id = agents_row$father_id,
-            partner = agents_row$partner,
-            gender = agents_row$gender,
-            profession = agents_row$profession,
-            alive = agents_row$alive,
-            health = agents_row$health
-          )
+          identifier = agents_row$identifier,
+          first_name = agents_row$first_name,
+          last_name = agents_row$last_name,
+          age = agents_row$age,
+          mother_id = agents_row$mother_id,
+          father_id = agents_row$father_id,
+          partner = agents_row$partner,
+          gender = agents_row$gender,
+          profession = agents_row$profession,
+          alive = agents_row$alive,
+          health = agents_row$health
+        )
         self$add_agent(new_agent)
       }
       self$add_children()
