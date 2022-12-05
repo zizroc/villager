@@ -58,7 +58,7 @@ To add agents to the simulation, use the provided `agent_mgr` object to call `ad
 ```{r}
 test_model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr) {
   agent_mgr <- agent_manager$new()
-  agent_mgr$add_agent(mother. father, daughter)
+  agent_mgr$add_agent(mother, father, daughter)
   daughter$mother_id <- mother$identifier
   daughter$father_id <- father$identifier
 }
