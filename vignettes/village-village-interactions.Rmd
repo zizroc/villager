@@ -1,0 +1,94 @@
+---
+title: "village-village-interaction"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{extending-agents}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+
+library(villager)
+```
+
+# Village-Village Interaction
+
+This vignette shows how interactions between villages is possible. This is done by exchanging agents when 
+
+## Scenario
+
+This in scenario, there are two villages that start with 10 agents. 
+
+## Initial Condition
+
+If the initial conditions are the same for each village, they can share the same initial condition function. For the sake of giving a more fleshed out example, we'll have each village start with different conditions
+
+### Village A
+
+```{r}
+initial_condition_a <- function(current_state, model_data, agent_mgr, resource_mgr) {
+  test_agent <- gps_agent$new(age=9125)
+  agent_mgr$add_agent(test_agent)
+}
+```
+
+### Village B
+
+```{r}
+initial_condition_b <- function(current_state, model_data, agent_mgr, resource_mgr) {
+  test_agent <- gps_agent$new(first_name="Lewis", last_name="Taylor", age=9125)
+  agent_mgr$add_agent(test_agent)
+}
+```
+
+## Models
+
+To make things more interesting, each village will have a different model. The key points to note in this example is the use of the `village_mgr` object, which is used to transfer agents between villages.
+
+### Village A
+
+Each day, there will be a 
+
+```{r}
+test_model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr, villager_mgr) {
+  for (agent in agent_mgr$get_agents()) {
+    if (1) {
+      # Get the village that we want to transfer the agent to
+      village_b <- villager_mgr$get_village("village_b")
+      village_b$agent_manager$add_agent(agent_to_move)
+      # Remove the agent from this village
+      agent_mgr$remove_agent(agent_to_move$identifier)
+    }
+  }
+}
+```
+
+### Village B
+
+## Running
+
+Finally, we'll create and run a simulation with a duration of 10 days.
+```{r}
+los_angeles <- village$new("Test_Village", initial_condition, test_model, gps_agent)
+simulator <- simulation$new(10, list(los_angeles))
+simulator$run_model()
+```
+
+## Results
+
+Data about agents are scoped to villages. This means that if one agent transfers from Village A to Village B, data about that villager will be split across the data files for both villages.
+
+```{r}
+# Load in data
+village_a_agents <- readr::read_csv("results/village_a/agents.csv")
+village_b_agents <- readr::read_csv("results/village_b/agents.csv")
+merge(village_a_agents, village_b_agents by="")
+```

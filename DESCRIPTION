@@ -47,6 +47,7 @@ Suggests:
     rmarkdown,
     testthat,
     roxygen2,
+    pandoc,
 URL: https://github.com/zizroc/villager/
 BugReports: https://github.com/zizroc/villager/issues/
 VignetteBuilder: knitr

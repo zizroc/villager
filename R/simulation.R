@@ -12,7 +12,7 @@
 simulation <- R6::R6Class("simulation",
   public = list(
     length = NA,
-    villages = NA,
+    village_mgr = NA,
     writer = NA,
 
     #' Creates a new Simulation instance
@@ -24,7 +24,7 @@ simulation <- R6::R6Class("simulation",
     initialize = function(length,
                           villages,
                           writer = villager::data_writer$new()) {
-      self$villages <- villages
+      self$village_mgr <- village_manager$new(villages)
       self$length <- length
       self$writer <- writer
     },
@@ -33,7 +33,7 @@ simulation <- R6::R6Class("simulation",
     #'
     #' @return None
     run_model = function() {
-      for (village in self$villages) {
+      for (village in self$village_mgr$get_villages()) {
         village$set_initial_state()
       }
       # Loop over each village and run the user defined initial condition function. Index off of 1 because the
@@ -41,8 +41,8 @@ simulation <- R6::R6Class("simulation",
       current_step <- 1
       while (current_step <= self$length) {
         # Iterate the villages a single time step
-        for (village in self$villages) {
-          village$propagate(current_step)
+        for (village in self$village_mgr$get_villages()) {
+          village$propagate(current_step, self$village_mgr)
           self$writer$write(village$current_state, village$name)
         }
         current_step <- current_step + 1

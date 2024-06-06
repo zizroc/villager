@@ -32,7 +32,7 @@ test_that("the first example properly sets the profession of the agents", {
   simulator <- simulation$new(4745, list(small_village))
   simulator$run_model()
 
-  for (agent in simulator$villages[[1]]$agent_mgr$get_living_agents()) {
+  for (agent in simulator$village_mgr$get_villages()[[1]]$agent_mgr$get_living_agents()) {
     testthat::expect_equal(agent$profession, "Farmer")
   }
 })
