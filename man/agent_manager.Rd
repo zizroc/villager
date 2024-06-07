@@ -36,24 +36,24 @@ Creates a new agent manager instance.
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{agent_manager$new()}}
-\item \href{#method-get_agent}{\code{agent_manager$get_agent()}}
-\item \href{#method-get_living_agents}{\code{agent_manager$get_living_agents()}}
-\item \href{#method-add_agent}{\code{agent_manager$add_agent()}}
-\item \href{#method-remove_agent}{\code{agent_manager$remove_agent()}}
-\item \href{#method-get_states}{\code{agent_manager$get_states()}}
-\item \href{#method-get_agent_index}{\code{agent_manager$get_agent_index()}}
-\item \href{#method-connect_agents}{\code{agent_manager$connect_agents()}}
-\item \href{#method-get_living_population}{\code{agent_manager$get_living_population()}}
-\item \href{#method-get_average_age}{\code{agent_manager$get_average_age()}}
-\item \href{#method-add_children}{\code{agent_manager$add_children()}}
-\item \href{#method-load}{\code{agent_manager$load()}}
-\item \href{#method-clone}{\code{agent_manager$clone()}}
+\item \href{#method-agent_manager-new}{\code{agent_manager$new()}}
+\item \href{#method-agent_manager-get_agent}{\code{agent_manager$get_agent()}}
+\item \href{#method-agent_manager-get_living_agents}{\code{agent_manager$get_living_agents()}}
+\item \href{#method-agent_manager-add_agent}{\code{agent_manager$add_agent()}}
+\item \href{#method-agent_manager-remove_agent}{\code{agent_manager$remove_agent()}}
+\item \href{#method-agent_manager-get_states}{\code{agent_manager$get_states()}}
+\item \href{#method-agent_manager-get_agent_index}{\code{agent_manager$get_agent_index()}}
+\item \href{#method-agent_manager-connect_agents}{\code{agent_manager$connect_agents()}}
+\item \href{#method-agent_manager-get_living_population}{\code{agent_manager$get_living_population()}}
+\item \href{#method-agent_manager-get_average_age}{\code{agent_manager$get_average_age()}}
+\item \href{#method-agent_manager-add_children}{\code{agent_manager$add_children()}}
+\item \href{#method-agent_manager-load}{\code{agent_manager$load()}}
+\item \href{#method-agent_manager-clone}{\code{agent_manager$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-agent_manager-new"></a>}}
+\if{latex}{\out{\hypertarget{method-agent_manager-new}{}}}
 \subsection{Method \code{new()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{agent_manager$new(agent_class = villager::agent)}\if{html}{\out{</div>}}
@@ -70,8 +70,8 @@ if it exists.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_agent"></a>}}
-\if{latex}{\out{\hypertarget{method-get_agent}{}}}
+\if{html}{\out{<a id="method-agent_manager-get_agent"></a>}}
+\if{latex}{\out{\hypertarget{method-agent_manager-get_agent}{}}}
 \subsection{Method \code{get_agent()}}{
 Return the R6 instance of a agent with identifier 'agent_identifier'.
 \subsection{Usage}{
@@ -91,8 +91,8 @@ Returns a list of all the agents that are currently alive.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_living_agents"></a>}}
-\if{latex}{\out{\hypertarget{method-get_living_agents}{}}}
+\if{html}{\out{<a id="method-agent_manager-get_living_agents"></a>}}
+\if{latex}{\out{\hypertarget{method-agent_manager-get_living_agents}{}}}
 \subsection{Method \code{get_living_agents()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{agent_manager$get_living_agents()}\if{html}{\out{</div>}}
@@ -104,17 +104,17 @@ Adds a agent to the manager.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-add_agent"></a>}}
-\if{latex}{\out{\hypertarget{method-add_agent}{}}}
+\if{html}{\out{<a id="method-agent_manager-add_agent"></a>}}
+\if{latex}{\out{\hypertarget{method-agent_manager-add_agent}{}}}
 \subsection{Method \code{add_agent()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{agent_manager$add_agent(new_agent)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{agent_manager$add_agent(...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{new_agent}}{The agent to add to the manager}
+\item{\code{...}}{One or more agents}
 }
 \if{html}{\out{</div>}}
 }
@@ -124,8 +124,8 @@ Removes a agent from the manager
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-remove_agent"></a>}}
-\if{latex}{\out{\hypertarget{method-remove_agent}{}}}
+\if{html}{\out{<a id="method-agent_manager-remove_agent"></a>}}
+\if{latex}{\out{\hypertarget{method-agent_manager-remove_agent}{}}}
 \subsection{Method \code{remove_agent()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{agent_manager$remove_agent(agent_identifier)}\if{html}{\out{</div>}}
@@ -144,8 +144,8 @@ Returns a data.frame of agents
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_states"></a>}}
-\if{latex}{\out{\hypertarget{method-get_states}{}}}
+\if{html}{\out{<a id="method-agent_manager-get_states"></a>}}
+\if{latex}{\out{\hypertarget{method-agent_manager-get_states}{}}}
 \subsection{Method \code{get_states()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{agent_manager$get_states()}\if{html}{\out{</div>}}
@@ -161,8 +161,8 @@ Returns the index of a agent in the internal agent list
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_agent_index"></a>}}
-\if{latex}{\out{\hypertarget{method-get_agent_index}{}}}
+\if{html}{\out{<a id="method-agent_manager-get_agent_index"></a>}}
+\if{latex}{\out{\hypertarget{method-agent_manager-get_agent_index}{}}}
 \subsection{Method \code{get_agent_index()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{agent_manager$get_agent_index(agent_identifier)}\if{html}{\out{</div>}}
@@ -181,8 +181,8 @@ Connects two agents together as mates
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-connect_agents"></a>}}
-\if{latex}{\out{\hypertarget{method-connect_agents}{}}}
+\if{html}{\out{<a id="method-agent_manager-connect_agents"></a>}}
+\if{latex}{\out{\hypertarget{method-agent_manager-connect_agents}{}}}
 \subsection{Method \code{connect_agents()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{agent_manager$connect_agents(agent_a, agent_b)}\if{html}{\out{</div>}}
@@ -200,8 +200,8 @@ Returns the total number of agents that are alive}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_living_population"></a>}}
-\if{latex}{\out{\hypertarget{method-get_living_population}{}}}
+\if{html}{\out{<a id="method-agent_manager-get_living_population"></a>}}
+\if{latex}{\out{\hypertarget{method-agent_manager-get_living_population}{}}}
 \subsection{Method \code{get_living_population()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{agent_manager$get_living_population()}\if{html}{\out{</div>}}
@@ -213,8 +213,8 @@ Returns the average age, in years, of all of the agents
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_average_age"></a>}}
-\if{latex}{\out{\hypertarget{method-get_average_age}{}}}
+\if{html}{\out{<a id="method-agent_manager-get_average_age"></a>}}
+\if{latex}{\out{\hypertarget{method-agent_manager-get_average_age}{}}}
 \subsection{Method \code{get_average_age()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{agent_manager$get_average_age()}\if{html}{\out{</div>}}
@@ -232,8 +232,8 @@ Takes all of the agents in the manager and reconstructs the children
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-add_children"></a>}}
-\if{latex}{\out{\hypertarget{method-add_children}{}}}
+\if{html}{\out{<a id="method-agent_manager-add_children"></a>}}
+\if{latex}{\out{\hypertarget{method-agent_manager-add_children}{}}}
 \subsection{Method \code{add_children()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{agent_manager$add_children()}\if{html}{\out{</div>}}
@@ -251,8 +251,8 @@ Loads agents from disk.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-load"></a>}}
-\if{latex}{\out{\hypertarget{method-load}{}}}
+\if{html}{\out{<a id="method-agent_manager-load"></a>}}
+\if{latex}{\out{\hypertarget{method-agent_manager-load}{}}}
 \subsection{Method \code{load()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{agent_manager$load(file_name)}\if{html}{\out{</div>}}
@@ -274,8 +274,8 @@ None
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-agent_manager-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-agent_manager-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

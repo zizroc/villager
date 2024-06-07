@@ -28,14 +28,14 @@ Creates a new resource.
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{resource$new()}}
-\item \href{#method-as_table}{\code{resource$as_table()}}
-\item \href{#method-clone}{\code{resource$clone()}}
+\item \href{#method-resource-new}{\code{resource$new()}}
+\item \href{#method-resource-as_table}{\code{resource$as_table()}}
+\item \href{#method-resource-clone}{\code{resource$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-resource-new"></a>}}
+\if{latex}{\out{\hypertarget{method-resource-new}{}}}
 \subsection{Method \code{new()}}{
 Creates a new resource object
 \subsection{Usage}{
@@ -54,8 +54,8 @@ Returns a data.frame representation of the resource}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-as_table"></a>}}
-\if{latex}{\out{\hypertarget{method-as_table}{}}}
+\if{html}{\out{<a id="method-resource-as_table"></a>}}
+\if{latex}{\out{\hypertarget{method-resource-as_table}{}}}
 \subsection{Method \code{as_table()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{resource$as_table()}\if{html}{\out{</div>}}
@@ -66,8 +66,8 @@ A data.frame of resources
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-resource-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-resource-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

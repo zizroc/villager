@@ -56,17 +56,17 @@ Create a new agent
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{agent$new()}}
-\item \href{#method-is_alive}{\code{agent$is_alive()}}
-\item \href{#method-get_days_since_last_birth}{\code{agent$get_days_since_last_birth()}}
-\item \href{#method-add_child}{\code{agent$add_child()}}
-\item \href{#method-as_table}{\code{agent$as_table()}}
-\item \href{#method-clone}{\code{agent$clone()}}
+\item \href{#method-agent-new}{\code{agent$new()}}
+\item \href{#method-agent-is_alive}{\code{agent$is_alive()}}
+\item \href{#method-agent-get_days_since_last_birth}{\code{agent$get_days_since_last_birth()}}
+\item \href{#method-agent-add_child}{\code{agent$add_child()}}
+\item \href{#method-agent-as_table}{\code{agent$as_table()}}
+\item \href{#method-agent-clone}{\code{agent$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-agent-new"></a>}}
+\if{latex}{\out{\hypertarget{method-agent-new}{}}}
 \subsection{Method \code{new()}}{
 Used to created new agent objects.
 \subsection{Usage}{
@@ -122,8 +122,8 @@ This is run each day
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-is_alive"></a>}}
-\if{latex}{\out{\hypertarget{method-is_alive}{}}}
+\if{html}{\out{<a id="method-agent-is_alive"></a>}}
+\if{latex}{\out{\hypertarget{method-agent-is_alive}{}}}
 \subsection{Method \code{is_alive()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{agent$is_alive()}\if{html}{\out{</div>}}
@@ -136,8 +136,8 @@ the age of the most recently born agent
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_days_since_last_birth"></a>}}
-\if{latex}{\out{\hypertarget{method-get_days_since_last_birth}{}}}
+\if{html}{\out{<a id="method-agent-get_days_since_last_birth"></a>}}
+\if{latex}{\out{\hypertarget{method-agent-get_days_since_last_birth}{}}}
 \subsection{Method \code{get_days_since_last_birth()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{agent$get_days_since_last_birth()}\if{html}{\out{</div>}}
@@ -150,8 +150,8 @@ Connects a child to the agent. This method ensures that the
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-add_child"></a>}}
-\if{latex}{\out{\hypertarget{method-add_child}{}}}
+\if{html}{\out{<a id="method-agent-add_child"></a>}}
+\if{latex}{\out{\hypertarget{method-agent-add_child}{}}}
 \subsection{Method \code{add_child()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{agent$add_child(child)}\if{html}{\out{</div>}}
@@ -170,8 +170,8 @@ Returns a data.frame representation of the agent
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-as_table"></a>}}
-\if{latex}{\out{\hypertarget{method-as_table}{}}}
+\if{html}{\out{<a id="method-agent-as_table"></a>}}
+\if{latex}{\out{\hypertarget{method-agent-as_table}{}}}
 \subsection{Method \code{as_table()}}{
 I hope there's a more scalable way to do this in R; Adding every new attribute to this
 function isn't practical
@@ -189,8 +189,8 @@ A data.frame representation of the agent
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-agent-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-agent-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

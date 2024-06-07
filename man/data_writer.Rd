@@ -33,14 +33,14 @@ Create a new data writer.
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{data_writer$new()}}
-\item \href{#method-write}{\code{data_writer$write()}}
-\item \href{#method-clone}{\code{data_writer$clone()}}
+\item \href{#method-data_writer-new}{\code{data_writer$new()}}
+\item \href{#method-data_writer-write}{\code{data_writer$write()}}
+\item \href{#method-data_writer-clone}{\code{data_writer$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-data_writer-new"></a>}}
+\if{latex}{\out{\hypertarget{method-data_writer-new}{}}}
 \subsection{Method \code{new()}}{
 Creates a new data writer object that has optional paths for data files.
 \subsection{Usage}{
@@ -68,8 +68,8 @@ Writes a village's state to disk.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-write"></a>}}
-\if{latex}{\out{\hypertarget{method-write}{}}}
+\if{html}{\out{<a id="method-data_writer-write"></a>}}
+\if{latex}{\out{\hypertarget{method-data_writer-write}{}}}
 \subsection{Method \code{write()}}{
 Takes a state an the name of a village and writes the agents and resources to disk
 \subsection{Usage}{
@@ -90,8 +90,8 @@ None
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-data_writer-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-data_writer-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

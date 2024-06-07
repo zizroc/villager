@@ -21,51 +21,66 @@ library(villager)
 
 # Village-Village Interaction
 
-This vignette shows how interactions between villages is possible. This is done by exchanging agents when 
+This vignette shows how interactions between villages is possible. This is done by exchanging agents between two villages.
 
 ## Scenario
 
-This in scenario, there are two villages that start with 10 agents. 
+This in scenario, there are two villages that each start with 10 agents. Each village will start with agents of different genders. Each day that passes, there's a small chance that an agent transfers to the other village. This can be thought of a simplified diffusion model.
 
 ## Initial Condition
 
-If the initial conditions are the same for each village, they can share the same initial condition function. For the sake of giving a more fleshed out example, we'll have each village start with different conditions
-
 ### Village A
+
+Village A starts with a female only population.
 
 ```{r}
 initial_condition_a <- function(current_state, model_data, agent_mgr, resource_mgr) {
-  test_agent <- gps_agent$new(age=9125)
-  agent_mgr$add_agent(test_agent)
+  for (i in 1:20) {
+    test_agent <- villager::agent$new(gender="female", health=100)
+    agent_mgr$add_agent(test_agent)
+  }
 }
 ```
 
 ### Village B
 
+Village B starts with an only male population.
+
 ```{r}
 initial_condition_b <- function(current_state, model_data, agent_mgr, resource_mgr) {
-  test_agent <- gps_agent$new(first_name="Lewis", last_name="Taylor", age=9125)
-  agent_mgr$add_agent(test_agent)
+  for (i in 1:20) {
+    test_agent <- villager::agent$new(gender="male", health=100)
+    agent_mgr$add_agent(test_agent)
+  }
 }
 ```
 
 ## Models
 
-To make things more interesting, each village will have a different model. The key points to note in this example is the use of the `village_mgr` object, which is used to transfer agents between villages.
+To make things more interesting, each village will have a different model. The key points to note in this example is the use of the `village_mgr` object, which is used to transfer agents between villages. Another key aspect is that models are run within _village_ instances. This means that you can access the current village's identifier through `self$identifier`. This is used when iterating through the village_mgr to make sure you aren't interacting with the wrong village.
 
 ### Village A
 
-Each day, there will be a 
+Each day, there will be a 10% chance that a female agent moves to Village B
 
 ```{r}
-test_model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr, villager_mgr) {
-  for (agent in agent_mgr$get_agents()) {
-    if (1) {
-      # Get the village that we want to transfer the agent to
-      village_b <- villager_mgr$get_village("village_b")
-      village_b$agent_manager$add_agent(agent_to_move)
-      # Remove the agent from this village
-      agent_mgr$remove_agent(agent_to_move$identifier)
+village_a_model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr, village_mgr) {
+  # Start by finding the pointer to Village B. Use the name of the village
+  for (village in village_mgr$get_villages()) {
+    if(village$name == "village_b")  {
+        village_b <- village
+    }
+  }
+  
+  for (agent_to_move in agent_mgr$get_living_agents()) {
+    if(agent_to_move$gender == 'female') {
+      transfer_chance <- runif(1, 0, 10)
+      if (transfer_chance >= 6) {
+        # Add the agent to Village B
+        village_b$agent_mgr$add_agent(agent_to_move)
+        # Remove the agent from this village
+        agent_mgr$remove_agent(agent_to_move$identifier)
+      }
     }
   }
 }
@@ -73,22 +88,113 @@ test_model <- function(current_state, previous_state, model_data, agent_mgr, res
 
 ### Village B
 
+Each day, there's a chance that a male agent moves to Village A.
+
+```{r}
+village_b_model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr, village_mgr) {
+  # Start by finding the pointer to Village A. Use the name of the village
+    for (village in village_mgr$get_villages()) {
+    if(village$name == "village_a")  {
+        village_a <- village
+    }
+  }
+  
+  for (agent_to_move in agent_mgr$get_living_agents()) {
+    if(agent_to_move$gender == 'male') {
+      transfer_chance <- runif(1, 0, 10)
+      if (transfer_chance >= 6) {
+        # Add the agent to Village A
+        village_a$agent_mgr$add_agent(agent_to_move)
+        # Remove the agent from this village
+        agent_mgr$remove_agent(agent_to_move$identifier)
+      }
+    }
+  }
+}
+```
 ## Running
 
 Finally, we'll create and run a simulation with a duration of 10 days.
+
 ```{r}
-los_angeles <- village$new("Test_Village", initial_condition, test_model, gps_agent)
-simulator <- simulation$new(10, list(los_angeles))
+village_a <- village$new(name="village_a", initial_condition_a, village_a_model)
+village_b <- village$new(name="village_b", initial_condition_b, village_b_model)
+simulator <- simulation$new(10, list(village_a, village_b))
 simulator$run_model()
 ```
 
 ## Results
 
-Data about agents are scoped to villages. This means that if one agent transfers from Village A to Village B, data about that villager will be split across the data files for both villages.
+### Village A
+
+Village A started will a population of all female agents. Over time, they moved to Village B, while the Village B male population moved to Village A.
 
 ```{r}
-# Load in data
-village_a_agents <- readr::read_csv("results/village_a/agents.csv")
-village_b_agents <- readr::read_csv("results/village_b/agents.csv")
-merge(village_a_agents, village_b_agents by="")
+# Load data
+village_a_agents <- readr::read_csv("results/village_a/agents.csv", show_col_types = FALSE)
+
+# Show number of agents of gender Female in Village A
+print("Village A Female counts")
+data_a<-village_a_agents[village_a_agents$step == 1, ]
+print(nrow(data_a[data_a$gender == 'female', ]))
+data_a<-village_a_agents[village_a_agents$step == 2, ]
+print(nrow(data_a[data_a$gender == 'female', ]))
+data_a<-village_a_agents[village_a_agents$step == 3, ]
+print(nrow(data_a[data_a$gender == 'female', ]))
+data_a<-village_a_agents[village_a_agents$step == 4, ]
+print(nrow(data_a[data_a$gender == 'female', ]))
+data_a<-village_a_agents[village_a_agents$step == 5, ]
+print(nrow(data_a[data_a$gender == 'female', ]))
+data_a<-village_a_agents[village_a_agents$step == 6, ]
+
+# Show village A Male counts. 
+print("Village A Male counts")
+data_a<-village_a_agents[village_a_agents$step == 1, ]
+print(nrow(data_a[data_a$gender == 'male', ]))
+data_a<-village_a_agents[village_a_agents$step == 2, ]
+print(nrow(data_a[data_a$gender == 'male', ]))
+data_a<-village_a_agents[village_a_agents$step == 3, ]
+print(nrow(data_a[data_a$gender == 'male', ]))
+data_a<-village_a_agents[village_a_agents$step == 4, ]
+print(nrow(data_a[data_a$gender == 'male', ]))
+data_a<-village_a_agents[village_a_agents$step == 5, ]
+print(nrow(data_a[data_a$gender == 'male', ]))
+data_a<-village_a_agents[village_a_agents$step == 6, ]
+```
+### Village B
+
+The opposite happens with Village B: It starts with only male agents and they move to Village A. The female agents from Village A move to B.
+
+Note that Village A is run _before_ Village B. For this reason, the first time step for Village B will be mutated by Village A's first step.
+
+```{r}
+# Load data
+village_b_agents <- readr::read_csv("results/village_b/agents.csv", show_col_types = FALSE)
+# Show number of agents of gender Female in Village B
+print("Village B Female counts")
+data_a<-village_b_agents[village_b_agents$step == 1, ]
+print(nrow(data_a[data_a$gender == 'female', ]))
+data_a<-village_b_agents[village_b_agents$step == 2, ]
+print(nrow(data_a[data_a$gender == 'female', ]))
+data_a<-village_b_agents[village_b_agents$step == 3, ]
+print(nrow(data_a[data_a$gender == 'female', ]))
+data_a<-village_b_agents[village_b_agents$step == 4, ]
+print(nrow(data_a[data_a$gender == 'female', ]))
+data_a<-village_b_agents[village_b_agents$step == 5, ]
+print(nrow(data_a[data_a$gender == 'female', ]))
+data_a<-village_b_agents[village_b_agents$step == 6, ]
+
+# Show village B Male counts. 
+print("Village B Male counts")
+data_a<-village_b_agents[village_b_agents$step == 1, ]
+print(nrow(data_a[data_a$gender == 'male', ]))
+data_a<-village_b_agents[village_b_agents$step == 2, ]
+print(nrow(data_a[data_a$gender == 'male', ]))
+data_a<-village_b_agents[village_b_agents$step == 3, ]
+print(nrow(data_a[data_a$gender == 'male', ]))
+data_a<-village_b_agents[village_b_agents$step == 4, ]
+print(nrow(data_a[data_a$gender == 'male', ]))
+data_a<-village_b_agents[village_b_agents$step == 5, ]
+print(nrow(data_a[data_a$gender == 'male', ]))
+data_a<-village_b_agents[village_b_agents$step == 6, ]
 ```

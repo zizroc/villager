@@ -34,13 +34,13 @@ Creates a new State
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{village_state$new()}}
-\item \href{#method-clone}{\code{village_state$clone()}}
+\item \href{#method-village_state-new}{\code{village_state$new()}}
+\item \href{#method-village_state-clone}{\code{village_state$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-village_state-new"></a>}}
+\if{latex}{\out{\hypertarget{method-village_state-new}{}}}
 \subsection{Method \code{new()}}{
 Initializes all of the properties in the state to the ones passed in. This should
 be called by subclasses during initialization.
@@ -70,8 +70,8 @@ representation.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-village_state-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-village_state-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

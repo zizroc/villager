@@ -34,20 +34,20 @@ Creates a new , empty, resource manager for a village.}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{resource_manager$new()}}
-\item \href{#method-get_resources}{\code{resource_manager$get_resources()}}
-\item \href{#method-get_resource}{\code{resource_manager$get_resource()}}
-\item \href{#method-add_resource}{\code{resource_manager$add_resource()}}
-\item \href{#method-remove_resource}{\code{resource_manager$remove_resource()}}
-\item \href{#method-get_resource_index}{\code{resource_manager$get_resource_index()}}
-\item \href{#method-get_states}{\code{resource_manager$get_states()}}
-\item \href{#method-load}{\code{resource_manager$load()}}
-\item \href{#method-clone}{\code{resource_manager$clone()}}
+\item \href{#method-resource_manager-new}{\code{resource_manager$new()}}
+\item \href{#method-resource_manager-get_resources}{\code{resource_manager$get_resources()}}
+\item \href{#method-resource_manager-get_resource}{\code{resource_manager$get_resource()}}
+\item \href{#method-resource_manager-add_resource}{\code{resource_manager$add_resource()}}
+\item \href{#method-resource_manager-remove_resource}{\code{resource_manager$remove_resource()}}
+\item \href{#method-resource_manager-get_resource_index}{\code{resource_manager$get_resource_index()}}
+\item \href{#method-resource_manager-get_states}{\code{resource_manager$get_states()}}
+\item \href{#method-resource_manager-load}{\code{resource_manager$load()}}
+\item \href{#method-resource_manager-clone}{\code{resource_manager$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-resource_manager-new"></a>}}
+\if{latex}{\out{\hypertarget{method-resource_manager-new}{}}}
 \subsection{Method \code{new()}}{
 Get a new instance of a resource_manager
 \subsection{Usage}{
@@ -64,8 +64,8 @@ Gets all of the managed resources}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_resources"></a>}}
-\if{latex}{\out{\hypertarget{method-get_resources}{}}}
+\if{html}{\out{<a id="method-resource_manager-get_resources"></a>}}
+\if{latex}{\out{\hypertarget{method-resource_manager-get_resources}{}}}
 \subsection{Method \code{get_resources()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{resource_manager$get_resources()}\if{html}{\out{</div>}}
@@ -77,8 +77,8 @@ Gets a resource given a resource name
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_resource"></a>}}
-\if{latex}{\out{\hypertarget{method-get_resource}{}}}
+\if{html}{\out{<a id="method-resource_manager-get_resource"></a>}}
+\if{latex}{\out{\hypertarget{method-resource_manager-get_resource}{}}}
 \subsection{Method \code{get_resource()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{resource_manager$get_resource(name)}\if{html}{\out{</div>}}
@@ -97,17 +97,17 @@ Adds a resource to the manager.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-add_resource"></a>}}
-\if{latex}{\out{\hypertarget{method-add_resource}{}}}
+\if{html}{\out{<a id="method-resource_manager-add_resource"></a>}}
+\if{latex}{\out{\hypertarget{method-resource_manager-add_resource}{}}}
 \subsection{Method \code{add_resource()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{resource_manager$add_resource(new_resource)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{resource_manager$add_resource(...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{new_resource}}{The resource to add}
+\item{\code{...}}{The resources to add}
 }
 \if{html}{\out{</div>}}
 }
@@ -117,8 +117,8 @@ Removes a resource from the manager
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-remove_resource"></a>}}
-\if{latex}{\out{\hypertarget{method-remove_resource}{}}}
+\if{html}{\out{<a id="method-resource_manager-remove_resource"></a>}}
+\if{latex}{\out{\hypertarget{method-resource_manager-remove_resource}{}}}
 \subsection{Method \code{remove_resource()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{resource_manager$remove_resource(name)}\if{html}{\out{</div>}}
@@ -137,8 +137,8 @@ Returns the index of a resource in the internal resource list
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_resource_index"></a>}}
-\if{latex}{\out{\hypertarget{method-get_resource_index}{}}}
+\if{html}{\out{<a id="method-resource_manager-get_resource_index"></a>}}
+\if{latex}{\out{\hypertarget{method-resource_manager-get_resource_index}{}}}
 \subsection{Method \code{get_resource_index()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{resource_manager$get_resource_index(name)}\if{html}{\out{</div>}}
@@ -157,8 +157,8 @@ Returns a data.frame where each row is a resource.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_states"></a>}}
-\if{latex}{\out{\hypertarget{method-get_states}{}}}
+\if{html}{\out{<a id="method-resource_manager-get_states"></a>}}
+\if{latex}{\out{\hypertarget{method-resource_manager-get_states}{}}}
 \subsection{Method \code{get_states()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{resource_manager$get_states()}\if{html}{\out{</div>}}
@@ -174,8 +174,8 @@ Loads a csv file of resources into the manager
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-load"></a>}}
-\if{latex}{\out{\hypertarget{method-load}{}}}
+\if{html}{\out{<a id="method-resource_manager-load"></a>}}
+\if{latex}{\out{\hypertarget{method-resource_manager-load}{}}}
 \subsection{Method \code{load()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{resource_manager$load(file_name)}\if{html}{\out{</div>}}
@@ -193,8 +193,8 @@ None
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-resource_manager-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-resource_manager-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

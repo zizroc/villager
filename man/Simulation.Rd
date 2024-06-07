@@ -29,14 +29,14 @@ Creates a new Simulation instance
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{simulation$new()}}
-\item \href{#method-run_model}{\code{simulation$run_model()}}
-\item \href{#method-clone}{\code{simulation$clone()}}
+\item \href{#method-simulation-new}{\code{simulation$new()}}
+\item \href{#method-simulation-run_model}{\code{simulation$run_model()}}
+\item \href{#method-simulation-clone}{\code{simulation$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-simulation-new"></a>}}
+\if{latex}{\out{\hypertarget{method-simulation-new}{}}}
 \subsection{Method \code{new()}}{
 Creates a new simulation object to control the experiment
 \subsection{Usage}{
@@ -57,8 +57,8 @@ Runs the simulation}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-run_model"></a>}}
-\if{latex}{\out{\hypertarget{method-run_model}{}}}
+\if{html}{\out{<a id="method-simulation-run_model"></a>}}
+\if{latex}{\out{\hypertarget{method-simulation-run_model}{}}}
 \subsection{Method \code{run_model()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{simulation$run_model()}\if{html}{\out{</div>}}
@@ -69,8 +69,8 @@ None
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-simulation-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-simulation-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

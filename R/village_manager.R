@@ -32,7 +32,7 @@ village_manager <- R6::R6Class(
     #' @param name The name of the requested village
     #' @return A village object
     get_village = function(name) {
-      for (village in self$village) {
+      for (village in self$villages) {
         if (village$name == name) {
           return(village)
         }
