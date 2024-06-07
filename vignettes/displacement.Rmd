@@ -1,0 +1,700 @@
+---
+title: "Simulating Forced Displacement"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Simulating-Forced-Displacement}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Introduction: A digital laboratory to simulate real-world challenges
+
+Agent-Based Modeling (ABM) is a powerful simulation technique used to understand and predict complex behaviors and interactions within systems. In ABM: 
+
+- Agent are individual people, each with motivations and resources.
+ 
+- Agent evolve within an environment (multiple countries), each being characterized by different conditions
+
+- Agent may decide to move or not based on factors like safety and opportunity, that reflects the conditions of the different countries.
+ 
+- When agent move, the conditions of the countries can be affected
+
+- By letting agent interact within a virtual environment, movement patterns can be predicted in order to design better interventions
+
+## Agent-based modeling for Forced Displacement
+
+ In the context of forced displacement, ABM can help us explore how individuals and groups make migration decisions based on various factors. This tutorial will guide you through the fundamental components needed to define an ABM simulation for forced displacement scenarios.
+
+### Minimum ingredients to define a simulation
+
+
+1. __Agents__
+
+Agents represent individuals or entities that interact with their environment and each other. In our displacement model, agents are displaced persons whose behaviors are influenced by:
+
+- Perceived Safety: The level of danger in their current location.
+- Access to Resources: Availability of essentials like food, water, and shelter.
+- Social Connections: Presence of family, friends, or social networks in potential destinations.
+
+2. __Rules__ 
+
+The rules of behavior define how agents make decisions and behave. Each agent’s migration decision will depend on:
+
+- Attributes: Age, health, skills, etc.
+- Environmental Factors: Safety, resource availability, social networks in potential destinations.
+
+3. __Environment__
+
+The environment is the context in which agents operate. It includes:
+
+- Origin and Destination Locations: Characteristics of the home country and potential destinations (e.g., safety levels, resources, infrastructure).
+
+4. __Iterations__
+
+Simulations run in loops or iterations, allowing agents to repeatedly act or interact over time, reflecting the ongoing nature of displacement scenarios.
+
+### Research Questions that can be Addressed by ABM
+
+ABM can help answer critical questions such as:
+
+- __Migration Destinations__: Where are displaced populations most likely to migrate?
+
+- __Influence of Push and Pull Factors__: How do safety, resources, and social networks influence migration decisions?
+
+- __Impact on Destinations__: How will incoming populations affect resources and infrastructure in destination areas?
+
+- __Impact on Origins__: How will displacement impact the social and economic dynamics of the origin location?
+
+ 
+There are therefore numerous added value of such modeling excercise compared to a simple predictive model: 
+
+- __Individual-Level Decisions__: ABM captures the diversity and complexity of individual migration choices. 
+
+- __Emergent Outcomes__:  Observing system-level consequences of individual actions, identifying potential bottlenecks and unforeseen impacts.
+
+- __Spatial Dynamics__:  Realistic representation of movement through space, considering geographical factors and travel costs.
+
+
+
+### A dummy Displacement Scenario
+
+Imagine a political shock event disrupts Country A, causing some of its citizens to consider migrating to neighboring Countries B, C, and D. A simplified model can be build to simulate agents (individuals) deciding whether to move out of their origin country based on a combination of factors like:
+
+- Living conditions in origin country (Country A): These worsen due to the political shock.
+- Living conditions in destination countries (B, C, D): Each has varying degrees of attractiveness.
+- Distance to destination countries: Closer destinations are more likely to be chosen.
+
+To implement a simulation within such scenario, some data will be required:
+
+- __Static Attributes__: Age, gender, health status, skills, family size, risk tolerance.
+
+- __Dynamic Attributes__: Current location, satisfaction with current location, remaining resources.
+
+- __Environment__: Includes origin and potential destination locations with attributes like:  
+    - Safety levels
+    - Availability of resources (food, water, shelter)
+    - Infrastructure capacity (education, health)
+    - Work Opportunity
+    - Presence of social networks
+
+
+## Modeling Steps
+
+The goal is to calculate the number of agents remaining in the origin country (A) and those who migrated to countries B, C, and D under a series of assumptions both for the people and the environment (aka countries characteristics). Country characteristics can be measured by indexes measuring for instance Safety, Resources, Opportunities, existence of Citizen network from Country A and available Support Interventions (for instance "Resource Distribution" like Cash allowance, "Public services" like free access to School and Education or "Legal Documentation" to access formal labor employment)
+
+To proceed, one needs to iterate over 5 steps: 
+ 
+ 1. Define Agents
+ 2. Set up Initial Conditions
+ 3. Design the Model
+ 4. Simulate Displacement  
+ 5. Analyze Results 
+
+We can do this with a few R libraries.
+
+```{r message=FALSE, warning=FALSE}
+# Load libraries
+library(tidyverse)
+library(villager)
+set.seed(123)  # For reproducible simulations
+
+```
+
+
+
+### 1/5. Define Agents 
+Agents representing citizens of Country A that have specific attributes.
+
+Citizens in country A with for instance the following agent characteristics:  
+-  `age`: Random between 20 and 65.
+-  `health`: Random value from a normal distribution.
+-  `skills`: "Low", "Medium", or "High" (categorical).
+-  `family`: True if the agent has family (binary).
+-  `risk_tolerance`: Random value between 0 and 1 (uniform distribution).
+-  `social_network`: Boolean vector indicating connections only within country A (if family is present).
+
+```{r}
+# A class that extends the villager agent class to have skills, risk tolerance, and country history
+person <- R6::R6Class("agent",
+                         inherit = villager::agent,
+                         public = list(
+                           age = NULL,
+                           alive = NULL,
+                           children = NULL,
+                           father_id = NULL,
+                           first_name = NULL,
+                           gender = NULL,
+                           health = NULL,
+                           identifier = NULL,
+                           last_name = NULL,
+                           mother_id = NULL,
+                           partner = NULL,
+                           profession = NULL,
+                           skills = NULL,
+                           risk_tolerance = NULL,
+                           country_history = NULL,
+
+                           initialize = function(identifier = NA,
+                                                 first_name = NA,
+                                                 last_name = NA,
+                                                 age = 0,
+                                                 mother_id = NA,
+                                                 father_id = NA,
+                                                 partner = NA,
+                                                 children = vector(mode = "character"),
+                                                 gender = NA,
+                                                 profession = NA,
+                                                 alive = TRUE,
+                                                 health = 100,
+                                                 skills = NA,
+                                                 risk_tolerance = NA,
+                                                 country_history = NA) {
+
+                             # Call the base class with the standard values
+                             super$initialize(identifier,
+                                              first_name,
+                                              last_name,
+                                              age,
+                                              mother_id,
+                                              father_id,
+                                              partner,
+                                              children,
+                                              gender,
+                                              profession,
+                                              alive,
+                                              health)
+
+                             # Set the extended class properties
+                             self$skills <- skills
+                             self$risk_tolerance <- risk_tolerance
+                             self$country_history <- country_history
+                           },
+
+                           as_table = function() {
+                             agent_table <- data.frame(
+                               age = self$age,
+                               alive = self$alive,
+                               father_id = self$father_id,
+                               first_name = self$first_name,
+                               gender = self$gender,
+                               health = self$health,
+                               identifier = self$identifier,
+                               last_name = self$last_name,
+                               mother_id = self$mother_id,
+                               partner = self$partner,
+                               profession = self$profession,
+                               skills = self$skills,
+                               risk_tolerance = self$risk_tolerance,
+                               country_history = paste(self$country_history, collapse = "-to-")
+                             )
+                             return(agent_table)
+                           }
+                         )
+)
+
+``` 
+
+### 2/5. Set up Initial Conditions
+
+ Set up the environment with Country of origin A and destination countries (`destination_B`, `destination_C`, `destination_D`), aka the initial condition. Then a synthetic Population is generated with 2000 agents for the conflict country (`origin_A`) with the  attributes defined above.
+
+#### Common Functions
+
+We'll create different initial conditions for each country. There's some shared code in creating the agents, pairing them, etc. Rather than copy and pasting them in each initial condition function, define them here and call them in the initial condition function. This works through R's way of scoping variables (can define the functions outside the scope of the initial conditions, and call them from within the class).
+
+```{r}
+# Creates an initial population of agents with some set of properties
+# param agent_mgr: The initial condition's agent manager
+# param agent_Count: The number of agents to create
+create_initial_population <- function(agent_mgr, agent_count) {
+  # Create a normal distribution for health, centered around 80 (1 (nearly dead) to 100 (very healthy))
+  health_norm <- rnorm(2000, mean=80 , sd=5)
+  # Create a normal distribution for risk tolerance, centered around 60 (1 (tolerate risk) to 100 (do not support insecurity))
+  risk_norm <- rnorm(2000, mean = 60, sd=15)
+  # Create 2,000 people
+  for(i in 1:agent_count) {
+    # Assume two genders (female/male)
+    gender = 'female'
+    # Every even number we assign a male, getting a 50/50 gender split
+    if((i %% 2) == 0) {
+      gender = 'male'
+    }
+    skills <- c("Low", "Medium", "High")
+    # Get a number from the distribution and bound the value between 0 and 1
+    # Bug: The distribution is picking values exclusively less than 0 and greater than 1
+    # This is leading to the population having either 0 or 1 tolerance.
+    risk <- round(risk_norm[i])
+    risk <- pmin(risk, 1)
+    risk <- pmax(risk, 0)
+    new_person <- person$new(age=round(runif(1,7300,23725)), 
+                             gender=gender, 
+                             health=health_norm[i], 
+                             risk_tolerance=risk, 
+                             skills=sample(skills, 1), 
+                             country_history=c("origin_A"))
+    agent_mgr$add_agent(new_person)
+  }
+}
+
+# Takes an agent manager and pairs some agents together in marriage
+# param agent_mgr: The initial condition's agent manager
+create_marriage_couples <- function(agent_mgr) {
+  # Randomly pair them, based on made up rules 
+  for (single_person in agent_mgr$get_living_agents()) {
+    # Person has to be single
+    if(is.na(single_person$partner)) {
+      # Slim chance someone gets married
+      if (runif(1,0,10) >= 8) {
+        # Loop over potential mates
+        for (potential_mate in agent_mgr$get_living_agents()) {
+          if(is.na(potential_mate$partner)) {
+            # Make sure we aren't looking at the single_person agent
+            if (potential_mate$identifier != single_person$identifier) {
+              # Assume heterosex
+              if (potential_mate$gender != single_person$gender) {
+                # Skip checking age ranges (assume everyone is of age)
+                agent_mgr$connect_agents(single_person, potential_mate)
+                # Exit inner loop and return to outer
+                break
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+# Takes an agent manager, takes paired agents, creates and pairs children
+# param agent_mgr: The initial condition's agent manager
+create_children <- function(agent_mgr) {
+    skills <- c("Low", "Medium", "High")
+    # Get a number from the distribution and bound the value between 0 and 1
+    # Bug: The distribution is picking values exclusively less than 0 and greater than 1
+    # This is leading to the population having either 0 or 1 tolerance.
+    # Create a normal distribution for health, centered around 80 (1 (nearly dead) to 100 (very healthy))
+  health_norm <- rnorm(2000, mean=80 , sd=5)
+  # Create a normal distribution for risk tolerance, centered around 60 (1 (tolerate risk) to 100 (do not support insecurity))
+  risk_norm <- rnorm(2000, mean = 60, sd=15)
+  for (potential_parent_person in agent_mgr$get_living_agents()) {
+    # Make sure they're married and no older than... 55?
+    if(!is.na(potential_parent_person$partner) && potential_parent_person$age < 20075) {
+      # Some small chance they have kids
+      if (runif(1,0,10) >= 8) {
+        # Add three kids
+        for(i in 1:3) {
+          risk <- round(risk_norm[i])
+          risk <- pmin(risk, 1)
+          risk <- pmax(risk, 0)
+          new_child <- person$new(
+            age=8030, 
+            health = health_norm[i], 
+            risk_tolerance = risk, 
+            skills=sample(skills, 1), 
+            country_history = c("origin_A")
+          )
+          agent_mgr$add_agent(new_child)
+          potential_parent_person$add_child(new_child)
+          # Get the partner
+          partner <- agent_mgr$get_agent(potential_parent_person$partner)
+          partner$add_child(new_child)
+          # Add the parents to the child, figure out which is the mom and dad
+          if (potential_parent_person$gender == 'male') {
+            new_child$father_id <- potential_parent_person$identifier
+            new_child$mother_id <- partner$identifier
+          }
+          if (potential_parent_person$gender == 'female') {
+            new_child$mother_id <- potential_parent_person$identifier
+            new_child$father_id <- partner$identifier
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+#### Country A (Origin)
+
+```{r}
+# Country A has 2,000 agents
+initial_condition_a <- function(current_state, 
+                              model_data,
+                              agent_mgr, 
+                              resource_mgr) {
+  # Set properties for the country
+  resource_mgr$add_resource(villager::resource$new(name="living_conditions", quantity=2))
+  resource_mgr$add_resource(villager::resource$new(name="safety", quantity=2))
+  resource_mgr$add_resource(villager::resource$new(name="access_to_healthcare", quantity=2))
+  resource_mgr$add_resource(villager::resource$new(name="access_to_education", quantity=2))
+  resource_mgr$add_resource(villager::resource$new(name="access_to_work", quantity=2))
+  resource_mgr$add_resource(villager::resource$new(name="access_to_cash_allowance", quantity=1))
+  resource_mgr$add_resource(villager::resource$new(name="network", quantity=1))
+  
+  # Create the initial population
+  create_initial_population(agent_mgr, 2000)
+  # Create couples
+  create_marriage_couples(agent_mgr)
+  # Add a random number of children to married couples.
+  create_children(agent_mgr)
+}
+
+# Country B has 1,000 agents
+initial_condition_b <- function(current_state, 
+                              model_data,
+                              agent_mgr, 
+                              resource_mgr) {
+  # Set properties for the country
+  resource_mgr$add_resource(villager::resource$new(name="living_conditions", quantity=7))
+  resource_mgr$add_resource(villager::resource$new(name="safety", quantity=6))
+  resource_mgr$add_resource(villager::resource$new(name="access_to_healthcare", quantity=7))
+  resource_mgr$add_resource(villager::resource$new(name="access_to_education", quantity=7))
+  resource_mgr$add_resource(villager::resource$new(name="access_to_work", quantity=3))
+  resource_mgr$add_resource(villager::resource$new(name="access_to_cash_allowance", quantity=1))
+  resource_mgr$add_resource(villager::resource$new(name="network", quantity=4))
+  
+  # Create the initial population
+  create_initial_population(agent_mgr, 1000)
+  # Create couples
+  create_marriage_couples(agent_mgr)
+  # Add a random number of children to married couples.
+  create_children(agent_mgr)
+}
+
+# Country C has 500 agents
+initial_condition_c <- function(current_state, 
+                              model_data,
+                              agent_mgr, 
+                              resource_mgr) {
+  # Set properties for the country
+  resource_mgr$add_resource(villager::resource$new(name="living_conditions", quantity=3))
+  resource_mgr$add_resource(villager::resource$new(name="safety", quantity=2))
+  resource_mgr$add_resource(villager::resource$new(name="access_to_healthcare", quantity=2))
+  resource_mgr$add_resource(villager::resource$new(name="access_to_education", quantity=2))
+  resource_mgr$add_resource(villager::resource$new(name="access_to_work", quantity=1))
+  resource_mgr$add_resource(villager::resource$new(name="access_to_cash_allowance", quantity=1))
+  resource_mgr$add_resource(villager::resource$new(name="network", quantity=2))
+  
+  # Create the initial population
+  create_initial_population(agent_mgr, 500)
+  # Create couples
+  create_marriage_couples(agent_mgr)
+  # Add a random number of children to married couples.
+  create_children(agent_mgr)
+}
+
+# Country D has 5,000 agents
+initial_condition_d <- function(current_state, 
+                              model_data,
+                              agent_mgr, 
+                              resource_mgr) {
+  # Set properties for the country
+  resource_mgr$add_resource(villager::resource$new(name="living_conditions", quantity=4))
+  resource_mgr$add_resource(villager::resource$new(name="safety", quantity=4))
+  resource_mgr$add_resource(villager::resource$new(name="access_to_healthcare", quantity=4))
+  resource_mgr$add_resource(villager::resource$new(name="access_to_education", quantity=5))
+  resource_mgr$add_resource(villager::resource$new(name="access_to_work", quantity=3))
+  resource_mgr$add_resource(villager::resource$new(name="access_to_cash_allowance", quantity=3))
+  resource_mgr$add_resource(villager::resource$new(name="network", quantity=1))
+
+  # Create the initial population
+  create_initial_population(agent_mgr, 5000)
+  # Create couples
+  create_marriage_couples(agent_mgr)
+  # Add a random number of children to married couples.
+  create_children(agent_mgr)
+}
+```
+
+
+
+### 3/5. Design the Model
+
+A score for each destination country based on safety, resources, affordability (based on skills), potential social network connection in the destination (if applicable), and opportunity for support, etc.
+
+The agent calculate the attractiveness for each country based then relates it to his own migration propensity and if the threshold is reached, chooses the country with the highest score to migrate to.
+
+#### Country A
+People move from country A to another country if the sum of `living_conditions`, `safety`, and `access_to_education` fall below 5.
+If the population raises above 2,100, these properties start to decrease.
+
+```{r}
+model_forced_displacement_a <- function(current_state,
+                           previous_state, 
+                           model_data, 
+                           agent_mgr,
+                           resource_mgr,
+                           village_mgr) {
+  print(paste("Step for Country A:", current_state$step))
+  # Age agents by a day
+  for (agent in agent_mgr$get_living_agents()) {
+    agent$age <- agent$age+1
+  }
+  
+  # Update the country properties, as functions of total population
+  population_total <- length(agent_mgr$get_living_agents())
+  living_conditions <- resource_mgr$get_resource("living_conditions")
+  safety<- resource_mgr$get_resource("safety")
+  access_to_education <- resource_mgr$get_resource("access_to_education")
+  if (population_total >= 2100) {
+    living_conditions$quantity <- living_conditions$quantity * 1/population_total
+    safety$quantity <- safety$quantity - 1/sqrt(safety$quantity)
+    access_to_education$quantity <- access_to_education$quantity * 1
+  }
+  if (population_total < 2100 && population > 1000) {
+    
+    living_conditions$quantity <- 2
+    safety<- resource_mgr$get_resource("safety")
+    safety$quantity <- 2
+    access_to_education <- resource_mgr$get_resource("access_to_education")
+    access_to_education$quantity <- 3
+  }
+  
+  # Movement equation: y=0.5(living_conditions)+0.5(safety)+0.5(access_to_education)
+  print(living_conditions$quantity)
+  print(safety$quantity)
+  print(access_to_education$quantity)
+  should_move = 0.5*living_conditions$quantity+0.5*safety$quantity*0.5+access_to_education$quantity
+  print(should_move)
+  # If y < 0, then the agents will want to move
+  # Decide whether the person moves from one country to the next
+  # Limit total movement to 10 agents, per day
+  if (should_move < 0) {
+    total_moved <- 0
+    # Figure out which country to move to
+    country_b <- village_mgr$get_village("country_b")
+    country_b_resource_mgr <- country_b$resource_mgr
+    country_b_safety <- country_b_resource_mgr$get_resource("safety")$quantity
+    country_b_access_to_education <- country_b_resource_mgr$get_resource("access_to_education")$quantity
+    country_c <- village_mgr$get_village("country_c")
+    country_c_resource_mgr <- country_c$resource_mgr
+    country_c_safety <- country_c_resource_mgr$get_resource("safety")$quantity
+    country_c_access_to_education <- country_c_resource_mgr$get_resource("access_to_education")$quantity
+    
+    # Decision equation. Note that you can grab the agent_mgr and check if any of the agents have parents/relatives in this country
+    # y = 0.5*country_b_safety + 0.2*country_b_access_to_education - 0.1*country_c_safety + 0.9*country_c_safety
+    country_eqn <- 0.5 * country_b_safety + 0.2 * country_b_access_to_education - 0.1*country_c_safety + 0.9*country_c_safety
+    # If >0, Country B looks like an attractive place to move to
+    attractive_country_agent_mgr <- NA
+    
+    if (country_eqn > 0) {
+      attractive_country_agent_mgr <- country_b$agent_mgr
+    } else {
+      # Otherwise Country C looks good
+      attractive_country_agent_mgr <- country_c$agent_mgr
+    }
+    for (agent in agent_mgr$get_living_agents()) {
+      if (total_moved < 10) {
+        attractive_country_agent_mgr$add_agent(agent)
+        agent_mgr$remove_agent(agent$identifier)
+        total_moved <- total_moved + 1
+      }
+    }
+  }
+}
+```
+
+#### Country B
+Country B has its own model, right now it doesn't do anything (ran out of time)
+
+```{r}
+model_forced_displacement_b <- function(current_state,
+                           previous_state, 
+                           model_data, 
+                           agent_mgr,
+                           resource_mgr,
+                           village_mgr) {
+  print(paste("Step for Country B:", current_state$step))
+  # Age agents by a day
+  for (agent in agent_mgr$get_living_agents()) {
+    agent$age <- agent$age+1
+  }
+}
+```
+
+#### Country C
+Country C has its own model, right now it doesn't do anything (ran out of time)
+
+```{r}
+model_forced_displacement_c <- function(current_state,
+                           previous_state, 
+                           model_data, 
+                           agent_mgr,
+                           resource_mgr,
+                           village_mgr) {
+  print(paste("Step for Country C:", current_state$step))
+  # Age agents by a day
+  for (agent in agent_mgr$get_living_agents()) {
+    agent$age <- agent$age+1
+  }
+}
+```
+
+#### Country D
+Country D has its own model, right now it doesn't do anything (ran out of time)
+
+```{r}
+model_forced_displacement_d <- function(current_state,
+                           previous_state, 
+                           model_data, 
+                           agent_mgr,
+                           resource_mgr,
+                           village_mgr) {
+  print(paste("Step for Country D:", current_state$step))
+  # Age agents by a day
+  for (agent in agent_mgr$get_living_agents()) {
+    agent$age <- agent$age+1
+  }
+}
+```
+
+###  4/5. Simulate Displacement  
+
+Using those assumptions, simulation can be performed a certain number of times. In each iteration, each agent goes through the decision-making process and potentially updates their location. After each iteration, we can calculate the final population distribution across destination countries. 
+ 
+
+```{r message=FALSE, warning=FALSE}
+country_a <- villager::village$new("Country_A",
+                                   initial_condition_a, 
+                                   model_forced_displacement_a,
+                                   person)
+country_b <- villager::village$new("Country_B",
+                                   initial_condition_b, 
+                                   model_forced_displacement_b,
+                                   person)
+country_c <- villager::village$new("Country_C",
+                                   initial_condition_c, 
+                                   model_forced_displacement_c,
+                                   person)
+country_d <- villager::village$new("Country_D",
+                                   initial_condition_c, 
+                                   model_forced_displacement_d,
+                                   person)
+simulation_iterations <- 10
+simulator <- villager::simulation$new(simulation_iterations ,
+                                      list(country_a, country_b, country_c, country_d))
+simulator$run_model()
+```
+
+
+### 5/5. Analyze Results 
+
+ Note that this example is designed  as a template that can be easily modified to incorporate additional factors like travel cost, language barriers, or policy changes in destination countries.
+  
+```{r  fig.height=5, fig.width=8, message=FALSE, warning=FALSE}
+# Load in data that got save automatically
+agent_data <- readr::read_csv("results/Displacement_Model/agents.csv")
+ressource_data <- readr::read_csv("results/Displacement_Model/resources.csv")
+brks <- c(0, 0.25, 0.5, 0.75, 1)
+# Filter the results down to just the last day
+ggplot(agent_data |>
+                dplyr::filter( step == simulation_iterations)) +
+  aes(x = forcats::fct_rev(forcats::fct_infreq(country_history)) ) +
+  geom_bar(fill = "#0072BC") +
+  scale_y_continuous(breaks = brks, labels = scales::percent(brks)) +
+  coord_flip() +  
+  labs(
+    title = "Forced Displacement Simulation",
+    subtitle = paste0("Agent Based Modeling Results after ", simulation_iterations, " iterations"),
+    caption = "Dummy Data for illustrative purpose",
+    y = "Percentage of people"  ) +
+  unhcrthemes::theme_unhcr(grid = "X", axis = "Y", axis_title = "X")
+```
+
+```{r  fig.height=5, fig.width=8, message=FALSE, warning=FALSE}
+# Filter the results down to just the last day
+ggplot(agent_data |>
+         dplyr::group_by(country_history,  step) |>
+         dplyr::summarise ( n = dplyr::n())) +
+  aes(x =  step ,  y = n, group = country_history,  color = country_history) +
+  geom_line( size=2 ) + 
+  scale_colour_viridis_d("Displacement", option = "plasma") +
+  scale_x_continuous(  labels = scales::label_number(accuracy =1, scale_cut = scales::cut_short_scale())) +
+  labs(
+    title = "Simulation Convergence: Population Displacement",
+    subtitle = paste0("Agent Based Modeling Results"),
+    caption = "Dummy Data for illustrative purpose",
+    x = "Simulation Steps"  ) +
+  unhcrthemes::theme_unhcr(grid = "Y", axis = "X", axis_title = "X")
+```
+
+
+
+
+##  Conclusion: Model Validation
+
+Validation is crucial to ensure the credibility and reliability of an Agent-Based Model (ABM) for forced displacement. This process involves comparing the model's outputs with real-world data and expert assessments to confirm its accuracy and realism.
+
+ 1. __Demographic Data__:
+Demographic data from censuses or surveys can be instrumental in validating the model. For instance, population distributions, age structures, and family compositions from affected areas can be compared with the model’s output to ensure it accurately reflects the demographic characteristics of the displaced population.
+
+_Example_: If the model predicts that 30% of displaced individuals are children, this percentage should align with data from similar past displacement events.
+
+ 2. __Humanitarian Reports__:
+Reports from humanitarian organizations provide detailed accounts of displacement events, resource availability, and the conditions of displaced populations. These reports can be used to check the model's predictions about resource needs and movement patterns.
+
+_Example_: If a humanitarian report indicates that access to education was a critical issue during a displacement event, the model should similarly reflect resource depletion in areas with high concentrations of displaced individuals.
+
+ 3. __Research on Displacement Behavior__:
+Academic and field research on displacement behaviors and decision-making processes offers valuable insights into why and how people move during crises. This research can be used to validate the rules and behaviors encoded in the model.
+
+_Example_: Studies showing that individuals prefer migrating to areas with existing social networks can be used to verify that the model accurately simulates this behavior.
+
+ 4. __Historical Displacement Patterns__:
+Comparing the model’s outputs with historical displacement patterns from similar events helps validate its predictive power. The model should be able to replicate known outcomes of past displacement scenarios.
+
+_Example_: If historical data show that most displaced persons from Country A moved to the nearest Country B, the model should produce similar migration patterns under equivalent conditions.
+
+ 5. __Expert Assessment__:
+Engaging experts in forced displacement research allows for an evaluation of the model’s behavioral realism. Experts can provide feedback on whether the model's assumptions, rules, and outputs are plausible and consistent with real-world observations.
+
+_Example_: Experts might assess whether the model's depiction of migration decision-making under different levels of threat is realistic.
+
+6. __Sensitivity Analysis__:
+Conducting sensitivity analysis involves varying the model’s parameters to see how changes affect the outputs. This helps identify which parameters are most influential and ensures that the model’s predictions are robust across a range of scenarios.
+
+_Example_: By altering parameters such as safety perception or resource availability, analysts can determine if the model consistently predicts higher migration rates when safety decreases or resources become scarce.
+
+## Annex: References
+
+Using ABM in Migration and Forced Displacement Studies is not new. The literature review below is not exhaustive but can provide a first good overview: 
+
+- [Decision-Making in Agent-Based Models of Migration: State of the Art and Challenges](https://link.springer.com/article/10.1007/s10680-015-9362-0)
+
+- [Principles and State of the Art of Agent-Based Migration Modelling](https://link.springer.com/chapter/10.1007/978-3-030-83039-7_3)
+ 
+- [An agent-based approach to human migration movement](https://ink.library.smu.edu.sg/cgi/viewcontent.cgi?article=4339&context=sis_research)
+
+- [Agent-based modeling for migration and modern slavery research: a systematic review](https://link.springer.com/article/10.1007/s42001-020-00076-7)
+
+- [Prediction of Migration Paths Using Agent-Based Simulation Modeling: The Case of Syria](http://ieomsociety.org/proceedings/2022istanbul/187.pdf)
+
+- [Where are they headed next? Modeling emergent displaced camps in the DRC using agent-based models](https://www.informs-sim.org/wsc18papers/includes/files/005.pdf)
+ 
