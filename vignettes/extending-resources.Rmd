@@ -92,7 +92,7 @@ are reached, the quantity is set to zero.
 
 ```{r}
 # Create the model that, each day, checks to see whether or not any resource expire
-model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr) {
+model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr, village_mgr) {
   # Loop over all of the resources and check if any expire
   for (resource in resource_mgr$get_resources()) {
     # Figure out how many days have passed

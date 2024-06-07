@@ -147,7 +147,7 @@ The model works by first moving an agent by a random amount. This is equivalent 
 Next, The agent checks to see if it's within trading distance of any agents other than itself. If it is, $1 is reduced from its resource cache and is added to the neighbor agent.
 
 ```{r}
-test_model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr) {
+test_model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr, village_mgr) {
   # Loop over each agent and move them
   for (agent in agent_mgr$get_living_agents()) {
     # Generate new coordinates
