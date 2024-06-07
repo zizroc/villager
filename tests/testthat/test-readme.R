@@ -19,7 +19,8 @@ test_that("the first example properly sets the profession of the agents", {
     resource_mgr$add_resource(corn_resource, fish_resource)
   }
 
-  test_model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr) {
+  test_model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr, village_mgr) {
+    print(paste("Step:", current_state$step))
     for (agent in agent_mgr$get_living_agents()) {
       agent$age <- agent$age+1
       if (agent$age >= 4383) {
@@ -29,10 +30,10 @@ test_that("the first example properly sets the profession of the agents", {
   }
 
   small_village <- village$new("Test Model", initial_condition, test_model)
-  simulator <- simulation$new(4745, list(small_village))
+  simulator <- simulation$new(4, list(small_village))
   simulator$run_model()
 
-  for (agent in simulator$villages[[1]]$agent_mgr$get_living_agents()) {
+  for (agent in simulator$village_mgr$get_villages()[[1]]$agent_mgr$get_living_agents()) {
     testthat::expect_equal(agent$profession, "Farmer")
   }
 })
@@ -46,7 +47,7 @@ test_that("the second example", {
     }
   }
 
-  model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr) {
+  model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr, village_mgr) {
     current_day <- current_state$step
     if((current_day%%2) == 0) {
       # Then it's an even day
@@ -66,7 +67,7 @@ test_that("the second example", {
   coastal_village <- village$new("Test village", initial_condition, model)
   simulator <- simulation$new(4, villages = list(coastal_village))
   simulator$run_model()
-  mgr <- simulator$villages[[1]]$agent_mgr
+  mgr <- simulator$village_mgr$get_villages()[[1]]$agent_mgr
   # Test that there are 14 agents
   testthat::expect_equal(14, length(mgr$agents))
   # Test that 8 are alive

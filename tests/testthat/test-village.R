@@ -13,7 +13,7 @@ test_that("the initial models can properly set village states", {
   simulator <- simulation$new(1, villages = list(new_village))
   simulator$run_model()
 
-  last_record <- simulator$villages[[1]]$current_state$resource_states
+  last_record <- simulator$village_mgr$get_villages()[[1]]$current_state$resource_states
 
   # Check that the initial state of corn is 5
   corn_row <- match("corn", last_record$name)
@@ -38,7 +38,7 @@ test_that("the initial condition is properly set", {
   new_village <- village$new("Test_Village", initial_condition)
   simulator <- simulation$new(1, villages = list(new_village))
   simulator$run_model()
-  last_record <- simulator$villages[[1]]$current_state$resource_states
+  last_record <- simulator$village_mgr$get_villages()[[1]]$current_state$resource_states
   # Check that the initial state of corn is 5
   corn_row <- match("corn", last_record$name)
   corn_row <- last_record[corn_row, ]
@@ -55,7 +55,7 @@ test_that("propagate runs a custom model", {
     resource_mgr$add_resource(resource$new(name = "corn", quantity = 5))
   }
 
-  corn_model <- function(curent_state, previous_state, model_data, agent_mgr, resource_mgr) {
+  corn_model <- function(curent_state, previous_state, model_data, agent_mgr, resource_mgr, village_mgr) {
       if (curent_state$step == 3) {
         # On the third day add 5 corn
         corn_resource <- resource_mgr$get_resource("corn")
@@ -67,7 +67,7 @@ test_that("propagate runs a custom model", {
   simulator <- simulation$new(3, villages = list(new_village))
   simulator$run_model()
 
-  last_record <- simulator$villages[[1]]$current_state$resource_states
+  last_record <- simulator$village_mgr$get_villages()[[1]]$current_state$resource_states
 
   corn_row <- match("corn", last_record$name)
   corn_row <- last_record[corn_row, ]
@@ -80,12 +80,12 @@ test_that("propagate runs multiple custom models", {
     resource_mgr$add_resource(resource$new(name = "salmon", quantity = 1))
   }
 
-  corn_model <- function(curent_state, previous_state, model_data, agent_mgr, resource_mgr) {
+  corn_model <- function(curent_state, previous_state, model_data, agent_mgr, resource_mgr, village_mgr) {
     corn <- resource_mgr$get_resource("corn")
     corn$quantity <- corn$quantity + 1
   }
 
-  salmon_model <- function(curent_state, previous_state, model_data, agent_mgr, resource_mgr) {
+  salmon_model <- function(curent_state, previous_state, model_data, agent_mgr, resource_mgr, village_mgr) {
     salmon <- resource_mgr$get_resource("salmon")
     salmon$quantity <- salmon$quantity + 1
   }
@@ -94,9 +94,9 @@ test_that("propagate runs multiple custom models", {
 
   simulator <- simulation$new(2, villages = list(new_village))
   simulator$run_model()
-  testthat::expect_length(simulator$villages, 1)
+  testthat::expect_length(simulator$village_mgr$get_villages(), 1)
 
-  last_record <- simulator$villages[[1]]$current_state$resource_states
+  last_record <- simulator$village_mgr$get_villages()[[1]]$current_state$resource_states
   corn_row <- match("corn", last_record$name)
   corn_row <- last_record[corn_row, ]
   salmon_row <- match("salmon", last_record$name)
@@ -112,12 +112,12 @@ test_that("The previous state is recorded", {
     resource_mgr$add_resource(resource$new(name = "salmon", quantity = 1))
   }
 
-  corn_model <- function(curent_state, previous_state, model_data, agent_mgr, resource_mgr) {
+  corn_model <- function(curent_state, previous_state, model_data, agent_mgr, resource_mgr, village_mgr) {
     corn <- resource_mgr$get_resource("corn")
     corn$quantity <- corn$quantity + 1
   }
 
-  salmon_model <- function(curent_state, previous_state, model_data, agent_mgr, resource_mgr) {
+  salmon_model <- function(curent_state, previous_state, model_data, agent_mgr, resource_mgr, village_mgr) {
     salmon <- resource_mgr$get_resource("salmon")
     salmon$quantity <- salmon$quantity + 1
   }
@@ -126,9 +126,9 @@ test_that("The previous state is recorded", {
 
   simulator <- simulation$new(2, villages = list(new_village))
   simulator$run_model()
-  testthat::expect_length(simulator$villages, 1)
+  testthat::expect_length(simulator$village_mgr$get_villages(), 1)
 
-  last_record <- simulator$villages[[1]]$current_state$resource_states
+  last_record <- simulator$village_mgr$get_villages()[[1]]$current_state$resource_states
   corn_row <- match("corn", last_record$name)
   corn_row <- last_record[corn_row, ]
   salmon_row <- match("salmon", last_record$name)

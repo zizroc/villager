@@ -2,7 +2,7 @@
 
 test_that("models can add agents each day", {
   # Create a model that creates a new agent each day
-  population_model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr) {
+  population_model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr, village_mgr) {
     new_agent <- agent$new()
     agent_mgr$add_agent(new_agent)
   }
@@ -15,8 +15,10 @@ test_that("models can add agents each day", {
   # Run for 5 days
   new_siumulator <- simulation$new(6, villages = list(plains_village))
   new_siumulator$run_model()
-  testthat::expect_length(new_siumulator$villages[[1]]$agent_mgr$agents, 6)
-  ending_population <- new_siumulator$villages[[1]]$agent_mgr$get_living_population()
+  test_villages <- new_siumulator$village_mgr$get_villages()
+  testthat::expect_equal(length(test_villages), 1)
+  testthat::expect_length(test_villages[[1]]$agent_mgr$agents, 6)
+  ending_population <- test_villages[[1]]$agent_mgr$get_living_population()
   testthat::expect_equal(ending_population, 6)
 })
 
@@ -24,11 +26,12 @@ test_that("models can add and change resource quantities", {
   # Create a model that creates a stock of corn
   # At the end of three days, make sure that there are 6 corn stocks
   initial_condition <- function(current_state, model_data, agent_mgr, resource_mgr) {
+    print("123")
     crop_resource <- resource$new(name = "corn", quantity = 0)
     resource_mgr$add_resource(crop_resource)
   }
 
-  deterministic_crop_stock_model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr) {
+  deterministic_crop_stock_model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr, village_mgr) {
     corn <- resource_mgr$get_resource("corn")
     corn$quantity <- corn$quantity + 3
   }
@@ -37,7 +40,8 @@ test_that("models can add and change resource quantities", {
   plains_village  <- village$new("Test_Village", initial_condition, models = deterministic_crop_stock_model)
   new_siumulator <- simulation$new(3, villages = list(plains_village))
   new_siumulator$run_model()
-  last_record <- new_siumulator$villages[[1]]$current_state
+  last_record <- new_siumulator$village_mgr$get_villages()[[1]]$current_state
+  print(last_record$resource_states)
   corn <- last_record$resource_states %>% dplyr::filter(name == "corn")
   testthat::expect_equal(corn$quantity, 9)
 })
@@ -55,7 +59,7 @@ test_that("models can change resoources based on information from the agent_mana
     agent_mgr$add_agent(agent$new())
   }
 
-  crop_stock_model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr) {
+  crop_stock_model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr, village_mgr) {
     crops <- resource_mgr$get_resource("crops")
     # Each villager eats 2 crops each day
     crops$quantity <- crops$quantity - 2 * agent_mgr$get_living_population()
@@ -67,8 +71,8 @@ test_that("models can change resoources based on information from the agent_mana
   new_siumulator$run_model()
 
   # Check to see if the correct number are left
-  record_length <- length(new_siumulator$villages[[1]]$StateRecords)
-  last_record <- new_siumulator$villages[[1]]$current_state
+  record_length <- length(new_siumulator$village_mgr$get_villages()[[1]]$StateRecords)
+  last_record <- new_siumulator$village_mgr$get_villages()[[1]]$current_state
   crops <- last_record$resource_states %>% dplyr::filter(name == "crops")
   testthat::expect_equal(crops$quantity, 8)
 })
@@ -84,7 +88,7 @@ test_that("models can have dynamics based on agent behavior", {
   }
 
   # Create a model where agents are added if there is extra food available
-  crop_stock_model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr) {
+  crop_stock_model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr, village_mgr) {
     crops <- resource_mgr$get_resource("crops")
     crops$quantity <- crops$quantity + 1
     if (crops$quantity - agent_mgr$get_living_population() > 0) {
@@ -98,8 +102,8 @@ test_that("models can have dynamics based on agent behavior", {
   new_siumulator$run_model()
 
   # Check to see if the correct number are left
-  record_length <- length(new_siumulator$villages[[1]]$StateRecords)
-  last_record <- new_siumulator$villages[[1]]$StateRecords[[record_length]]
+  record_length <- length(new_siumulator$village_mgr$get_villages()[[1]]$StateRecords)
+  last_record <- new_siumulator$village_mgr$get_villages()[[1]]$StateRecords[[record_length]]
   testthat::expect_equal(plains_village$agent_mgr$get_living_population(), 5)
 })
 
@@ -117,7 +121,7 @@ test_that("agents and resources can have properties changed in models", {
   }
 
   # Create a model where agents are set to alive/dead
-  crop_stock_model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr) {
+  crop_stock_model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr, village_mgr) {
     # If it's not the first year, then set two agents to the dead state
     agent_1 <- agent_mgr$get_agent("dead_agent_1")
     agent_2 <- agent_mgr$get_agent("dead_agent_2")
@@ -133,7 +137,7 @@ test_that("agents and resources can have properties changed in models", {
   new_siumulator$run_model()
 
   # Check to see if the correct number are left
-  last_record <- new_siumulator$villages[[1]]$current_state
+  last_record <- new_siumulator$village_mgr$get_villages()[[1]]$current_state
   testthat::expect_equal(plains_village$resource_mgr$get_resource("marine")$quantity,
                          50)
   testthat::expect_equal(plains_village$agent_mgr$get_living_population(), 2)
@@ -153,7 +157,7 @@ test_that("agents profession can change based on age", {
     agent_manager$add_agent(agent$new(identifier = "female2", age = 2292, alive = TRUE, gender = "Female"))
   }
 
-  agent_model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr) {
+  agent_model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr, village_mgr) {
     # Get the new list of living agents and assign professions
     for (living_agent in agent_mgr$get_living_agents()) {
       if (living_agent$age >= 14610) {
@@ -179,7 +183,7 @@ test_that("agents profession can change based on age", {
   new_siumulator$run_model()
 
   # Check to see that the professions are correct
-  village_agent_mgr <- new_siumulator$villages[[1]]$agent_mgr
+  village_agent_mgr <- new_siumulator$village_mgr$get_villages()[[1]]$agent_mgr
   testthat::expect_equal(village_agent_mgr$get_agent("male1")$profession, "Forager")
   testthat::expect_equal(village_agent_mgr$get_agent("male2")$profession, "Fisher")
   testthat::expect_equal(village_agent_mgr$get_agent("female1")$profession, "Farmer")

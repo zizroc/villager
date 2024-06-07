@@ -126,7 +126,7 @@ initial_condition <- function(current_state, model_data, agent_mgr, resource_mgr
 Each day, the model picks a number between 0.0000001 and 0.0000003 and increments `gps_coordinate` on the agent.
 
 ```{r}
-test_model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr) {
+test_model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr, village_mgr) {
   # Loop over all the agents (just one at the moment)
   for (agent in agent_mgr$get_living_agents()) {
     # Generate new coordinates

@@ -13,6 +13,8 @@
 #'   }
 village <- R6::R6Class("village",
   public = list(
+    #' @field name Unique identifier for the village
+    identifier = NA,
     #' @field name An optional name for the village
     name = NA,
     #' @field initial_condition A function that sets the initial state of the village
@@ -47,7 +49,7 @@ village <- R6::R6Class("village",
       self$initial_condition <- initial_condition
       self$agent_mgr <- agent_manager$new(agent_class)
       self$resource_mgr <- resource_manager$new(resource_class)
-
+      self$identifier <- uuid::UUIDgenerate()
       # Check to see if the user supplied a single model, outside of a list
       # If so, put it in a vector because other code expects 'models' to be a list
       if (!is.list(models) && !is.null(models)) {
@@ -69,7 +71,7 @@ village <- R6::R6Class("village",
     #' to set initial conditions. See the set_initial_state method.
     #' @param current_step The current time step
     #' @return None
-    propagate = function(current_step) {
+    propagate = function(current_step, village_mgr) {
       # Create a new state representing this slice in time. Since many of the
       # values will be the same as the previous state, clone the previous state
       self$current_state <- self$previous_state$clone(deep = TRUE)
@@ -79,7 +81,7 @@ village <- R6::R6Class("village",
       for (model in self$models) {
         # Create a read only copy of the last state so that users can make decisions off of it
         self$previous_state <- self$current_state$clone(deep = TRUE)
-        model(self$current_state, self$previous_state, self$model_data, self$agent_mgr, self$resource_mgr
+        model(self$current_state, self$previous_state, self$model_data, self$agent_mgr, self$resource_mgr, village_mgr
         )
       }
       self$current_state$agent_states <- self$agent_mgr$get_states()

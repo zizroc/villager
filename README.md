@@ -46,7 +46,7 @@ test_model <- function(current_state, previous_state, model_data, agent_mgr, res
 Agents are created by instantiating the `agent` class. There are a number of agent properties that can be passed to the constructor.
 
 ```{r}
-test_model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr) {
+test_model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr, village_mgr) {
   mother <- agent$new(first_name="Kirsten", last_name="Taylor", age=9125)
   father <- agent$new(first_name="Joshua", last_name="Thompson", age=7300)
   daughter <- agent$new(first_name="Mariylyyn", last_name="Thompson", age=10220)
@@ -56,7 +56,7 @@ test_model <- function(current_state, previous_state, model_data, agent_mgr, res
 To add agents to the simulation, use the provided `agent_mgr` object to call `add_agent`. Because the classes are R6, the object can be modified after being added to the manager and the changes will be persisted without needing to re-add the villager. For example, setting a daughter's mother and her father below. Note that the standard way is to modify the properties _beforehand_, although not strictly necessary.
 
 ```{r}
-test_model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr) {
+test_model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr, village_mgr) {
   agent_mgr <- agent_manager$new()
   agent_mgr$add_agent(mother, father, daughter)
   daughter$mother_id <- mother$identifier
@@ -74,7 +74,7 @@ agent_mgr$agent_mgr$connect_agents(mother, father)
 Resources are similar to agents in that they're both R6 classes, are instantiated similarly, and are also managed by an object passed into the model. An example of creating resources and adding them to the simulation is given below.
 
 ```
-test_model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr) {
+test_model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr, village_mgr) {
   corn_resource <- resource$new(name="corn", quantity = 10)
   fish_resource <- resource$new(name="fish", quantity = 15)
   corn_resource$quantity=5
@@ -161,7 +161,7 @@ initial_condition <- function(current_state, model_data, agent_mgr, resource_mgr
   resource_mgr$add_resource(corn_resource, fish_resource)
 }
 
-test_model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr) {
+test_model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr, village_mgr) {
 print(paste("Step:", current_state$step))
   for (agent in agent_mgr$get_living_agents()) {
     agent$age <- agent$age+1
@@ -185,9 +185,16 @@ To demonstrate programatically creating villagers, consider the model below that
 - Every odd day, one villager dies
 
 ```
-library(villager)
+  initial_condition <- function(current_state, model_data, agent_mgr, resource_mgr) {
+    for (i in 1:10) {
+      name <- runif(1, 0.0, 100)
+      new_agent <- agent$new(first_name <- name, last_name <- "Smith")
+      agent_mgr$add_agent(new_agent)
+    }
+  }
+
+  model <- function(current_state, previous_state, model_data, agent_mgr, resource_mgr, village_mgr) {
     current_day <- current_state$step
-    print(current_day)
     if((current_day%%2) == 0) {
       # Then it's an even day
       # Create two new agents whose first names are random numbers
@@ -206,7 +213,6 @@ library(villager)
   coastal_village <- village$new("Test village", initial_condition, model)
   simulator <- simulation$new(4, villages = list(coastal_village))
   simulator$run_model()
-  mgr <- simulator$villages[[1]]$agent_mgr
 ```
 
 ## Advanced Usage

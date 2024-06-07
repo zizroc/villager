@@ -1,12 +1,12 @@
 Package: villager
 Title: A Framework for Designing and Running Agent Based Models
-Version: 1.2.2
+Version: 2.0.0
 Authors@R: c(
   person(
     given = "Thomas",
     family = "Thelen",
     role = c("aut", "cre"),
-    email = "thelen@nceas.ucsb.edu"
+    email = "tommythelen@gmail.com"
   ),
   person(
     given = "Gerardo",
@@ -31,7 +31,7 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: false
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
+RoxygenNote: 7.3.1
 Depends: R (>= 3.5.0)
 Imports:
     readr,
@@ -46,7 +46,8 @@ Suggests:
     remotes,
     rmarkdown,
     testthat,
+    roxygen2,
+    pandoc,
 URL: https://github.com/zizroc/villager/
 BugReports: https://github.com/zizroc/villager/issues/
 VignetteBuilder: knitr
-
