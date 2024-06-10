@@ -161,6 +161,7 @@ data_a<-village_a_agents[village_a_agents$step == 5, ]
 print(nrow(data_a[data_a$gender == 'male', ]))
 data_a<-village_a_agents[village_a_agents$step == 6, ]
 ```
+
 ### Village B
 
 The opposite happens with Village B: It starts with only male agents and they move to Village A. The female agents from Village A move to B.
