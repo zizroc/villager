@@ -12,6 +12,8 @@ villager is a framework for creating and running agent based models in R. Its pu
 - Extensible data output system (csv, excel sheets, sqlite)
 - Built in support for agents and resources
 - Easy to use time management
+- Aggregations of agents in the form of "villages"
+- village-village communication (aggregations of agents can move agents and resources between)
 
 ## Installing
 _villager_ can be installed from CRAN by running the following,
@@ -115,7 +117,7 @@ initial_condition <- function(current_state, model_data, agent_mgr, resource_mgr
 }
 ```
 
-## Creating Villages and Running Models
+### Creating Villages and Running Models
 
 Models are tied to particular village instances. This binding is done when villages are created, shown below. Models can have names and must always be paired with an initial condition function and a model function.
 
@@ -130,7 +132,7 @@ simulator <- simulation$new(100, list(small_village))
 simulator$run_model()
 ```
 
-### Example: A small village with a single family
+#### Example: A small village with a single family
 
 We can combine the examples above into a full simulation that...
 
@@ -176,7 +178,7 @@ simulator <- simulation$new(4745, list(small_village))
 simulator$run_model()
 ```
 
-### Example: Creating new villagers
+#### Example: Creating new villagers
 
 To demonstrate programatically creating villagers, consider the model below that has the following logic.
 
@@ -215,9 +217,13 @@ To demonstrate programatically creating villagers, consider the model below that
   simulator$run_model()
 ```
 
-## Advanced Usage
+### Advanced Usage
 
-In the examples above, the default properties of agents and resources were used. It's possible that these won't cover all the needs for more diverse models. There are vignettes on extending the agent and resource classes to handle these situations.
+In the examples above, the default properties of agents and resources were used. It's possible that these won't cover all the needs for more diverse models. There are vignettes on extending the agent and resource classes to handle these situations. Vignette examples include
+
+- Agents with geographic bindings (lat/long coordinates): Example how to bind agents to spatial locations and model interactions between them
+- Multi-village simulation: Example on how to move agents and resources between villages
+- Extended resources: Extending resources to cover more complex cases
 
 ## Contributing
 
